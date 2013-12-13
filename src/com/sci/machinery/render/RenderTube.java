@@ -11,6 +11,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 import com.sci.machinery.block.TileTube;
+import com.sci.machinery.core.TravellingItem;
 
 public class RenderTube extends TileEntitySpecialRenderer
 {
@@ -198,22 +199,22 @@ public class RenderTube extends TileEntitySpecialRenderer
 
 		tess.draw();
 
-		for(ItemStack item : tube.getItems())
+		for(TravellingItem item : tube.getItems())
 		{
 			renderItem(item, x, y, z);
 		}
 	}
 
-	public void renderItem(ItemStack item, double x, double y, double z)
+	public void renderItem(TravellingItem item, double x, double y, double z)
 	{
 		float renderScale = 0.3f;
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float) x + 0.1f, (float) y - 0.175f, (float) z + 0.1f);
 		GL11.glTranslatef(0, 0.25F, 0);
 		GL11.glScalef(renderScale, renderScale, renderScale);
-		dummyEntityItem.setEntityItemStack(item);
-		dummyEntityItem.rotationPitch += 0.1 % 360;
-		customRenderItem.doRenderItem(dummyEntityItem, 0, 0, 0, 0, dummyEntityItem.rotationPitch);
+		dummyEntityItem.setEntityItemStack(item.getStack());
+		item.setRotation(item.getRotation() + 0.5f % 360);
+		customRenderItem.doRenderItem(dummyEntityItem, 0, 0, 0, 0, item.getRotation());
 		GL11.glPopMatrix();
 	}
 

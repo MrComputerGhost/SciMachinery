@@ -60,7 +60,8 @@ public class BlockTube extends BlockSciContainer
 	@Override
 	public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z)
 	{
-		TileEntity[] t = getAdjacentTiles(world, x, y, z);
+		TileTube tube = (TileTube) world.getBlockTileEntity(x, y, z);
+		TileEntity[] t = tube.getAdjacentTiles(world, x, y, z);
 		float minX = 0.4f;
 		float minY = 0.4f;
 		float minZ = 0.4f;
@@ -70,6 +71,7 @@ public class BlockTube extends BlockSciContainer
 
 		if(t[0] != null && t[0] instanceof TileTube)
 		{
+			
 		}
 		else if(t[1] != null && t[1] instanceof TileTube)
 		{
@@ -82,24 +84,12 @@ public class BlockTube extends BlockSciContainer
 		}
 		else if(t[4] != null && t[4] instanceof TileTube)
 		{
-			//maxZ = 1.0f;
+
 		}
 		else if(t[5] != null && t[5] instanceof TileTube)
 		{
 		}
 
 		this.setBlockBounds(minX, minY, minZ, maxX, maxY, maxZ);
-	}
-
-	private TileEntity[] getAdjacentTiles(IBlockAccess world, int x, int y, int z)
-	{
-		TileEntity[] t = new TileEntity[6];
-		t[0] = world.getBlockTileEntity(x + 1, y, z);
-		t[1] = world.getBlockTileEntity(x - 1, y, z);
-		t[2] = world.getBlockTileEntity(x, y + 1, z);
-		t[3] = world.getBlockTileEntity(x, y - 1, z);
-		t[4] = world.getBlockTileEntity(x, y, z + 1);
-		t[5] = world.getBlockTileEntity(x, y, z - 1);
-		return t;
 	}
 }

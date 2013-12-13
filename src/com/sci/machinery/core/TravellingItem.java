@@ -1,13 +1,23 @@
 package com.sci.machinery.core;
 
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.ForgeDirection;
 
 public class TravellingItem
 {
 	private ItemStack stack;
 	private float rotation;
+	private int lastDir = -1;
 	
+	public int getLastDir()
+	{
+		return lastDir;
+	}
+
+	public void setLastDir(int lastDir)
+	{
+		this.lastDir = lastDir;
+	}
+
 	public TravellingItem()
 	{
 	}

@@ -59,19 +59,64 @@ public class TileTube extends TileSci
 							}
 						}
 					}
+
+					boolean sent = true;
 					for(int i = 0; i < t.length; i++)
 					{
 						if(!items.isEmpty())
 						{
 							if(t[i] instanceof TileTube)
 							{
-								((TileTube) t[i]).addItem(items.remove(0));
+								if(i != items.get(0).getLastDir() || items.get(0).getLastDir() == -1)
+								{
+									items.get(0).setLastDir(reverse(i));
+									((TileTube) t[i]).addItem(items.remove(0));
+									sent = false;
+								}
 							}
 						}
+					}
+					if(!sent && !items.isEmpty())
+					{
+						if(!this.worldObj.isRemote)
+							this.worldObj.spawnEntityInWorld(new EntityItem(this.worldObj, this.xCoord, this.yCoord, this.zCoord, items.get(0).getStack()));
+						items.remove(0);
 					}
 				}
 			}
 		}
+	}
+
+	private int reverse(int i)
+	{
+		switch (i)
+		{
+		case 0:
+		{
+			return 1;
+		}
+		case 1:
+		{
+			return 0;
+		}
+		case 2:
+		{
+			return 3;
+		}
+		case 3:
+		{
+			return 2;
+		}
+		case 4:
+		{
+			return 5;
+		}
+		case 5:
+		{
+			return 4;
+		}
+		}
+		return i;
 	}
 
 	private boolean allNull(TileEntity[] t)

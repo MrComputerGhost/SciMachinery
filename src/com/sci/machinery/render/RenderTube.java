@@ -3,6 +3,7 @@ package com.sci.machinery.render;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
+import org.lwjgl.opengl.GL11;
 import com.sci.machinery.block.TileTube;
 
 public class RenderTube extends TileEntitySpecialRenderer
@@ -19,6 +20,10 @@ public class RenderTube extends TileEntitySpecialRenderer
 
 		TileTube tube = (TileTube) t;
 
+		x += OF;
+		y += OF;
+		z += OF;
+
 		Tessellator tess = Tessellator.instance;
 		tess.setColorOpaque(50, 50, 50);
 
@@ -26,130 +31,130 @@ public class RenderTube extends TileEntitySpecialRenderer
 		tess.addVertex(x + 0, y + OA, z + 0);
 		tess.addVertex(x + O, y + OA, z + 0);
 		tess.addVertex(x + O, y + 0, z + 0);
-		
+
 		tess.addVertex(x + 0, y + O - OA, z + 0);
 		tess.addVertex(x + 0, y + O, z + 0);
 		tess.addVertex(x + O, y + O, z + 0);
 		tess.addVertex(x + O, y + O - OA, z + 0);
-		
+
 		tess.addVertex(x + 0, y + 0, z + 0);
 		tess.addVertex(x + 0, y + O, z + 0);
 		tess.addVertex(x + OA, y + O, z + 0);
 		tess.addVertex(x + OA, y + 0, z + 0);
-		
+
 		tess.addVertex(x + O - OA, y + 0, z + 0);
 		tess.addVertex(x + O - OA, y + O, z + 0);
 		tess.addVertex(x + O, y + O, z + 0);
 		tess.addVertex(x + O, y + 0, z + 0);
-		
+
 		//
-		
+
 		tess.addVertex(x + 0, y + 0, z + O);
 		tess.addVertex(x + 0, y + OA, z + O);
 		tess.addVertex(x + 0, y + OA, z + 0);
 		tess.addVertex(x + 0, y + 0, z + 0);
-		
+
 		tess.addVertex(x + 0, y + O, z + O);
 		tess.addVertex(x + 0, y + O, z + 0);
 		tess.addVertex(x + 0, y + O - OA, z + 0);
 		tess.addVertex(x + 0, y + O - OA, z + O);
-		
+
 		tess.addVertex(x + 0, y + O, z + OA);
 		tess.addVertex(x + 0, y + O, z + 0);
 		tess.addVertex(x + 0, y + 0, z + 0);
 		tess.addVertex(x + 0, y + 0, z + OA);
-		
+
 		tess.addVertex(x + 0, y + O, z + O);
 		tess.addVertex(x + 0, y + O, z + O - OA);
 		tess.addVertex(x + 0, y + 0, z + O - OA);
 		tess.addVertex(x + 0, y + 0, z + O);
-		
+
 		//
-		
+
 		tess.addVertex(x + O, y + OA, z + 0);
 		tess.addVertex(x + O, y + OA, z + O);
 		tess.addVertex(x + O, y + 0, z + O);
 		tess.addVertex(x + O, y + 0, z + 0);
-		
+
 		tess.addVertex(x + O, y + O, z + 0);
 		tess.addVertex(x + O, y + O, z + O);
 		tess.addVertex(x + O, y + O, z + O);
 		tess.addVertex(x + O, y + O, z + 0);
-		
+
 		tess.addVertex(x + O, y + O, z + 0);
 		tess.addVertex(x + O, y + O, z + OA);
 		tess.addVertex(x + O, y + 0, z + OA);
 		tess.addVertex(x + O, y + 0, z + 0);
-		
+
 		tess.addVertex(x + O, y + O, z + O - OA);
 		tess.addVertex(x + O, y + O, z + 0);
 		tess.addVertex(x + O, y + 0, z + 0);
 		tess.addVertex(x + O, y + 0, z + O - OA);
-		
+
 		//
-		
-		tess.addVertex(x + O, y + 0, z + 0);
+
+		tess.addVertex(x + O, y + OA, z + O);
+		tess.addVertex(x + 0, y + OA, z + O);
+		tess.addVertex(x + 0, y + 0, z + O);
+		tess.addVertex(x + O, y + 0, z + O);
+
+		tess.addVertex(x + O, y + O, z + O);
+		tess.addVertex(x + 0, y + O, z + O);
+		tess.addVertex(x + 0, y + O - OA, z + O);
+		tess.addVertex(x + O, y + O - OA, z + O);
+
+		tess.addVertex(x + OA, y + O, z + O);
+		tess.addVertex(x + 0, y + O, z + O);
+		tess.addVertex(x + 0, y + 0, z + O);
+		tess.addVertex(x + OA, y + 0, z + O);
+
+		tess.addVertex(x + O, y + O, z + O);
+		tess.addVertex(x + O - OA, y + O, z + O);
+		tess.addVertex(x + O - OA, y + 0, z + O);
+		tess.addVertex(x + O, y + 0, z + O);
+
+		//
+
+		tess.addVertex(x + OA, y + O, z + O);
+		tess.addVertex(x + OA, y + O, z + 0);
+		tess.addVertex(x + 0, y + O, z + 0);
+		tess.addVertex(x + 0, y + O, z + O);
+
+		tess.addVertex(x + 0, y + O, z + O);
+		tess.addVertex(x + O, y + O, z + O);
+		tess.addVertex(x + O, y + O, z + O - OA);
+		tess.addVertex(x + 0, y + O, z + O - OA);
+
+		tess.addVertex(x + 0, y + O, z + 0);
+		tess.addVertex(x + 0, y + O, z + OA);
+		tess.addVertex(x + O, y + O, z + OA);
+		tess.addVertex(x + O, y + O, z + 0);
+
+		tess.addVertex(x + O, y + O, z + O);
+		tess.addVertex(x + O, y + O, z + 0);
+		tess.addVertex(x + O - OA, y + O, z + 0);
+		tess.addVertex(x + O - OA, y + O, z + O);
+
+		//
+
+		tess.addVertex(x + OA, y + 0, z + O);
+		tess.addVertex(x + 0, y + 0, z + O);
 		tess.addVertex(x + 0, y + 0, z + 0);
-		tess.addVertex(x + 0, y + 0, z + 0);
-		tess.addVertex(x + O, y + 0, z + 0);
-		
-		tess.addVertex(x + O, y + 0, z + 0);
-		tess.addVertex(x + 0, y + 0, z + 0);
-		tess.addVertex(x + 0, y + 0, z + 0);
-		tess.addVertex(x + O, y + 0, z + 0);
-		
 		tess.addVertex(x + OA, y + 0, z + 0);
+
+		tess.addVertex(x + 0, y + 0, z + O);
+		tess.addVertex(x + 0, y + 0, z + O - OA);
+		tess.addVertex(x + O, y + 0, z + O - OA);
+		tess.addVertex(x + O, y + 0, z + O);
+
 		tess.addVertex(x + 0, y + 0, z + 0);
-		tess.addVertex(x + 0, y + 0, z + 0);
-		tess.addVertex(x + OA, y + 0, z + 0);
-		
 		tess.addVertex(x + O, y + 0, z + 0);
-		tess.addVertex(x + O - OA, y + 0, z + 0);
+		tess.addVertex(x + O, y + 0, z + OA);
+		tess.addVertex(x + 0, y + 0, z + OA);
+
+		tess.addVertex(x + O - OA, y + 0, z + O);
 		tess.addVertex(x + O - OA, y + 0, z + 0);
 		tess.addVertex(x + O, y + 0, z + 0);
-		
-		//
-		
-		tess.addVertex(x + 0, y + 0, z + 0);
-		tess.addVertex(x + 0, y + 0, z + 0);
-		tess.addVertex(x + 0, y + 0, z + 0);
-		tess.addVertex(x + 0, y + 0, z + 0);
-		
-		tess.addVertex(x + 0, y + 0, z + 0);
-		tess.addVertex(x + 0, y + 0, z + 0);
-		tess.addVertex(x + 0, y + 0, z + 0);
-		tess.addVertex(x + 0, y + 0, z + 0);
-		
-		tess.addVertex(x + 0, y + 0, z + 0);
-		tess.addVertex(x + 0, y + 0, z + 0);
-		tess.addVertex(x + 0, y + 0, z + 0);
-		tess.addVertex(x + 0, y + 0, z + 0);
-		
-		tess.addVertex(x + 0, y + 0, z + 0);
-		tess.addVertex(x + 0, y + 0, z + 0);
-		tess.addVertex(x + 0, y + 0, z + 0);
-		tess.addVertex(x + 0, y + 0, z + 0);
-		
-		//
-		
-		tess.addVertex(x + 0, y + 0, z + 0);
-		tess.addVertex(x + 0, y + 0, z + 0);
-		tess.addVertex(x + 0, y + 0, z + 0);
-		tess.addVertex(x + 0, y + 0, z + 0);
-		
-		tess.addVertex(x + 0, y + 0, z + 0);
-		tess.addVertex(x + 0, y + 0, z + 0);
-		tess.addVertex(x + 0, y + 0, z + 0);
-		tess.addVertex(x + 0, y + 0, z + 0);
-		
-		tess.addVertex(x + 0, y + 0, z + 0);
-		tess.addVertex(x + 0, y + 0, z + 0);
-		tess.addVertex(x + 0, y + 0, z + 0);
-		tess.addVertex(x + 0, y + 0, z + 0);
-		
-		tess.addVertex(x + 0, y + 0, z + 0);
-		tess.addVertex(x + 0, y + 0, z + 0);
-		tess.addVertex(x + 0, y + 0, z + 0);
-		tess.addVertex(x + 0, y + 0, z + 0);
+		tess.addVertex(x + O, y + 0, z + O);
 	}
 }

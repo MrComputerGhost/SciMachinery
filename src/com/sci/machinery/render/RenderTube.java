@@ -1,11 +1,15 @@
 package com.sci.machinery.render;
 
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.entity.RenderItem;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.IBlockAccess;
+import org.lwjgl.opengl.GL11;
 import com.sci.machinery.block.TileTube;
 
 public class RenderTube extends TileEntitySpecialRenderer
@@ -14,6 +18,28 @@ public class RenderTube extends TileEntitySpecialRenderer
 	public static final double O = 0.2D;
 	public static final double OA = 0.05D;
 	public static final double OO = O * 2;
+
+	private final EntityItem dummyEntityItem = new EntityItem(null);
+	private final RenderItem customRenderItem;
+
+	public RenderTube()
+	{
+		customRenderItem = new RenderItem()
+		{
+			@Override
+			public boolean shouldBob()
+			{
+				return false;
+			}
+
+			@Override
+			public boolean shouldSpreadItems()
+			{
+				return false;
+			}
+		};
+		customRenderItem.setRenderManager(RenderManager.instance);
+	}
 
 	@Override
 	public void renderTileEntityAt(TileEntity t, double x, double y, double z, float f)
@@ -171,6 +197,24 @@ public class RenderTube extends TileEntitySpecialRenderer
 		}
 
 		tess.draw();
+
+		for(ItemStack item : tube.getItems())
+		{
+			renderItem(item, x, y, z);
+		}
+	}
+
+	public void renderItem(ItemStack item, double x, double y, double z)
+	{
+		float renderScale = 0.3f;
+		GL11.glPushMatrix();
+		GL11.glTranslatef((float) x + 0.1f, (float) y - 0.175f, (float) z + 0.1f);
+		GL11.glTranslatef(0, 0.25F, 0);
+		GL11.glScalef(renderScale, renderScale, renderScale);
+		dummyEntityItem.setEntityItemStack(item);
+		dummyEntityItem.rotationPitch += 0.1 % 360;
+		customRenderItem.doRenderItem(dummyEntityItem, 0, 0, 0, 0, dummyEntityItem.rotationPitch);
+		GL11.glPopMatrix();
 	}
 
 	public void renderSide(int side, double x, double y, double z)

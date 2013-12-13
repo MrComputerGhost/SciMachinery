@@ -2,6 +2,7 @@ package com.sci.machinery.block;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.IBlockAccess;
@@ -61,35 +62,42 @@ public class BlockTube extends BlockSciContainer
 	public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z)
 	{
 		TileTube tube = (TileTube) world.getBlockTileEntity(x, y, z);
-		TileEntity[] t = tube.getAdjacentTiles(world, x, y, z);
-		float minX = 0.4f;
-		float minY = 0.4f;
-		float minZ = 0.4f;
-		float maxX = 0.6f;
-		float maxY = 0.6f;
-		float maxZ = 0.6f;
+		if(tube != null)
+		{
+			TileEntity[] t = tube.getAdjacentTiles(world, x, y, z);
+			float minX = 0.4f;
+			float minY = 0.4f;
+			float minZ = 0.4f;
+			float maxX = 0.6f;
+			float maxY = 0.6f;
+			float maxZ = 0.6f;
 
-		if(t[0] != null && t[0] instanceof TileTube)
-		{
-			
-		}
-		else if(t[1] != null && t[1] instanceof TileTube)
-		{
-		}
-		else if(t[2] != null && t[2] instanceof TileTube)
-		{
-		}
-		else if(t[3] != null && t[3] instanceof TileTube)
-		{
-		}
-		else if(t[4] != null && t[4] instanceof TileTube)
-		{
+			if(t[0] != null && t[0] instanceof TileTube || t[0] instanceof IInventory)
+			{
+				minY = 0.0f;
+			}
+			if(t[1] != null && t[1] instanceof TileTube || t[1] instanceof IInventory)
+			{
+				maxY = 1.0f;
+			}
+			if(t[2] != null && t[2] instanceof TileTube || t[2] instanceof IInventory)
+			{
+				maxZ = 1.0f;
+			}
+			if(t[3] != null && t[3] instanceof TileTube || t[3] instanceof IInventory)
+			{
+				minZ = 0.0f;
+			}
+			if(t[4] != null && t[4] instanceof TileTube || t[4] instanceof IInventory)
+			{
+				maxX = 1.0f;
+			}
+			if(t[5] != null && t[5] instanceof TileTube || t[5] instanceof IInventory)
+			{
+				minX = 0.0f;
+			}
 
+			this.setBlockBounds(minX, minY, minZ, maxX, maxY, maxZ);
 		}
-		else if(t[5] != null && t[5] instanceof TileTube)
-		{
-		}
-
-		this.setBlockBounds(minX, minY, minZ, maxX, maxY, maxZ);
 	}
 }

@@ -12,7 +12,7 @@ public class RenderTube extends TileEntitySpecialRenderer
 {
 	public static final double OF = 0.4D;
 	public static final double O = 0.2D;
-	public static final double OA = 0.04D;
+	public static final double OA = 0.05D;
 	public static final double OO = O * 2;
 
 	@Override

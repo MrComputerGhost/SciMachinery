@@ -14,6 +14,7 @@ import com.sci.machinery.core.TravellingItem;
 public class TileTube extends TileSci
 {
 	private List<TravellingItem> items;
+	private int timer;
 
 	public TileTube()
 	{
@@ -28,30 +29,44 @@ public class TileTube extends TileSci
 	@Override
 	public void updateEntity()
 	{
-		if(!items.isEmpty())
+		timer++;
+		if(timer == 10)
 		{
-			TileEntity[] t = getAdjacentTiles(this.worldObj, this.xCoord, this.yCoord, this.zCoord);
-			if(allNull(t))
+			timer = 0;
+			if(!items.isEmpty())
 			{
-				if(!this.worldObj.isRemote)
-					this.worldObj.spawnEntityInWorld(new EntityItem(this.worldObj, this.xCoord, this.yCoord, this.zCoord, items.get(0).getStack()));
-				items.remove(0);
-			}
-			else
-			{
-				for(int i = 0; i < t.length; i++)
+				TileEntity[] t = getAdjacentTiles(this.worldObj, this.xCoord, this.yCoord, this.zCoord);
+				if(allNull(t))
 				{
-					if(!items.isEmpty())
+					if(!this.worldObj.isRemote)
+						this.worldObj.spawnEntityInWorld(new EntityItem(this.worldObj, this.xCoord, this.yCoord, this.zCoord, items.get(0).getStack()));
+					items.remove(0);
+				}
+				else
+				{
+					for(int i = 0; i < t.length; i++)
 					{
-						if(t[i] instanceof IInventory)
+						if(!items.isEmpty())
 						{
-							ItemStack s = TileEntityHopper.insertStack((IInventory) t[i], items.remove(0).getStack(), 0);
-							if(!this.worldObj.isRemote)
-								this.worldObj.spawnEntityInWorld(new EntityItem(this.worldObj, this.xCoord, this.yCoord, this.zCoord, s));
+							if(t[i] instanceof IInventory)
+							{
+								ItemStack s = TileEntityHopper.insertStack((IInventory) t[i], items.remove(0).getStack(), 0);
+								if(s != null)
+								{
+									if(!this.worldObj.isRemote)
+										this.worldObj.spawnEntityInWorld(new EntityItem(this.worldObj, this.xCoord, this.yCoord, this.zCoord, s));
+								}
+							}
 						}
-						else if(t[i] instanceof TileTube)
+					}
+					for(int i = 0; i < t.length; i++)
+					{
+						if(!items.isEmpty())
 						{
-							((TileTube) t[i]).addItem(items.remove(0));
+							if(t[i] instanceof TileTube)
+							{
+								((TileTube) t[i]).addItem(items.remove(0));
+							}
 						}
 					}
 				}

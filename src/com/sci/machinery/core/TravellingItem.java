@@ -1,11 +1,16 @@
 package com.sci.machinery.core;
 
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.common.ForgeDirection;
 
 public class TravellingItem
 {
 	private ItemStack stack;
 	private float rotation;
+	
+	public TravellingItem()
+	{
+	}
 	
 	public float getRotation()
 	{

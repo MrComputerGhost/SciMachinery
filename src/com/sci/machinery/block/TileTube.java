@@ -8,10 +8,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityHopper;
 import net.minecraft.world.IBlockAccess;
-import com.sci.machinery.core.TileSci;
+import com.sci.machinery.core.ITubeConnectable;
 import com.sci.machinery.core.TravellingItem;
 
-public class TileTube extends TileSci
+public class TileTube extends TileEntity implements ITubeConnectable
 {
 	private List<TravellingItem> items;
 	private int timer;
@@ -65,7 +65,7 @@ public class TileTube extends TileSci
 					{
 						if(!items.isEmpty())
 						{
-							if(t[i] instanceof TileTube)
+							if(t[i] instanceof ITubeConnectable)
 							{
 								if(i != items.get(0).getLastDir() || items.get(0).getLastDir() == -1)
 								{

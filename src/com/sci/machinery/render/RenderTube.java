@@ -6,11 +6,11 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 import com.sci.machinery.block.TileTube;
+import com.sci.machinery.core.ITubeConnectable;
 import com.sci.machinery.core.TravellingItem;
 
 public class RenderTube extends TileEntitySpecialRenderer
@@ -45,7 +45,7 @@ public class RenderTube extends TileEntitySpecialRenderer
 	@Override
 	public void renderTileEntityAt(TileEntity t, double x, double y, double z, float f)
 	{
-		if(!(t instanceof TileTube)) { throw new RuntimeException("Got a non-TileTube tile in RenderTube!"); }
+		if(!(t instanceof ITubeConnectable)) { throw new RuntimeException("Got a non-ITubeConnectable tile in RenderTube!"); }
 
 		TileTube tube = (TileTube) t;
 
@@ -191,7 +191,7 @@ public class RenderTube extends TileEntitySpecialRenderer
 		TileEntity[] tiles = tube.getAdjacentTiles(tube.worldObj, (int) tube.xCoord, (int) tube.yCoord, (int) tube.zCoord);
 		for(int i = 0; i < 6; i++)
 		{
-			if(tiles[i] instanceof TileTube || tiles[i] instanceof IInventory)
+			if(tiles[i] instanceof ITubeConnectable || tiles[i] instanceof IInventory)
 			{
 				renderSide(i, x, y, z);
 			}

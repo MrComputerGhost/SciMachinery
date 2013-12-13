@@ -1,6 +1,8 @@
 package com.sci.machinery.core;
 
+import com.sci.machinery.block.TileItemPump;
 import com.sci.machinery.block.TileTube;
+import com.sci.machinery.render.RenderItemPump;
 import com.sci.machinery.render.RenderTube;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -20,6 +22,7 @@ public class ClientProxy extends CommonProxy
 	{
 		super.init(e);
 		ClientRegistry.bindTileEntitySpecialRenderer(TileTube.class, new RenderTube());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileItemPump.class, new RenderItemPump());
 	}
 
 	@Override

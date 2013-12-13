@@ -3,7 +3,9 @@ package com.sci.machinery;
 import java.io.File;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraftforge.common.Configuration;
+import com.sci.machinery.block.BlockItemPump;
 import com.sci.machinery.block.BlockTube;
+import com.sci.machinery.block.TileItemPump;
 import com.sci.machinery.block.TileTube;
 import com.sci.machinery.core.CreativeTabSM;
 import com.sci.machinery.core.IProxy;
@@ -33,6 +35,9 @@ public class SciMachinery
 	public int tubeId;
 	public BlockTube tube;
 	
+	public int itemPumpId;
+	public BlockItemPump itemPump;
+	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent e)
 	{
@@ -46,6 +51,7 @@ public class SciMachinery
 		{
 			cfg.load();
 			tubeId = cfg.getBlock("tube", 420).getInt();
+			itemPumpId = cfg.getBlock("itemPump", 421).getInt();
 		}
 		finally
 		{
@@ -61,6 +67,10 @@ public class SciMachinery
 		tube = new BlockTube(tubeId);
 		GameRegistry.registerBlock(tube, "SciMachinery_TileTube");
 		GameRegistry.registerTileEntity(TileTube.class, "SciMachinery_TileTube");
+		
+		itemPump = new BlockItemPump(itemPumpId);
+		GameRegistry.registerBlock(itemPump, "SciMachinery_TileItemPump");
+		GameRegistry.registerTileEntity(TileItemPump.class,  "SciMachinery_TileItemPump");
 	}
 	
 	@EventHandler

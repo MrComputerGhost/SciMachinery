@@ -59,6 +59,7 @@ public class SciMachinery
 		proxy.init(e);
 		
 		tube = new BlockTube(tubeId);
+		GameRegistry.registerBlock(tube, "SciMachinery_TileTube");
 		GameRegistry.registerTileEntity(TileTube.class, "SciMachinery_TileTube");
 	}
 	

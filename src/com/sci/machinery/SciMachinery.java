@@ -1,9 +1,11 @@
-package com.sci.mj3;
+package com.sci.machinery;
 
 import java.io.File;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraftforge.common.Configuration;
-import com.sci.mj3.core.IProxy;
-import com.sci.mj3.lib.Reference;
+import com.sci.machinery.block.BlockTube;
+import com.sci.machinery.core.IProxy;
+import com.sci.machinery.lib.Reference;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -15,18 +17,24 @@ import cpw.mods.fml.common.network.NetworkMod;
 
 @Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME, version = Reference.MOD_VERSION)
 @NetworkMod(clientSideRequired = true, serverSideRequired = false)
-public class ModJam3Mod
+public class SciMachinery
 {
 	@Instance(Reference.MOD_ID)
-	public static ModJam3Mod instance;
+	public static SciMachinery instance;
 
 	@SidedProxy(clientSide = Reference.CLIENT_PROXY, serverSide = Reference.SERVER_PROXY)
 	public static IProxy proxy;
 
+	public static CreativeTabs tab = new CreativeTabs(CreativeTabs.getNextID(), Reference.MOD_ID);
+	
+	public int tubeId;
+	public BlockTube tube;
+	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent e)
 	{
 		proxy.preInit(e);
+		
 		File folder = new File(e.getModConfigurationDirectory(), "sci4me");
 		if(!folder.exists())
 			folder.mkdirs();
@@ -34,6 +42,7 @@ public class ModJam3Mod
 		try
 		{
 			cfg.load();
+			tubeId = cfg.getBlock("tube", 420).getInt();
 		}
 		finally
 		{
@@ -45,6 +54,8 @@ public class ModJam3Mod
 	public void init(FMLInitializationEvent e)
 	{
 		proxy.init(e);
+		
+		tube = new BlockTube(tubeId);
 	}
 	
 	@EventHandler

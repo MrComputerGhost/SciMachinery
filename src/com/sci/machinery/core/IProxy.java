@@ -1,4 +1,4 @@
-package com.sci.mj3.core;
+package com.sci.machinery.core;
 
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;

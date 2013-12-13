@@ -3,10 +3,11 @@ package com.sci.machinery.block;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import com.sci.machinery.SciMachinery;
 import com.sci.machinery.core.BlockSciContainer;
-import com.sci.machinery.render.RenderTube;
 
 public class BlockTube extends BlockSciContainer
 {
@@ -40,5 +41,65 @@ public class BlockTube extends BlockSciContainer
 	public boolean isOpaqueCube()
 	{
 		return false;
+	}
+
+	@Override
+	public AxisAlignedBB getSelectedBoundingBoxFromPool(World par1World, int par2, int par3, int par4)
+	{
+		this.setBlockBoundsBasedOnState(par1World, par2, par3, par4);
+		return super.getSelectedBoundingBoxFromPool(par1World, par2, par3, par4);
+	}
+
+	@Override
+	public AxisAlignedBB getCollisionBoundingBoxFromPool(World par1World, int par2, int par3, int par4)
+	{
+		this.setBlockBoundsBasedOnState(par1World, par2, par3, par4);
+		return super.getCollisionBoundingBoxFromPool(par1World, par2, par3, par4);
+	}
+
+	@Override
+	public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z)
+	{
+		TileEntity[] t = getAdjacentTiles(world, x, y, z);
+		float minX = 0.4f;
+		float minY = 0.4f;
+		float minZ = 0.4f;
+		float maxX = 0.6f;
+		float maxY = 0.6f;
+		float maxZ = 0.6f;
+
+		if(t[0] != null && t[0] instanceof TileTube)
+		{
+		}
+		else if(t[1] != null && t[1] instanceof TileTube)
+		{
+		}
+		else if(t[2] != null && t[2] instanceof TileTube)
+		{
+		}
+		else if(t[3] != null && t[3] instanceof TileTube)
+		{
+		}
+		else if(t[4] != null && t[4] instanceof TileTube)
+		{
+			//maxZ = 1.0f;
+		}
+		else if(t[5] != null && t[5] instanceof TileTube)
+		{
+		}
+
+		this.setBlockBounds(minX, minY, minZ, maxX, maxY, maxZ);
+	}
+
+	private TileEntity[] getAdjacentTiles(IBlockAccess world, int x, int y, int z)
+	{
+		TileEntity[] t = new TileEntity[6];
+		t[0] = world.getBlockTileEntity(x + 1, y, z);
+		t[1] = world.getBlockTileEntity(x - 1, y, z);
+		t[2] = world.getBlockTileEntity(x, y + 1, z);
+		t[3] = world.getBlockTileEntity(x, y - 1, z);
+		t[4] = world.getBlockTileEntity(x, y, z + 1);
+		t[5] = world.getBlockTileEntity(x, y, z - 1);
+		return t;
 	}
 }

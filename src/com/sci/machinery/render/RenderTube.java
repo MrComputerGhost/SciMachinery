@@ -3,7 +3,8 @@ package com.sci.machinery.render;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
-import org.lwjgl.opengl.GL11;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.IBlockAccess;
 import com.sci.machinery.block.TileTube;
 
 public class RenderTube extends TileEntitySpecialRenderer
@@ -25,7 +26,9 @@ public class RenderTube extends TileEntitySpecialRenderer
 		z += OF;
 
 		Tessellator tess = Tessellator.instance;
-		tess.setColorOpaque(50, 50, 50);
+		tess.startDrawingQuads();
+
+		this.bindTexture(new ResourceLocation("scimachinery", "blocks/tube.png"));
 
 		tess.addVertex(x + 0, y + 0, z + 0);
 		tess.addVertex(x + 0, y + OA, z + 0);
@@ -78,8 +81,8 @@ public class RenderTube extends TileEntitySpecialRenderer
 
 		tess.addVertex(x + O, y + O, z + 0);
 		tess.addVertex(x + O, y + O, z + O);
-		tess.addVertex(x + O, y + O, z + O);
-		tess.addVertex(x + O, y + O, z + 0);
+		tess.addVertex(x + O, y + O - OA, z + O);
+		tess.addVertex(x + O, y + O - OA, z + 0);
 
 		tess.addVertex(x + O, y + O, z + 0);
 		tess.addVertex(x + O, y + O, z + OA);
@@ -87,8 +90,8 @@ public class RenderTube extends TileEntitySpecialRenderer
 		tess.addVertex(x + O, y + 0, z + 0);
 
 		tess.addVertex(x + O, y + O, z + O - OA);
-		tess.addVertex(x + O, y + O, z + 0);
-		tess.addVertex(x + O, y + 0, z + 0);
+		tess.addVertex(x + O, y + O, z + O);
+		tess.addVertex(x + O, y + 0, z + O);
 		tess.addVertex(x + O, y + 0, z + O - OA);
 
 		//
@@ -156,5 +159,77 @@ public class RenderTube extends TileEntitySpecialRenderer
 		tess.addVertex(x + O - OA, y + 0, z + 0);
 		tess.addVertex(x + O, y + 0, z + 0);
 		tess.addVertex(x + O, y + 0, z + O);
+
+		/*
+		 * x += OF; y += OF; z += OF;
+		 */
+
+		renderSide(5, x, y, z);
+
+		tess.draw();
+	}
+
+	public void renderSide(int side, double x, double y, double z)
+	{
+		Tessellator tess = Tessellator.instance;
+
+		if(side == 5)
+		{
+			tess.addVertex(x + 0, y + 0, z + 0);
+			tess.addVertex(x - OO, y + 0, z + 0);
+			tess.addVertex(x - OO, y + OA, z + 0);
+			tess.addVertex(x + 0, y + OA, z + 0);
+
+			tess.addVertex(x + 0, y + O - OA, z + 0);
+			tess.addVertex(x - OO, y + O - OA, z + 0);
+			tess.addVertex(x - OO, y + O, z + 0);
+			tess.addVertex(x + 0, y + O, z + 0);
+
+			tess.addVertex(x - OO, y + OA, z + O);
+			tess.addVertex(x - OO, y + 0, z + O);
+			tess.addVertex(x + 0, y + 0, z + O);
+			tess.addVertex(x + 0, y + OA, z + O);
+
+			tess.addVertex(x - OO, y + O, z + O);
+			tess.addVertex(x - OO, y + O - OA, z + O);
+			tess.addVertex(x + 0, y + O - OA, z + O);
+			tess.addVertex(x + 0, y + O, z + O);
+
+			tess.addVertex(x + 0, y + O, z + O);
+			tess.addVertex(x + 0, y + O, z + O - OA);
+			tess.addVertex(x - OO, y + O, z + O - OA);
+			tess.addVertex(x - OO, y + O, z + O);
+
+			tess.addVertex(x + 0, y + O, z + 0);
+			tess.addVertex(x - OO, y + O, z + 0);
+			tess.addVertex(x - OO, y + O, z + OA);
+			tess.addVertex(x + 0, y + O, z + OA);
+
+			tess.addVertex(x + 0, y + 0, z + O);
+			tess.addVertex(x - OO, y + 0, z + O);
+			tess.addVertex(x - OO, y + 0, z + O - OA);
+			tess.addVertex(x + 0, y + 0, z + O - OA);
+
+			tess.addVertex(x + 0, y + 0, z + 0);
+			tess.addVertex(x + 0, y + 0, z + OA);
+			tess.addVertex(x - OO, y + 0, z + OA);
+			tess.addVertex(x - OO, y + 0, z + 0);
+		}
+		else if(side == 4)
+		{
+
+		}
+	}
+
+	private TileEntity[] getAdjacentTiles(IBlockAccess world, int x, int y, int z)
+	{
+		TileEntity[] t = new TileEntity[6];
+		t[0] = world.getBlockTileEntity(x + 1, y, z);
+		t[1] = world.getBlockTileEntity(x - 1, y, z);
+		t[2] = world.getBlockTileEntity(x, y + 1, z);
+		t[3] = world.getBlockTileEntity(x, y - 1, z);
+		t[4] = world.getBlockTileEntity(x, y, z + 1);
+		t[5] = world.getBlockTileEntity(x, y, z - 1);
+		return t;
 	}
 }

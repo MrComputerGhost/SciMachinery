@@ -5,20 +5,28 @@ import java.util.List;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityHopper;
 import net.minecraft.world.IBlockAccess;
 import com.sci.machinery.core.ITubeConnectable;
+import com.sci.machinery.core.Speed;
 import com.sci.machinery.core.TravellingItem;
+import com.sci.machinery.network.PacketAddItem;
+import com.sci.machinery.network.PacketTypeHandler;
+import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class TileTube extends TileEntity implements ITubeConnectable
 {
-	private List<TravellingItem> items;
+	protected List<TravellingItem> items;
 	private int timer;
+	protected final Speed speed;
 
 	public TileTube()
 	{
-		items = new ArrayList<TravellingItem>();
+		this.speed = Speed.MEDIUM;
+		this.items = new ArrayList<TravellingItem>();
 	}
 
 	public List<TravellingItem> getItems()
@@ -29,65 +37,66 @@ public class TileTube extends TileEntity implements ITubeConnectable
 	@Override
 	public void updateEntity()
 	{
-		timer++;
-		if(timer == 10)
+		if(!items.isEmpty())
 		{
-			timer = 0;
-			if(!items.isEmpty())
+			timer++;
+			if(timer == speed.delay)
 			{
-				TileEntity[] t = getAdjacentTiles(this.worldObj, this.xCoord, this.yCoord, this.zCoord);
-				if(allNull(t))
+				timer = 0;
+				if(!items.isEmpty())
 				{
-					if(!this.worldObj.isRemote)
+					TileEntity[] t = getAdjacentTiles(this.worldObj, this.xCoord, this.yCoord, this.zCoord);
+					if(allNull(t))
+					{
 						this.worldObj.spawnEntityInWorld(new EntityItem(this.worldObj, this.xCoord, this.yCoord, this.zCoord, items.get(0).getStack()));
-					items.remove(0);
-				}
-				else
-				{
-					for(int i = 0; i < t.length; i++)
-					{
-						if(!items.isEmpty())
-						{
-							if(t[i] instanceof IInventory)
-							{
-								ItemStack s = TileEntityHopper.insertStack((IInventory) t[i], items.remove(0).getStack(), 0);
-								if(s != null)
-								{
-									if(!this.worldObj.isRemote)
-										this.worldObj.spawnEntityInWorld(new EntityItem(this.worldObj, this.xCoord, this.yCoord, this.zCoord, s));
-								}
-							}
-						}
-					}
-
-					boolean sent = true;
-					for(int i = 0; i < t.length; i++)
-					{
-						if(!items.isEmpty())
-						{
-							if(t[i] instanceof ITubeConnectable)
-							{
-								if(i != items.get(0).getLastDir() || items.get(0).getLastDir() == -1)
-								{
-									items.get(0).setLastDir(reverse(i));
-									((TileTube) t[i]).addItem(items.remove(0));
-									sent = false;
-								}
-							}
-						}
-					}
-					if(!sent && !items.isEmpty())
-					{
-						if(!this.worldObj.isRemote)
-							this.worldObj.spawnEntityInWorld(new EntityItem(this.worldObj, this.xCoord, this.yCoord, this.zCoord, items.get(0).getStack()));
 						items.remove(0);
+					}
+					else
+					{
+						for(int i = 0; i < t.length; i++)
+						{
+							if(!items.isEmpty())
+							{
+								if(t[i] instanceof IInventory)
+								{
+									ItemStack s = TileEntityHopper.insertStack((IInventory) t[i], items.remove(0).getStack(), 0);
+									if(s != null)
+									{
+										if(!this.worldObj.isRemote)
+											this.worldObj.spawnEntityInWorld(new EntityItem(this.worldObj, this.xCoord, this.yCoord, this.zCoord, s));
+									}
+								}
+							}
+						}
+
+						boolean sent = true;
+						for(int i = 0; i < t.length; i++)
+						{
+							if(!items.isEmpty())
+							{
+								if(t[i] instanceof ITubeConnectable)
+								{
+									if(i != items.get(0).getLastDir() || items.get(0).getLastDir() == -1 && ((ITubeConnectable) t[i]).canAcceptItems())
+									{
+										items.get(0).setLastDir(reverse(i));
+										((ITubeConnectable) t[i]).addItem(items.remove(0));
+										sent = false;
+									}
+								}
+							}
+						}
+						if(!sent && !items.isEmpty())
+						{
+							this.worldObj.spawnEntityInWorld(new EntityItem(this.worldObj, this.xCoord, this.yCoord, this.zCoord, items.get(0).getStack()));
+							items.remove(0);
+						}
 					}
 				}
 			}
 		}
 	}
 
-	private int reverse(int i)
+	protected int reverse(int i)
 	{
 		switch (i)
 		{
@@ -119,7 +128,7 @@ public class TileTube extends TileEntity implements ITubeConnectable
 		return i;
 	}
 
-	private boolean allNull(TileEntity[] t)
+	protected boolean allNull(TileEntity[] t)
 	{
 		boolean ret = true;
 		for(TileEntity te : t)
@@ -143,5 +152,65 @@ public class TileTube extends TileEntity implements ITubeConnectable
 	public void addItem(TravellingItem travellingItem)
 	{
 		items.add(travellingItem);
+	}
+
+	@Override
+	public boolean canAcceptItems()
+	{
+		return true;
+	}
+
+	@Override
+	public void readFromNBT(NBTTagCompound par1NBTTagCompound)
+	{
+		super.readFromNBT(par1NBTTagCompound);
+		NBTTagList nbttaglist = par1NBTTagCompound.getTagList("Items");
+		items.clear();
+
+		for(int i = 0; i < nbttaglist.tagCount(); ++i)
+		{
+			NBTTagCompound nbttagcompound1 = (NBTTagCompound) nbttaglist.tagAt(i);
+			int j = nbttagcompound1.getByte("Slot");
+
+			this.addItem(new TravellingItem(ItemStack.loadItemStackFromNBT(nbttagcompound1)));
+		}
+	}
+
+	@Override
+	public void writeToNBT(NBTTagCompound par1NBTTagCompound)
+	{
+		super.writeToNBT(par1NBTTagCompound);
+		NBTTagList nbttaglist = new NBTTagList();
+
+		for(int i = 0; i < this.items.size(); ++i)
+		{
+			NBTTagCompound nbttagcompound1 = new NBTTagCompound();
+			nbttagcompound1.setByte("Slot", (byte) i);
+			this.items.get(i).getStack().writeToNBT(nbttagcompound1);
+			nbttaglist.appendTag(nbttagcompound1);
+		}
+
+		par1NBTTagCompound.setTag("Items", nbttaglist);
+	}
+
+	public void validate()
+	{
+		super.validate();
+		for(TravellingItem item : items)
+		{
+			ItemStack stack = item.getStack();
+			PacketDispatcher.sendPacketToAllAround(xCoord, yCoord, zCoord, 128, worldObj.provider.dimensionId, PacketTypeHandler.populatePacket(new PacketAddItem(xCoord, yCoord, zCoord, stack.itemID, stack.stackSize)));
+		}
+	}
+
+	public void breakTube()
+	{
+		if(!worldObj.isRemote && !items.isEmpty())
+		{
+			while(!items.isEmpty())
+			{
+				this.worldObj.spawnEntityInWorld(new EntityItem(this.worldObj, this.xCoord, this.yCoord, this.zCoord, items.remove(0).getStack()));
+			}
+		}
 	}
 }

@@ -1,15 +1,19 @@
 package com.sci.machinery;
 
 import java.io.File;
+import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.Configuration;
-import com.sci.machinery.block.BlockItemPump;
+import com.sci.machinery.block.BlockPumpTube;
 import com.sci.machinery.block.BlockTube;
-import com.sci.machinery.block.TileItemPump;
+import com.sci.machinery.block.TilePumpTube;
 import com.sci.machinery.block.TileTube;
 import com.sci.machinery.core.CreativeTabSM;
 import com.sci.machinery.core.IProxy;
 import com.sci.machinery.lib.Reference;
+import com.sci.machinery.network.PacketHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -21,7 +25,8 @@ import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 @Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME, version = Reference.MOD_VERSION)
-@NetworkMod(clientSideRequired = true, serverSideRequired = false)
+@NetworkMod(channels =
+{ Reference.CHANNEL_NAME }, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketHandler.class)
 public class SciMachinery
 {
 	@Instance(Reference.MOD_ID)
@@ -31,18 +36,18 @@ public class SciMachinery
 	public static IProxy proxy;
 
 	public static CreativeTabs tab = new CreativeTabSM(CreativeTabs.getNextID(), Reference.MOD_ID);
-	
+
 	public int tubeId;
 	public BlockTube tube;
-	
-	public int itemPumpId;
-	public BlockItemPump itemPump;
-	
+
+	public int pumpTubeId;
+	public BlockPumpTube pumpTube;
+
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent e)
 	{
 		proxy.preInit(e);
-		
+
 		File folder = new File(e.getModConfigurationDirectory(), "sci4me");
 		if(!folder.exists())
 			folder.mkdirs();
@@ -51,7 +56,7 @@ public class SciMachinery
 		{
 			cfg.load();
 			tubeId = cfg.getBlock("tube", 420).getInt();
-			itemPumpId = cfg.getBlock("itemPump", 421).getInt();
+			pumpTubeId = cfg.getBlock("pumpTube", 421).getInt();
 		}
 		finally
 		{
@@ -63,16 +68,21 @@ public class SciMachinery
 	public void init(FMLInitializationEvent e)
 	{
 		proxy.init(e);
-		
+
 		tube = new BlockTube(tubeId);
 		GameRegistry.registerBlock(tube, "SciMachinery_TileTube");
 		GameRegistry.registerTileEntity(TileTube.class, "SciMachinery_TileTube");
-		
-		itemPump = new BlockItemPump(itemPumpId);
-		GameRegistry.registerBlock(itemPump, "SciMachinery_TileItemPump");
-		GameRegistry.registerTileEntity(TileItemPump.class,  "SciMachinery_TileItemPump");
+
+		pumpTube = new BlockPumpTube(pumpTubeId);
+		GameRegistry.registerBlock(pumpTube, "SciMachinery_TilePumpTube");
+		GameRegistry.registerTileEntity(TilePumpTube.class, "SciMachinery_TilePumpTube");
+
+		GameRegistry.addRecipe(new ItemStack(tube, 16), new Object[]
+		{ "sss", "gpg", "sss", 's', Block.stoneSingleSlab, 'g', Block.glass, 'p', Block.pistonBase });
+		GameRegistry.addRecipe(new ItemStack(pumpTube, 4), new Object[]
+		{ "rhr", "hth", "rhr", 'r', Item.redstone, 'h', Block.hopperBlock, 't', tube });
 	}
-	
+
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent e)
 	{

@@ -6,14 +6,18 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.IItemRenderer;
 import org.lwjgl.opengl.GL11;
+import com.sci.machinery.SciMachinery;
+import com.sci.machinery.block.TilePumpTube;
 import com.sci.machinery.block.TileTube;
 import com.sci.machinery.core.ITubeConnectable;
 import com.sci.machinery.core.TravellingItem;
 
-public class RenderTube extends TileEntitySpecialRenderer
+public class RenderTube extends TileEntitySpecialRenderer implements IItemRenderer
 {
 	public static final double OF = 0.4D;
 	public static final double O = 0.2D;
@@ -55,6 +59,13 @@ public class RenderTube extends TileEntitySpecialRenderer
 
 		Tessellator tess = Tessellator.instance;
 		tess.startDrawingQuads();
+
+		GL11.glDisable(GL11.GL_LIGHTING);
+
+		if(tube instanceof TilePumpTube)
+		{
+			tess.setColorRGBA(200, 20, 20, 200);
+		}
 
 		this.bindTexture(new ResourceLocation("scimachinery", "blocks/tube.png"));
 
@@ -196,6 +207,8 @@ public class RenderTube extends TileEntitySpecialRenderer
 				renderSide(i, x, y, z);
 			}
 		}
+
+		GL11.glEnable(GL11.GL_LIGHTING);
 
 		tess.draw();
 
@@ -488,6 +501,333 @@ public class RenderTube extends TileEntitySpecialRenderer
 			tess.addVertex(x + 0, y + 0, z + O - OA);
 			tess.addVertex(x + 0, y - OO, z + O - OA);
 			tess.addVertex(x + 0, y - OO, z + O);
+		}
+	}
+
+	@Override
+	public boolean handleRenderType(ItemStack item, ItemRenderType type)
+	{
+		return true;
+	}
+
+	@Override
+	public boolean shouldUseRenderHelper(ItemRenderType type, ItemStack item, ItemRendererHelper helper)
+	{
+		return true;
+	}
+
+	@Override
+	public void renderItem(ItemRenderType type, ItemStack item, Object... data)
+	{
+		if(type == ItemRenderType.INVENTORY)
+		{
+			GL11.glPushMatrix();
+			double x = 0;
+			double y = 0;
+			double z = 0;
+
+			Tessellator tess = Tessellator.instance;
+			tess.startDrawingQuads();
+
+			GL11.glDisable(GL11.GL_LIGHTING);
+
+			if(item.itemID == SciMachinery.instance.pumpTubeId)
+			{
+				tess.setColorRGBA(200, 20, 20, 200);
+			}
+
+			this.bindTexture(new ResourceLocation("scimachinery", "blocks/tube.png"));
+
+			tess.addVertex(x + 0, y + 0, z + 0);
+			tess.addVertex(x + 0, y + OA, z + 0);
+			tess.addVertex(x + O, y + OA, z + 0);
+			tess.addVertex(x + O, y + 0, z + 0);
+
+			tess.addVertex(x + 0, y + O - OA, z + 0);
+			tess.addVertex(x + 0, y + O, z + 0);
+			tess.addVertex(x + O, y + O, z + 0);
+			tess.addVertex(x + O, y + O - OA, z + 0);
+
+			tess.addVertex(x + 0, y + 0, z + 0);
+			tess.addVertex(x + 0, y + O, z + 0);
+			tess.addVertex(x + OA, y + O, z + 0);
+			tess.addVertex(x + OA, y + 0, z + 0);
+
+			tess.addVertex(x + O - OA, y + 0, z + 0);
+			tess.addVertex(x + O - OA, y + O, z + 0);
+			tess.addVertex(x + O, y + O, z + 0);
+			tess.addVertex(x + O, y + 0, z + 0);
+
+			//
+
+			tess.addVertex(x + 0, y + 0, z + O);
+			tess.addVertex(x + 0, y + OA, z + O);
+			tess.addVertex(x + 0, y + OA, z + 0);
+			tess.addVertex(x + 0, y + 0, z + 0);
+
+			tess.addVertex(x + 0, y + O, z + O);
+			tess.addVertex(x + 0, y + O, z + 0);
+			tess.addVertex(x + 0, y + O - OA, z + 0);
+			tess.addVertex(x + 0, y + O - OA, z + O);
+
+			tess.addVertex(x + 0, y + O, z + OA);
+			tess.addVertex(x + 0, y + O, z + 0);
+			tess.addVertex(x + 0, y + 0, z + 0);
+			tess.addVertex(x + 0, y + 0, z + OA);
+
+			tess.addVertex(x + 0, y + O, z + O);
+			tess.addVertex(x + 0, y + O, z + O - OA);
+			tess.addVertex(x + 0, y + 0, z + O - OA);
+			tess.addVertex(x + 0, y + 0, z + O);
+
+			//
+
+			tess.addVertex(x + O, y + OA, z + 0);
+			tess.addVertex(x + O, y + OA, z + O);
+			tess.addVertex(x + O, y + 0, z + O);
+			tess.addVertex(x + O, y + 0, z + 0);
+
+			tess.addVertex(x + O, y + O, z + 0);
+			tess.addVertex(x + O, y + O, z + O);
+			tess.addVertex(x + O, y + O - OA, z + O);
+			tess.addVertex(x + O, y + O - OA, z + 0);
+
+			tess.addVertex(x + O, y + O, z + 0);
+			tess.addVertex(x + O, y + O, z + OA);
+			tess.addVertex(x + O, y + 0, z + OA);
+			tess.addVertex(x + O, y + 0, z + 0);
+
+			tess.addVertex(x + O, y + O, z + O - OA);
+			tess.addVertex(x + O, y + O, z + O);
+			tess.addVertex(x + O, y + 0, z + O);
+			tess.addVertex(x + O, y + 0, z + O - OA);
+
+			//
+
+			tess.addVertex(x + O, y + OA, z + O);
+			tess.addVertex(x + 0, y + OA, z + O);
+			tess.addVertex(x + 0, y + 0, z + O);
+			tess.addVertex(x + O, y + 0, z + O);
+
+			tess.addVertex(x + O, y + O, z + O);
+			tess.addVertex(x + 0, y + O, z + O);
+			tess.addVertex(x + 0, y + O - OA, z + O);
+			tess.addVertex(x + O, y + O - OA, z + O);
+
+			tess.addVertex(x + OA, y + O, z + O);
+			tess.addVertex(x + 0, y + O, z + O);
+			tess.addVertex(x + 0, y + 0, z + O);
+			tess.addVertex(x + OA, y + 0, z + O);
+
+			tess.addVertex(x + O, y + O, z + O);
+			tess.addVertex(x + O - OA, y + O, z + O);
+			tess.addVertex(x + O - OA, y + 0, z + O);
+			tess.addVertex(x + O, y + 0, z + O);
+			//
+
+			tess.addVertex(x + OA, y + O, z + O);
+			tess.addVertex(x + OA, y + O, z + 0);
+			tess.addVertex(x + 0, y + O, z + 0);
+			tess.addVertex(x + 0, y + O, z + O);
+
+			tess.addVertex(x + 0, y + O, z + O);
+			tess.addVertex(x + O, y + O, z + O);
+			tess.addVertex(x + O, y + O, z + O - OA);
+			tess.addVertex(x + 0, y + O, z + O - OA);
+
+			tess.addVertex(x + 0, y + O, z + 0);
+			tess.addVertex(x + 0, y + O, z + OA);
+			tess.addVertex(x + O, y + O, z + OA);
+			tess.addVertex(x + O, y + O, z + 0);
+
+			tess.addVertex(x + O, y + O, z + O);
+			tess.addVertex(x + O, y + O, z + 0);
+			tess.addVertex(x + O - OA, y + O, z + 0);
+			tess.addVertex(x + O - OA, y + O, z + O);
+
+			//
+
+			tess.addVertex(x + OA, y + 0, z + O);
+			tess.addVertex(x + 0, y + 0, z + O);
+			tess.addVertex(x + 0, y + 0, z + 0);
+			tess.addVertex(x + OA, y + 0, z + 0);
+
+			tess.addVertex(x + 0, y + 0, z + O);
+			tess.addVertex(x + 0, y + 0, z + O - OA);
+			tess.addVertex(x + O, y + 0, z + O - OA);
+			tess.addVertex(x + O, y + 0, z + O);
+
+			tess.addVertex(x + 0, y + 0, z + 0);
+			tess.addVertex(x + O, y + 0, z + 0);
+			tess.addVertex(x + O, y + 0, z + OA);
+			tess.addVertex(x + 0, y + 0, z + OA);
+
+			tess.addVertex(x + O - OA, y + 0, z + O);
+			tess.addVertex(x + O - OA, y + 0, z + 0);
+			tess.addVertex(x + O, y + 0, z + 0);
+			tess.addVertex(x + O, y + 0, z + O);
+
+			renderSide(2, x, y, z);
+			renderSide(3, x, y, z);
+			
+			tess.draw();
+			GL11.glEnable(GL11.GL_LIGHTING);
+			GL11.glPopMatrix();
+		}
+		else
+		{
+			double x = 0;
+			double y = 0.75;
+			double z = 0;
+
+			Tessellator tess = Tessellator.instance;
+			tess.startDrawingQuads();
+
+			GL11.glDisable(GL11.GL_LIGHTING);
+
+			if(item.itemID == SciMachinery.instance.pumpTubeId)
+			{
+				tess.setColorRGBA(200, 20, 20, 200);
+			}
+
+			this.bindTexture(new ResourceLocation("scimachinery", "blocks/tube.png"));
+
+			tess.addVertex(x + 0, y + 0, z + 0);
+			tess.addVertex(x + 0, y + OA, z + 0);
+			tess.addVertex(x + O, y + OA, z + 0);
+			tess.addVertex(x + O, y + 0, z + 0);
+
+			tess.addVertex(x + 0, y + O - OA, z + 0);
+			tess.addVertex(x + 0, y + O, z + 0);
+			tess.addVertex(x + O, y + O, z + 0);
+			tess.addVertex(x + O, y + O - OA, z + 0);
+
+			tess.addVertex(x + 0, y + 0, z + 0);
+			tess.addVertex(x + 0, y + O, z + 0);
+			tess.addVertex(x + OA, y + O, z + 0);
+			tess.addVertex(x + OA, y + 0, z + 0);
+
+			tess.addVertex(x + O - OA, y + 0, z + 0);
+			tess.addVertex(x + O - OA, y + O, z + 0);
+			tess.addVertex(x + O, y + O, z + 0);
+			tess.addVertex(x + O, y + 0, z + 0);
+
+			//
+
+			tess.addVertex(x + 0, y + 0, z + O);
+			tess.addVertex(x + 0, y + OA, z + O);
+			tess.addVertex(x + 0, y + OA, z + 0);
+			tess.addVertex(x + 0, y + 0, z + 0);
+
+			tess.addVertex(x + 0, y + O, z + O);
+			tess.addVertex(x + 0, y + O, z + 0);
+			tess.addVertex(x + 0, y + O - OA, z + 0);
+			tess.addVertex(x + 0, y + O - OA, z + O);
+
+			tess.addVertex(x + 0, y + O, z + OA);
+			tess.addVertex(x + 0, y + O, z + 0);
+			tess.addVertex(x + 0, y + 0, z + 0);
+			tess.addVertex(x + 0, y + 0, z + OA);
+
+			tess.addVertex(x + 0, y + O, z + O);
+			tess.addVertex(x + 0, y + O, z + O - OA);
+			tess.addVertex(x + 0, y + 0, z + O - OA);
+			tess.addVertex(x + 0, y + 0, z + O);
+
+			//
+
+			tess.addVertex(x + O, y + OA, z + 0);
+			tess.addVertex(x + O, y + OA, z + O);
+			tess.addVertex(x + O, y + 0, z + O);
+			tess.addVertex(x + O, y + 0, z + 0);
+
+			tess.addVertex(x + O, y + O, z + 0);
+			tess.addVertex(x + O, y + O, z + O);
+			tess.addVertex(x + O, y + O - OA, z + O);
+			tess.addVertex(x + O, y + O - OA, z + 0);
+
+			tess.addVertex(x + O, y + O, z + 0);
+			tess.addVertex(x + O, y + O, z + OA);
+			tess.addVertex(x + O, y + 0, z + OA);
+			tess.addVertex(x + O, y + 0, z + 0);
+
+			tess.addVertex(x + O, y + O, z + O - OA);
+			tess.addVertex(x + O, y + O, z + O);
+			tess.addVertex(x + O, y + 0, z + O);
+			tess.addVertex(x + O, y + 0, z + O - OA);
+
+			//
+
+			tess.addVertex(x + O, y + OA, z + O);
+			tess.addVertex(x + 0, y + OA, z + O);
+			tess.addVertex(x + 0, y + 0, z + O);
+			tess.addVertex(x + O, y + 0, z + O);
+
+			tess.addVertex(x + O, y + O, z + O);
+			tess.addVertex(x + 0, y + O, z + O);
+			tess.addVertex(x + 0, y + O - OA, z + O);
+			tess.addVertex(x + O, y + O - OA, z + O);
+
+			tess.addVertex(x + OA, y + O, z + O);
+			tess.addVertex(x + 0, y + O, z + O);
+			tess.addVertex(x + 0, y + 0, z + O);
+			tess.addVertex(x + OA, y + 0, z + O);
+
+			tess.addVertex(x + O, y + O, z + O);
+			tess.addVertex(x + O - OA, y + O, z + O);
+			tess.addVertex(x + O - OA, y + 0, z + O);
+			tess.addVertex(x + O, y + 0, z + O);
+
+			//
+
+			tess.addVertex(x + OA, y + O, z + O);
+			tess.addVertex(x + OA, y + O, z + 0);
+			tess.addVertex(x + 0, y + O, z + 0);
+			tess.addVertex(x + 0, y + O, z + O);
+
+			tess.addVertex(x + 0, y + O, z + O);
+			tess.addVertex(x + O, y + O, z + O);
+			tess.addVertex(x + O, y + O, z + O - OA);
+			tess.addVertex(x + 0, y + O, z + O - OA);
+
+			tess.addVertex(x + 0, y + O, z + 0);
+			tess.addVertex(x + 0, y + O, z + OA);
+			tess.addVertex(x + O, y + O, z + OA);
+			tess.addVertex(x + O, y + O, z + 0);
+
+			tess.addVertex(x + O, y + O, z + O);
+			tess.addVertex(x + O, y + O, z + 0);
+			tess.addVertex(x + O - OA, y + O, z + 0);
+			tess.addVertex(x + O - OA, y + O, z + O);
+
+			//
+
+			tess.addVertex(x + OA, y + 0, z + O);
+			tess.addVertex(x + 0, y + 0, z + O);
+			tess.addVertex(x + 0, y + 0, z + 0);
+			tess.addVertex(x + OA, y + 0, z + 0);
+
+			tess.addVertex(x + 0, y + 0, z + O);
+			tess.addVertex(x + 0, y + 0, z + O - OA);
+			tess.addVertex(x + O, y + 0, z + O - OA);
+			tess.addVertex(x + O, y + 0, z + O);
+
+			tess.addVertex(x + 0, y + 0, z + 0);
+			tess.addVertex(x + O, y + 0, z + 0);
+			tess.addVertex(x + O, y + 0, z + OA);
+			tess.addVertex(x + 0, y + 0, z + OA);
+
+			tess.addVertex(x + O - OA, y + 0, z + O);
+			tess.addVertex(x + O - OA, y + 0, z + 0);
+			tess.addVertex(x + O, y + 0, z + 0);
+			tess.addVertex(x + O, y + 0, z + O);
+
+			renderSide(2, x, y, z);
+			renderSide(3, x, y, z);
+
+			tess.draw();
+
+			GL11.glEnable(GL11.GL_LIGHTING);
 		}
 	}
 }

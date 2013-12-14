@@ -3,17 +3,13 @@ package com.sci.machinery.block;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import com.sci.machinery.SciMachinery;
 import com.sci.machinery.core.ITubeConnectable;
-import com.sci.machinery.core.TravellingItem;
 
 public class BlockTube extends BlockContainer
 {
@@ -106,11 +102,13 @@ public class BlockTube extends BlockContainer
 		}
 	}
 
-	@Override
-	public boolean onBlockActivated(World par1World, int par2, int par3, int par4, EntityPlayer par5EntityPlayer, int par6, float par7, float par8, float par9)
+	public void breakBlock(World par1World, int par2, int par3, int par4, int par5, int par6)
 	{
-		TileTube tube = (TileTube) par1World.getBlockTileEntity(par2, par3, par4);
-		tube.addItem(new TravellingItem(new ItemStack(Item.diamond)));
-		return true;
+		super.breakBlock(par1World, par2, par3, par4, par5, par6);
+		TileEntity t = par1World.getBlockTileEntity(par2, par3, par4);
+		if(t instanceof TileTube)
+		{
+			((TileTube)t).breakTube();
+		}
 	}
 }

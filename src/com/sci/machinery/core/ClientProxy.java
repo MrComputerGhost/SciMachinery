@@ -1,8 +1,9 @@
 package com.sci.machinery.core;
 
-import com.sci.machinery.block.TileItemPump;
+import net.minecraftforge.client.MinecraftForgeClient;
+import com.sci.machinery.SciMachinery;
+import com.sci.machinery.block.TilePumpTube;
 import com.sci.machinery.block.TileTube;
-import com.sci.machinery.render.RenderItemPump;
 import com.sci.machinery.render.RenderTube;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -11,6 +12,8 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 
 public class ClientProxy extends CommonProxy
 {
+	public RenderTube tubeRenderer;
+
 	@Override
 	public void preInit(FMLPreInitializationEvent e)
 	{
@@ -21,8 +24,12 @@ public class ClientProxy extends CommonProxy
 	public void init(FMLInitializationEvent e)
 	{
 		super.init(e);
-		ClientRegistry.bindTileEntitySpecialRenderer(TileTube.class, new RenderTube());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileItemPump.class, new RenderItemPump());
+		tubeRenderer = new RenderTube();
+		ClientRegistry.bindTileEntitySpecialRenderer(TileTube.class, tubeRenderer);
+		ClientRegistry.bindTileEntitySpecialRenderer(TilePumpTube.class, tubeRenderer);
+		
+		MinecraftForgeClient.registerItemRenderer(SciMachinery.instance.tubeId, tubeRenderer);
+		MinecraftForgeClient.registerItemRenderer(SciMachinery.instance.pumpTubeId, tubeRenderer);
 	}
 
 	@Override

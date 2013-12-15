@@ -10,6 +10,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityHopper;
 import net.minecraft.world.IBlockAccess;
+import net.minecraftforge.common.ForgeDirection;
 import com.sci.machinery.core.ITubeConnectable;
 import com.sci.machinery.core.Speed;
 import com.sci.machinery.core.TravellingItem;
@@ -59,7 +60,7 @@ public class TileTube extends TileEntity implements ITubeConnectable
 							{
 								if(t[i] instanceof IInventory)
 								{
-									ItemStack s = TileEntityHopper.insertStack((IInventory) t[i], items.remove(0).getStack(), 0);
+									ItemStack s = TileEntityHopper.insertStack((IInventory) t[i], items.remove(0).getStack(), i);
 									if(s != null)
 									{
 										if(!this.worldObj.isRemote)
@@ -78,7 +79,7 @@ public class TileTube extends TileEntity implements ITubeConnectable
 								{
 									if(i != items.get(0).getLastDir() || items.get(0).getLastDir() == -1 && ((ITubeConnectable) t[i]).canAcceptItems())
 									{
-										items.get(0).setLastDir(reverse(i));
+										items.get(0).setLastDir(i);
 										((ITubeConnectable) t[i]).addItem(items.remove(0));
 										sent = false;
 									}
@@ -110,38 +111,6 @@ public class TileTube extends TileEntity implements ITubeConnectable
 		this.speed = speed;
 	}
 
-	protected int reverse(int i)
-	{
-		switch (i)
-		{
-		case 0:
-		{
-			return 1;
-		}
-		case 1:
-		{
-			return 0;
-		}
-		case 2:
-		{
-			return 3;
-		}
-		case 3:
-		{
-			return 2;
-		}
-		case 4:
-		{
-			return 5;
-		}
-		case 5:
-		{
-			return 4;
-		}
-		}
-		return i;
-	}
-
 	protected boolean allNull(TileEntity[] t)
 	{
 		boolean ret = true;
@@ -154,12 +123,10 @@ public class TileTube extends TileEntity implements ITubeConnectable
 	public TileEntity[] getAdjacentTiles(IBlockAccess world, int x, int y, int z)
 	{
 		TileEntity[] t = new TileEntity[6];
-		t[4] = world.getBlockTileEntity(x + 1, y, z);
-		t[5] = world.getBlockTileEntity(x - 1, y, z);
-		t[1] = world.getBlockTileEntity(x, y + 1, z);
-		t[0] = world.getBlockTileEntity(x, y - 1, z);
-		t[2] = world.getBlockTileEntity(x, y, z + 1);
-		t[3] = world.getBlockTileEntity(x, y, z - 1);
+		for(int i = 0; i < t.length; i++)
+		{
+			t[i] = world.getBlockTileEntity(x + ForgeDirection.getOrientation(i).offsetX, y + ForgeDirection.getOrientation(i).offsetY, z + ForgeDirection.getOrientation(i).offsetZ);
+		}
 		return t;
 	}
 

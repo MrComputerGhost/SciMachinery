@@ -263,7 +263,7 @@ public class RenderTube extends TileEntitySpecialRenderer implements IItemRender
 	{
 		Tessellator tess = Tessellator.instance;
 
-		if(side == 5)
+		if(side == 4)
 		{
 			tess.addVertex(x + 0, y + 0, z + 0);
 			tess.addVertex(x - OO, y + 0, z + 0);
@@ -308,7 +308,7 @@ public class RenderTube extends TileEntitySpecialRenderer implements IItemRender
 
 		//
 
-		if(side == 4)
+		if(side == 5)
 		{
 			tess.addVertex(x + O, y + 0, z + 0);
 			tess.addVertex(x + O, y + OA, z + 0);
@@ -353,7 +353,7 @@ public class RenderTube extends TileEntitySpecialRenderer implements IItemRender
 
 		//
 
-		if(side == 3)
+		if(side == 2)
 		{
 			tess.addVertex(x + 0, y + 0, z - OO);
 			tess.addVertex(x + 0, y + 0, z + 0);
@@ -398,7 +398,7 @@ public class RenderTube extends TileEntitySpecialRenderer implements IItemRender
 
 		//
 
-		if(side == 2)
+		if(side == 3)
 		{
 			tess.addVertex(x + 0, y + 0, z + O + OO);
 			tess.addVertex(x + 0, y + OA, z + O + OO);

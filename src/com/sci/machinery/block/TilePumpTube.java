@@ -5,6 +5,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.common.ForgeDirection;
 import com.sci.machinery.core.ITubeConnectable;
 import com.sci.machinery.core.TravellingItem;
 import com.sci.machinery.network.PacketAddItem;
@@ -42,7 +43,7 @@ public class TilePumpTube extends TileTube implements ITubeConnectable
 							{
 								if(i != items.get(0).getLastDir() || items.get(0).getLastDir() == -1 && ((ITubeConnectable) t[i]).canAcceptItems())
 								{
-									items.get(0).setLastDir(reverse(i));
+									items.get(0).setLastDir(i);
 									((ITubeConnectable) t[i]).addItem(items.remove(0));
 									sent = false;
 								}
@@ -64,42 +65,39 @@ public class TilePumpTube extends TileTube implements ITubeConnectable
 				for(int i = 0; i < t.length; i++)
 				{
 					TileEntity tile = t[i];
-					if(tile instanceof IInventory)
+					if(tile instanceof ISidedInventory)
 					{
-						if(tile instanceof ISidedInventory)
-						{
-							ISidedInventory inv = (ISidedInventory) tile;
-							int[] aint = inv.getAccessibleSlotsFromSide(i);
+						ISidedInventory inv = (ISidedInventory) tile;
+						int[] aint = inv.getAccessibleSlotsFromSide(ForgeDirection.OPPOSITES[i]);
 
-							for(int j = 0; j < aint.length; ++j)
+						for(int j = 0; j < aint.length; ++j)
+						{
+							ItemStack stack = inv.getStackInSlot(aint[j]);
+							if(stack != null && inv.canExtractItem(aint[j], stack, ForgeDirection.OPPOSITES[j]))
 							{
-								ItemStack stack = inv.getStackInSlot(j);
-								if(stack != null)
+								inv.decrStackSize(j, stack.stackSize);
+								if(!worldObj.isRemote)
 								{
-									inv.decrStackSize(j, stack.stackSize);
-									if(!worldObj.isRemote)
-									{
-										PacketDispatcher.sendPacketToAllAround(xCoord, yCoord, zCoord, 128, worldObj.provider.dimensionId, PacketTypeHandler.populatePacket(new PacketAddItem(xCoord, yCoord, zCoord, stack.itemID, stack.stackSize)));
-										this.addItem(new TravellingItem(stack));
-									}
+									PacketDispatcher.sendPacketToAllAround(xCoord, yCoord, zCoord, 128, worldObj.provider.dimensionId, PacketTypeHandler.populatePacket(new PacketAddItem(xCoord, yCoord, zCoord, stack.itemID, stack.stackSize)));
+									this.addItem(new TravellingItem(stack));
 								}
 							}
 						}
-						else
-						{
-							int j = ((IInventory) tile).getSizeInventory();
+					}
+					else if(tile instanceof IInventory)
+					{
+						int j = ((IInventory) tile).getSizeInventory();
 
-							for(int k = 0; k < j; ++k)
+						for(int k = 0; k < j; ++k)
+						{
+							ItemStack stack = ((IInventory) tile).getStackInSlot(k);
+							if(stack != null)
 							{
-								ItemStack stack = ((IInventory) tile).getStackInSlot(k);
-								if(stack != null)
+								((IInventory) tile).decrStackSize(k, stack.stackSize);
+								if(!worldObj.isRemote)
 								{
-									((IInventory) tile).decrStackSize(k, stack.stackSize);
-									if(!worldObj.isRemote)
-									{
-										PacketDispatcher.sendPacketToAllAround(xCoord, yCoord, zCoord, 128, worldObj.provider.dimensionId, PacketTypeHandler.populatePacket(new PacketAddItem(xCoord, yCoord, zCoord, stack.itemID, stack.stackSize)));
-										this.addItem(new TravellingItem(stack));
-									}
+									PacketDispatcher.sendPacketToAllAround(xCoord, yCoord, zCoord, 128, worldObj.provider.dimensionId, PacketTypeHandler.populatePacket(new PacketAddItem(xCoord, yCoord, zCoord, stack.itemID, stack.stackSize)));
+									this.addItem(new TravellingItem(stack));
 								}
 							}
 						}

@@ -5,7 +5,11 @@ import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.client.event.sound.PlayStreamingEvent;
+import net.minecraftforge.client.event.sound.SoundLoadEvent;
 import net.minecraftforge.common.Configuration;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.ForgeSubscribe;
 import com.sci.machinery.block.BlockDetectorTube;
 import com.sci.machinery.block.BlockPumpTube;
 import com.sci.machinery.block.BlockTube;
@@ -14,8 +18,10 @@ import com.sci.machinery.block.TilePumpTube;
 import com.sci.machinery.block.TileTube;
 import com.sci.machinery.core.CreativeTabSM;
 import com.sci.machinery.core.IProxy;
+import com.sci.machinery.item.ItemEasterEgg;
 import com.sci.machinery.lib.Reference;
 import com.sci.machinery.network.PacketHandler;
+import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -25,7 +31,6 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.common.registry.LanguageRegistry;
 
 @Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME, version = Reference.MOD_VERSION)
 @NetworkMod(channels =
@@ -48,6 +53,9 @@ public class SciMachinery
 
 	public int detectorTubeId;
 	public BlockDetectorTube detectorTube;
+	
+	public int easterEggId;
+	public ItemEasterEgg easterEgg;
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent e)
@@ -64,6 +72,8 @@ public class SciMachinery
 			tubeId = cfg.getBlock("tube", 420).getInt();
 			pumpTubeId = cfg.getBlock("pumpTube", 421).getInt();
 			detectorTubeId = cfg.getBlock("detectorTube", 422).getInt();
+			
+			easterEggId = cfg.getItem("easterEgg", 423).getInt();
 		}
 		finally
 		{
@@ -76,6 +86,8 @@ public class SciMachinery
 	{
 		proxy.init(e);
 
+		easterEgg = new ItemEasterEgg(easterEggId);
+		
 		tube = new BlockTube(tubeId);
 		GameRegistry.registerBlock(tube, "SciMachinery_TileTube");
 		GameRegistry.registerTileEntity(TileTube.class, "SciMachinery_TileTube");
@@ -92,7 +104,7 @@ public class SciMachinery
 		{ "sss", "gpg", "sss", 's', Block.stoneSingleSlab, 'g', Block.glass, 'p', Block.pistonBase });
 		GameRegistry.addRecipe(new ItemStack(pumpTube, 4), new Object[]
 		{ "rhr", "hth", "rhr", 'r', Item.redstone, 'h', Block.hopperBlock, 't', tube });
-		GameRegistry.addRecipe(new ItemStack(detectorTube, 3), new Object[]
+		GameRegistry.addRecipe(new ItemStack(detectorTube, 3), new Object[]	
 		{ "rgr", "ttt", "rgr", 'r', Item.redstone, 'g', Item.ingotGold, 't', tube });
 	}
 
@@ -100,5 +112,20 @@ public class SciMachinery
 	public void postInit(FMLPostInitializationEvent e)
 	{
 		proxy.postInit(e);
+	}
+
+	@ForgeSubscribe
+	public void onPlayStreaming(PlayStreamingEvent event)
+	{
+		if(event.name.equals("chicken"))
+		{
+			FMLClientHandler.instance().getClient().sndManager.playStreaming("scimachinery:chicken", event.x + 0.5F, event.y + 0.5F, event.z + 0.5F);
+		}
+	}
+
+	@ForgeSubscribe
+	public void loadSounds(SoundLoadEvent e)
+	{
+		e.manager.soundPoolStreaming.addSound("scimachinery:chicken.ogg");
 	}
 }

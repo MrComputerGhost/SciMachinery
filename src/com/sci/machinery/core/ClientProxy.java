@@ -1,6 +1,7 @@
 package com.sci.machinery.core;
 
 import net.minecraftforge.client.MinecraftForgeClient;
+import net.minecraftforge.common.MinecraftForge;
 import com.sci.machinery.SciMachinery;
 import com.sci.machinery.block.TileDetectorTube;
 import com.sci.machinery.block.TilePumpTube;
@@ -25,6 +26,9 @@ public class ClientProxy extends CommonProxy
 	public void init(FMLInitializationEvent e)
 	{
 		super.init(e);
+		
+		MinecraftForge.EVENT_BUS.register(SciMachinery.instance);
+		
 		tubeRenderer = new RenderTube();
 		ClientRegistry.bindTileEntitySpecialRenderer(TileTube.class, tubeRenderer);
 		ClientRegistry.bindTileEntitySpecialRenderer(TilePumpTube.class, tubeRenderer);

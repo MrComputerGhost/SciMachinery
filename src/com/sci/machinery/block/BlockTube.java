@@ -1,7 +1,6 @@
 package com.sci.machinery.block;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.tileentity.TileEntity;
@@ -9,9 +8,10 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import com.sci.machinery.SciMachinery;
+import com.sci.machinery.core.BlockSci;
 import com.sci.machinery.core.ITubeConnectable;
 
-public class BlockTube extends BlockContainer
+public class BlockTube extends BlockSci
 {
 	public BlockTube(int id)
 	{
@@ -63,10 +63,10 @@ public class BlockTube extends BlockContainer
 	@Override
 	public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z)
 	{
-		TileTube tube = (TileTube) world.getBlockTileEntity(x, y, z);
-		if(tube != null)
+		TileEntity tube = world.getBlockTileEntity(x, y, z);
+		if(tube != null && tube instanceof TileTube)
 		{
-			TileEntity[] t = tube.getAdjacentTiles(world, x, y, z);
+			TileEntity[] t = ((TileTube) tube).getAdjacentTiles(world, x, y, z);
 			float minX = 0.4f;
 			float minY = 0.4f;
 			float minZ = 0.4f;
@@ -84,19 +84,19 @@ public class BlockTube extends BlockContainer
 			}
 			if(t[2] != null && t[2] instanceof ITubeConnectable || t[2] instanceof IInventory)
 			{
-				maxZ = 1.0f;
+				minZ = 0.0f;
 			}
 			if(t[3] != null && t[3] instanceof ITubeConnectable || t[3] instanceof IInventory)
 			{
-				minZ = 0.0f;
+				maxZ = 1.0f;
 			}
 			if(t[4] != null && t[4] instanceof ITubeConnectable || t[4] instanceof IInventory)
 			{
-				maxX = 1.0f;
+				minX = 0.0f;
 			}
 			if(t[5] != null && t[5] instanceof ITubeConnectable || t[5] instanceof IInventory)
 			{
-				minX = 0.0f;
+				maxX = 1.0f;
 			}
 
 			this.setBlockBounds(minX, minY, minZ, maxX, maxY, maxZ);
@@ -108,7 +108,7 @@ public class BlockTube extends BlockContainer
 		TileEntity t = par1World.getBlockTileEntity(par2, par3, par4);
 		if(t instanceof TileTube)
 		{
-			((TileTube)t).breakTube();
+			((TileTube) t).breakTube();
 		}
 		super.breakBlock(par1World, par2, par3, par4, par5, par6);
 	}

@@ -1,5 +1,6 @@
 package com.sci.machinery.core;
 
+import com.sci.machinery.SciMachinery;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 
@@ -12,7 +13,9 @@ public class CreativeTabSM extends CreativeTabs
 
 	@Override
 	public int getTabIconItemIndex()
-    {
-        return Item.redstone.itemID; //TODO icon
-    }
+	{
+		if(SciMachinery.instance.tube != null)
+			return SciMachinery.instance.tube.blockID;
+		return 0;
+	}
 }

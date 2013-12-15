@@ -10,14 +10,10 @@ import net.minecraftforge.client.event.sound.PlayStreamingEvent;
 import net.minecraftforge.client.event.sound.SoundLoadEvent;
 import net.minecraftforge.common.ChestGenHooks;
 import net.minecraftforge.common.Configuration;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeSubscribe;
-import com.sci.machinery.block.BlockDetectorTube;
-import com.sci.machinery.block.BlockPumpTube;
 import com.sci.machinery.block.BlockTube;
-import com.sci.machinery.block.TileDetectorTube;
-import com.sci.machinery.block.TilePumpTube;
 import com.sci.machinery.block.TileTube;
+import com.sci.machinery.block.tube.Tube;
 import com.sci.machinery.core.CreativeTabSM;
 import com.sci.machinery.core.IProxy;
 import com.sci.machinery.item.ItemEasterEgg;
@@ -54,10 +50,10 @@ public class SciMachinery
 	public BlockTube tube;	
 
 	public int pumpTubeId;		
-	public BlockPumpTube pumpTube;
+	public BlockTube pumpTube;
 		
 	public int detectorTubeId;	
-	public BlockDetectorTube detectorTube;
+	public BlockTube detectorTube;
 	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent e)
@@ -92,17 +88,17 @@ public class SciMachinery
 		
 		ChestGenHooks.addItem(ChestGenHooks.DUNGEON_CHEST, new WeightedRandomChestContent(new ItemStack(easterEgg), 1, 1, 1));
 		
-		tube = new BlockTube(tubeId);
-		GameRegistry.registerBlock(tube, "SciMachinery_TileTube");
 		GameRegistry.registerTileEntity(TileTube.class, "SciMachinery_TileTube");
+		
+		tube = new BlockTube(tubeId, Tube.NORMAL);
+		GameRegistry.registerBlock(tube, "SciMachinery_TileTube");
 
-		pumpTube = new BlockPumpTube(pumpTubeId);
+		pumpTube = new BlockTube(pumpTubeId, Tube.PUMP);
+		pumpTube.setUnlocalizedName("pumpTube");
 		GameRegistry.registerBlock(pumpTube, "SciMachinery_TilePumpTube");
-		GameRegistry.registerTileEntity(TilePumpTube.class, "SciMachinery_TilePumpTube");
 
-		detectorTube = new BlockDetectorTube(detectorTubeId);
+		detectorTube = new BlockTube(detectorTubeId, Tube.DETECTOR);
 		GameRegistry.registerBlock(detectorTube, "SciMachinery_TileDetectorTube");
-		GameRegistry.registerTileEntity(TileDetectorTube.class, "SciMachinery_TileDetectorTube");
 
 		GameRegistry.addRecipe(new ItemStack(tube, 16), new Object[]
 		{ "sss", "gpg", "sss", 's', Block.stoneSingleSlab, 'g', Block.glass, 'p', Block.pistonBase });

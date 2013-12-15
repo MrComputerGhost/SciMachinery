@@ -12,11 +12,13 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.IItemRenderer;
 import org.lwjgl.opengl.GL11;
 import com.sci.machinery.SciMachinery;
-import com.sci.machinery.block.TileDetectorTube;
-import com.sci.machinery.block.TilePumpTube;
 import com.sci.machinery.block.TileTube;
-import com.sci.machinery.core.ITubeConnectable;
-import com.sci.machinery.core.TravellingItem;
+import com.sci.machinery.block.tube.ITubeConnectable;
+import com.sci.machinery.block.tube.TravellingItem;
+import com.sci.machinery.block.tube.TubeDetector;
+import com.sci.machinery.block.tube.TubePump;
+import com.sci.machinery.core.BlockCoord;
+import com.sci.machinery.core.Utils;
 
 public class RenderTube extends TileEntitySpecialRenderer implements IItemRenderer
 {
@@ -197,7 +199,7 @@ public class RenderTube extends TileEntitySpecialRenderer implements IItemRender
 		tess.addVertex(x + O, y + 0, z + 0);
 		tess.addVertex(x + O, y + 0, z + O);
 
-		TileEntity[] tiles = tube.getAdjacentTiles(tube.worldObj, (int) tube.xCoord, (int) tube.yCoord, (int) tube.zCoord);
+		TileEntity[] tiles = Utils.getAdjacentTiles(tube.worldObj, new BlockCoord((int) tube.xCoord, (int) tube.yCoord, (int) tube.zCoord));
 		for(int i = 0; i < 6; i++)
 		{
 			if(tiles[i] instanceof ITubeConnectable || tiles[i] instanceof IInventory)
@@ -216,15 +218,15 @@ public class RenderTube extends TileEntitySpecialRenderer implements IItemRender
 		}
 	}
 
-	private void setColor(TileEntity t)
+	private void setColor(TileTube t)
 	{
-		if(t instanceof TilePumpTube)
+		if(t.getTube() instanceof TubePump)
 		{
 			setColor(SciMachinery.instance.pumpTubeId, 0);
 		}
-		else if(t instanceof TileDetectorTube)
+		else if(t.getTube() instanceof TubeDetector)
 		{
-			setColor(SciMachinery.instance.detectorTubeId, ((TileDetectorTube) t).isPowering() ? 1 : 0);
+			setColor(SciMachinery.instance.detectorTubeId, ((TileTube) t).isPowering() ? 1 : 0);
 		}
 	}
 

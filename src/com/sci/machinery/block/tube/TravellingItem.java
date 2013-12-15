@@ -1,33 +1,30 @@
-package com.sci.machinery.core;
+package com.sci.machinery.block.tube;
 
 import net.minecraft.item.ItemStack;
+import com.sci.machinery.core.BlockCoord;
 
 public class TravellingItem
 {
 	private ItemStack stack;
 	private float rotation;
-	private int lastDir = -1;
-	
+	private BlockCoord lastCoord;
+
 	public TravellingItem(ItemStack stack)
 	{
 		if(stack == null)
 			throw new NullPointerException();
 		this.stack = stack;
+		lastCoord = new BlockCoord(0, 0, 0);
 	}
-	
+
 	public float getRotation()
 	{
 		return rotation;
 	}
-	
-	public int getLastDir()
-	{
-		return lastDir;
-	}
 
-	public void setLastDir(int lastDir)
+	public BlockCoord getLastCoord()
 	{
-		this.lastDir = lastDir;
+		return lastCoord;
 	}
 
 	public void setRotation(float rotation)
@@ -43,5 +40,10 @@ public class TravellingItem
 	public void setStack(ItemStack stack)
 	{
 		this.stack = stack;
+	}
+
+	public void setLastCoord(BlockCoord lastCoord)
+	{
+		this.lastCoord = lastCoord;
 	}
 }

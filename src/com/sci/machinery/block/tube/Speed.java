@@ -1,4 +1,4 @@
-package com.sci.machinery.core;
+package com.sci.machinery.block.tube;
 
 public enum Speed
 {

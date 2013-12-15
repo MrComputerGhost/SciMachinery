@@ -3,14 +3,14 @@ package com.sci.machinery.network;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.tileentity.TileEntity;
 import com.sci.machinery.block.TileTube;
-import com.sci.machinery.core.TravellingItem;
+import com.sci.machinery.block.tube.TravellingItem;
+import com.sci.machinery.core.BlockCoord;
 import cpw.mods.fml.common.network.Player;
 
 public class PacketAddItem extends PacketSci
@@ -63,7 +63,7 @@ public class PacketAddItem extends PacketSci
 			TileEntity t = thePlayer.worldObj.getBlockTileEntity(x, y, z);
 			if(t != null && t instanceof TileTube)
 			{
-				((TileTube) t).addItem(new TravellingItem(new ItemStack(Item.itemsList[id], count)));
+				((TileTube) t).addItem(new TravellingItem(new ItemStack(Item.itemsList[id], count)), null);
 			}
 		}
 	}

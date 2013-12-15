@@ -8,14 +8,20 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import com.sci.machinery.SciMachinery;
+import com.sci.machinery.block.tube.ITubeConnectable;
+import com.sci.machinery.block.tube.Tube;
+import com.sci.machinery.core.BlockCoord;
 import com.sci.machinery.core.BlockSci;
-import com.sci.machinery.core.ITubeConnectable;
+import com.sci.machinery.core.Utils;
 
 public class BlockTube extends BlockSci
 {
-	public BlockTube(int id)
+	private Class<? extends Tube> tubeClazz;
+
+	public BlockTube(int id, Class<? extends Tube> tubeClazz)
 	{
 		super(id, Material.iron);
+		this.tubeClazz = tubeClazz;
 		this.setCreativeTab(SciMachinery.tab);
 		this.setHardness(0.7F);
 		this.setStepSound(Block.soundMetalFootstep);
@@ -23,9 +29,36 @@ public class BlockTube extends BlockSci
 	}
 
 	@Override
+	public int getLightValue(IBlockAccess world, int x, int y, int z)
+	{
+		return world.getBlockMetadata(x, y, z) == 1 ? 3 : 0;
+	}
+	
+	@Override
+	public int isProvidingStrongPower(IBlockAccess par1IBlockAccess, int par2, int par3, int par4, int par5)
+	{
+		TileEntity t = par1IBlockAccess.getBlockTileEntity(par2, par3, par4);
+		if(t != null && t instanceof TileTube) { return ((TileTube) t).isPowering() ? 15 : 0; }
+		return 0;
+	}
+
+	@Override
+	public int isProvidingWeakPower(IBlockAccess par1IBlockAccess, int par2, int par3, int par4, int par5)
+	{
+		return isProvidingStrongPower(par1IBlockAccess, par2, par3, par4, par5);
+	}
+	
+	@Override
 	public TileEntity createNewTileEntity(World world)
 	{
-		return new TileTube();
+		try
+		{
+			return new TileTube(tubeClazz.newInstance());
+		}
+		catch(Exception e)
+		{
+		}
+		return null;
 	}
 
 	@Override
@@ -66,7 +99,8 @@ public class BlockTube extends BlockSci
 		TileEntity tube = world.getBlockTileEntity(x, y, z);
 		if(tube != null && tube instanceof TileTube)
 		{
-			TileEntity[] t = ((TileTube) tube).getAdjacentTiles(world, x, y, z);
+			TileEntity[] t = Utils.getAdjacentTiles(world, new BlockCoord(x, y, z));
+			
 			float minX = 0.4f;
 			float minY = 0.4f;
 			float minZ = 0.4f;

@@ -114,7 +114,7 @@ public class TubeNormal extends Tube
 		}
 		if(sender != null)
 		{
-			item.setLastCoord(Utils.blockCoord(tile));
+			item.setLastCoord(Utils.blockCoord(sender));
 		}
 		items.add(item);
 	}

@@ -21,7 +21,7 @@ public class TileTube extends TileEntity implements ITubeConnectable
 {
 	protected List<TravellingItem> items;
 	private int timer;
-	protected final Speed speed;
+	protected Speed speed;
 
 	public TileTube()
 	{
@@ -94,6 +94,16 @@ public class TileTube extends TileEntity implements ITubeConnectable
 				}
 			}
 		}
+	}
+
+	public Speed getSpeed()
+	{
+		return speed;
+	}
+
+	public void setSpeed(Speed speed)
+	{
+		this.speed = speed;
 	}
 
 	protected int reverse(int i)

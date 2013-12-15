@@ -12,6 +12,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.IItemRenderer;
 import org.lwjgl.opengl.GL11;
 import com.sci.machinery.SciMachinery;
+import com.sci.machinery.block.TileDetectorTube;
 import com.sci.machinery.block.TilePumpTube;
 import com.sci.machinery.block.TileTube;
 import com.sci.machinery.core.ITubeConnectable;
@@ -57,15 +58,12 @@ public class RenderTube extends TileEntitySpecialRenderer implements IItemRender
 		y += OF;
 		z += OF;
 
+		GL11.glDisable(GL11.GL_LIGHTING);
+		
 		Tessellator tess = Tessellator.instance;
 		tess.startDrawingQuads();
 
-		GL11.glDisable(GL11.GL_LIGHTING);
-
-		if(tube instanceof TilePumpTube)
-		{
-			tess.setColorRGBA(200, 20, 20, 200);
-		}
+		setColor(tube);
 
 		this.bindTexture(new ResourceLocation("scimachinery", "blocks/tube.png"));
 
@@ -208,13 +206,43 @@ public class RenderTube extends TileEntitySpecialRenderer implements IItemRender
 			}
 		}
 
-		GL11.glEnable(GL11.GL_LIGHTING);
-
 		tess.draw();
+		
+		GL11.glEnable(GL11.GL_LIGHTING);
 
 		for(TravellingItem item : tube.getItems())
 		{
 			renderItem(item, x, y, z);
+		}
+	}
+
+	private void setColor(TileEntity t)
+	{
+		if(t instanceof TilePumpTube)
+		{
+			setColor(SciMachinery.instance.pumpTubeId, 0);
+		}
+		else if(t instanceof TileDetectorTube)
+		{
+			setColor(SciMachinery.instance.detectorTubeId, ((TileDetectorTube)t).isPowering() ? 1 : 0);
+		}
+	}
+
+	private void setColor(int id, int b)
+	{
+		Tessellator tess = Tessellator.instance;
+		if(id == SciMachinery.instance.pumpTubeId)
+		{
+			tess.setColorRGBA(200, 20, 20, 150);
+		}
+		else if(id == SciMachinery.instance.detectorTubeId)
+		{
+			if(b == 0)
+				tess.setColorRGBA(200, 200, 20, 150);
+			else if(b == 1)
+			{
+				tess.setColorRGBA(250, 250, 20, 150);
+			}
 		}
 	}
 
@@ -531,10 +559,7 @@ public class RenderTube extends TileEntitySpecialRenderer implements IItemRender
 
 			GL11.glDisable(GL11.GL_LIGHTING);
 
-			if(item.itemID == SciMachinery.instance.pumpTubeId)
-			{
-				tess.setColorRGBA(200, 20, 20, 200);
-			}
+			setColor(item.itemID, 0);
 
 			this.bindTexture(new ResourceLocation("scimachinery", "blocks/tube.png"));
 
@@ -669,7 +694,7 @@ public class RenderTube extends TileEntitySpecialRenderer implements IItemRender
 
 			renderSide(2, x, y, z);
 			renderSide(3, x, y, z);
-			
+
 			tess.draw();
 			GL11.glEnable(GL11.GL_LIGHTING);
 			GL11.glPopMatrix();
@@ -685,11 +710,8 @@ public class RenderTube extends TileEntitySpecialRenderer implements IItemRender
 
 			GL11.glDisable(GL11.GL_LIGHTING);
 
-			if(item.itemID == SciMachinery.instance.pumpTubeId)
-			{
-				tess.setColorRGBA(200, 20, 20, 200);
-			}
-
+			setColor(item.itemID, 0);
+			
 			this.bindTexture(new ResourceLocation("scimachinery", "blocks/tube.png"));
 
 			tess.addVertex(x + 0, y + 0, z + 0);

@@ -2,6 +2,7 @@ package com.sci.machinery.core;
 
 import net.minecraftforge.client.MinecraftForgeClient;
 import com.sci.machinery.SciMachinery;
+import com.sci.machinery.block.TileDetectorTube;
 import com.sci.machinery.block.TilePumpTube;
 import com.sci.machinery.block.TileTube;
 import com.sci.machinery.render.RenderTube;
@@ -27,9 +28,11 @@ public class ClientProxy extends CommonProxy
 		tubeRenderer = new RenderTube();
 		ClientRegistry.bindTileEntitySpecialRenderer(TileTube.class, tubeRenderer);
 		ClientRegistry.bindTileEntitySpecialRenderer(TilePumpTube.class, tubeRenderer);
+		ClientRegistry.bindTileEntitySpecialRenderer(TileDetectorTube.class, tubeRenderer);
 		
 		MinecraftForgeClient.registerItemRenderer(SciMachinery.instance.tubeId, tubeRenderer);
 		MinecraftForgeClient.registerItemRenderer(SciMachinery.instance.pumpTubeId, tubeRenderer);
+		MinecraftForgeClient.registerItemRenderer(SciMachinery.instance.detectorTubeId, tubeRenderer);
 	}
 
 	@Override

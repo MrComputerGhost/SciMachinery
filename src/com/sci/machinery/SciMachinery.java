@@ -6,8 +6,10 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.Configuration;
+import com.sci.machinery.block.BlockDetectorTube;
 import com.sci.machinery.block.BlockPumpTube;
 import com.sci.machinery.block.BlockTube;
+import com.sci.machinery.block.TileDetectorTube;
 import com.sci.machinery.block.TilePumpTube;
 import com.sci.machinery.block.TileTube;
 import com.sci.machinery.core.CreativeTabSM;
@@ -43,6 +45,9 @@ public class SciMachinery
 	public int pumpTubeId;
 	public BlockPumpTube pumpTube;
 
+	public int detectorTubeId;
+	public BlockDetectorTube detectorTube;
+
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent e)
 	{
@@ -57,6 +62,7 @@ public class SciMachinery
 			cfg.load();
 			tubeId = cfg.getBlock("tube", 420).getInt();
 			pumpTubeId = cfg.getBlock("pumpTube", 421).getInt();
+			detectorTubeId = cfg.getBlock("detectorTube", 422).getInt();
 		}
 		finally
 		{
@@ -77,10 +83,16 @@ public class SciMachinery
 		GameRegistry.registerBlock(pumpTube, "SciMachinery_TilePumpTube");
 		GameRegistry.registerTileEntity(TilePumpTube.class, "SciMachinery_TilePumpTube");
 
+		detectorTube = new BlockDetectorTube(detectorTubeId);
+		GameRegistry.registerBlock(detectorTube, "SciMachinery_TileDetectorTube");
+		GameRegistry.registerTileEntity(TileDetectorTube.class, "SciMachinery_TileDetectorTube");
+
 		GameRegistry.addRecipe(new ItemStack(tube, 16), new Object[]
 		{ "sss", "gpg", "sss", 's', Block.stoneSingleSlab, 'g', Block.glass, 'p', Block.pistonBase });
 		GameRegistry.addRecipe(new ItemStack(pumpTube, 4), new Object[]
 		{ "rhr", "hth", "rhr", 'r', Item.redstone, 'h', Block.hopperBlock, 't', tube });
+		GameRegistry.addRecipe(new ItemStack(detectorTube, 3), new Object[]
+		{ "rgr", "ttt", "rgr", 'r', Item.redstone, 'g', Item.ingotGold, 't', tube });
 	}
 
 	@EventHandler

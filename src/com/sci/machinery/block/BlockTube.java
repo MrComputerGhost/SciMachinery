@@ -19,6 +19,7 @@ public class BlockTube extends BlockContainer
 		this.setCreativeTab(SciMachinery.tab);
 		this.setHardness(0.7F);
 		this.setStepSound(Block.soundMetalFootstep);
+		this.setUnlocalizedName("sm.tube");
 	}
 
 	@Override
@@ -104,11 +105,11 @@ public class BlockTube extends BlockContainer
 
 	public void breakBlock(World par1World, int par2, int par3, int par4, int par5, int par6)
 	{
-		super.breakBlock(par1World, par2, par3, par4, par5, par6);
 		TileEntity t = par1World.getBlockTileEntity(par2, par3, par4);
 		if(t instanceof TileTube)
 		{
 			((TileTube)t).breakTube();
 		}
+		super.breakBlock(par1World, par2, par3, par4, par5, par6);
 	}
 }

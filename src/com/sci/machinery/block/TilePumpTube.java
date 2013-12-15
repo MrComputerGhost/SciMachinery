@@ -57,7 +57,7 @@ public class TilePumpTube extends TileTube implements ITubeConnectable
 					}
 				}
 			}
-			
+
 			TileEntity[] t = this.getAdjacentTiles(this.worldObj, this.xCoord, this.yCoord, this.zCoord);
 			if(!allNull(t))
 			{
@@ -78,8 +78,10 @@ public class TilePumpTube extends TileTube implements ITubeConnectable
 								{
 									inv.decrStackSize(j, stack.stackSize);
 									if(!worldObj.isRemote)
+									{
 										PacketDispatcher.sendPacketToAllAround(xCoord, yCoord, zCoord, 128, worldObj.provider.dimensionId, PacketTypeHandler.populatePacket(new PacketAddItem(xCoord, yCoord, zCoord, stack.itemID, stack.stackSize)));
-									this.addItem(new TravellingItem(stack));
+										this.addItem(new TravellingItem(stack));
+									}
 								}
 							}
 						}
@@ -94,8 +96,10 @@ public class TilePumpTube extends TileTube implements ITubeConnectable
 								{
 									((IInventory) tile).decrStackSize(k, stack.stackSize);
 									if(!worldObj.isRemote)
+									{
 										PacketDispatcher.sendPacketToAllAround(xCoord, yCoord, zCoord, 128, worldObj.provider.dimensionId, PacketTypeHandler.populatePacket(new PacketAddItem(xCoord, yCoord, zCoord, stack.itemID, stack.stackSize)));
-									this.addItem(new TravellingItem(stack));
+										this.addItem(new TravellingItem(stack));
+									}
 								}
 							}
 						}

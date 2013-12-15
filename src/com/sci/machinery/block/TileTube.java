@@ -67,12 +67,12 @@ public class TileTube extends TileEntity implements ITubeConnectable
 
 	private int getTubeID(Tube tube)
 	{
-		if(tube instanceof TubeNormal)
-			return 0;
-		else if(tube instanceof TubePump)
+		if(tube instanceof TubePump)
 			return 1;
 		else if(tube instanceof TubeDetector)
 			return 2;
+		else if(tube instanceof TubeNormal)
+			return 0;
 		return -1;
 	}
 

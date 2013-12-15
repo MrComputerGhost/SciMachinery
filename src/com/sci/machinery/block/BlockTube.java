@@ -151,15 +151,4 @@ public class BlockTube extends BlockSci
 		}
 		super.breakBlock(par1World, par2, par3, par4, par5, par6);
 	}
-
-	public boolean onBlockActivated(World par1World, int par2, int par3, int par4, EntityPlayer par5EntityPlayer, int par6, float par7, float par8, float par9)
-	{
-		TileEntity t = par1World.getBlockTileEntity(par2, par3, par4);
-		if(t instanceof TileTube && !par1World.isRemote)
-		{
-			((TileTube) t).addItem(new TravellingItem(new ItemStack(Item.diamond)), t);
-			return true;
-		}
-		return false;
-	}
 }

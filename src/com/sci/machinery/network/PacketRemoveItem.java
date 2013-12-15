@@ -13,25 +13,23 @@ import com.sci.machinery.block.tube.TravellingItem;
 import com.sci.machinery.core.BlockCoord;
 import cpw.mods.fml.common.network.Player;
 
-public class PacketAddItem extends PacketSci
+public class PacketRemoveItem extends PacketSci
 {
 	private int x, y, z;
-	private int id;
-	private int count;
+	private int index;
 
-	public PacketAddItem()
+	public PacketRemoveItem()
 	{
 
 	}
 
-	public PacketAddItem(int x, int y, int z, int id, int count)
+	public PacketRemoveItem(int x, int y, int z, int index)
 	{
-		super(PacketTypeHandler.ADD_ITEM);
+		super(PacketTypeHandler.REMOVE_ITEM);
 		this.x = x;
 		this.y = y;
 		this.z = z;
-		this.id = id;
-		this.count = count;
+		this.index = index;
 	}
 
 	@Override
@@ -40,8 +38,7 @@ public class PacketAddItem extends PacketSci
 		this.x = data.readInt();
 		this.y = data.readInt();
 		this.z = data.readInt();
-		this.id = data.readInt();
-		this.count = data.readInt();
+		this.index = data.readInt();
 	}
 
 	@Override
@@ -50,8 +47,7 @@ public class PacketAddItem extends PacketSci
 		data.writeInt(this.x);
 		data.writeInt(this.y);
 		data.writeInt(this.z);
-		data.writeInt(this.id);
-		data.writeInt(this.count);
+		data.writeInt(this.index);
 	}
 
 	@Override
@@ -63,7 +59,7 @@ public class PacketAddItem extends PacketSci
 			TileEntity t = thePlayer.worldObj.getBlockTileEntity(x, y, z);
 			if(t != null && t instanceof TileTube)
 			{
-				((TileTube) t).addItem(new TravellingItem(new ItemStack(Item.itemsList[id], count)), t);
+				((TileTube) t).removeItem(index);
 			}
 		}
 	}

@@ -2,13 +2,17 @@ package com.sci.machinery.block;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import com.sci.machinery.SciMachinery;
 import com.sci.machinery.block.tube.ITubeConnectable;
+import com.sci.machinery.block.tube.TravellingItem;
 import com.sci.machinery.block.tube.Tube;
 import com.sci.machinery.core.BlockCoord;
 import com.sci.machinery.core.BlockSci;
@@ -33,7 +37,7 @@ public class BlockTube extends BlockSci
 	{
 		return world.getBlockMetadata(x, y, z) == 1 ? 3 : 0;
 	}
-	
+
 	@Override
 	public int isProvidingStrongPower(IBlockAccess par1IBlockAccess, int par2, int par3, int par4, int par5)
 	{
@@ -47,7 +51,7 @@ public class BlockTube extends BlockSci
 	{
 		return isProvidingStrongPower(par1IBlockAccess, par2, par3, par4, par5);
 	}
-	
+
 	@Override
 	public TileEntity createNewTileEntity(World world)
 	{
@@ -57,6 +61,7 @@ public class BlockTube extends BlockSci
 		}
 		catch(Exception e)
 		{
+			e.printStackTrace();
 		}
 		return null;
 	}
@@ -100,7 +105,7 @@ public class BlockTube extends BlockSci
 		if(tube != null && tube instanceof TileTube)
 		{
 			TileEntity[] t = Utils.getAdjacentTiles(world, new BlockCoord(x, y, z));
-			
+
 			float minX = 0.4f;
 			float minY = 0.4f;
 			float minZ = 0.4f;
@@ -145,5 +150,16 @@ public class BlockTube extends BlockSci
 			((TileTube) t).breakTube();
 		}
 		super.breakBlock(par1World, par2, par3, par4, par5, par6);
+	}
+
+	public boolean onBlockActivated(World par1World, int par2, int par3, int par4, EntityPlayer par5EntityPlayer, int par6, float par7, float par8, float par9)
+	{
+		TileEntity t = par1World.getBlockTileEntity(par2, par3, par4);
+		if(t instanceof TileTube && !par1World.isRemote)
+		{
+			((TileTube) t).addItem(new TravellingItem(new ItemStack(Item.diamond)), t);
+			return true;
+		}
+		return false;
 	}
 }

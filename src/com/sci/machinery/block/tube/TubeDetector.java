@@ -10,11 +10,6 @@ public class TubeDetector extends TubeNormal
 {
 	private boolean lastIsEmpty;
 
-	public TubeDetector(TileTube tile)
-	{
-		super(tile);
-	}
-
 	@Override
 	public void update()
 	{

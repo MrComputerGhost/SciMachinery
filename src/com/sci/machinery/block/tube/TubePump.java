@@ -7,11 +7,6 @@ import net.minecraft.tileentity.TileEntity;
 
 public class TubePump extends TubeNormal
 {
-	public TubePump(TileTube tile)
-	{
-		super(tile);
-	}
-	
 	@Override
 	public void update()
 	{

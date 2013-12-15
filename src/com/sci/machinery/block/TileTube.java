@@ -3,11 +3,10 @@ package com.sci.machinery.block;
 import java.util.List;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.IBlockAccess;
-import net.minecraftforge.common.ForgeDirection;
 import com.sci.machinery.block.tube.ITubeConnectable;
 import com.sci.machinery.block.tube.TravellingItem;
 import com.sci.machinery.block.tube.Tube;
+import com.sci.machinery.core.BlockCoord;
 
 public class TileTube extends TileEntity implements ITubeConnectable
 {
@@ -16,6 +15,7 @@ public class TileTube extends TileEntity implements ITubeConnectable
 	public TileTube(Tube tube)
 	{
 		this.tube = tube;
+		tube.setTile(this);
 	}
 
 	@Override
@@ -56,9 +56,9 @@ public class TileTube extends TileEntity implements ITubeConnectable
 	}
 
 	@Override
-	public void addItem(TravellingItem item, TileEntity sender)
+	public void addItem(TravellingItem item, TileEntity entity)
 	{
-		tube.addItem(item, sender);
+		tube.addItem(item, entity);
 	}
 
 	public Tube getTube()
@@ -74,5 +74,10 @@ public class TileTube extends TileEntity implements ITubeConnectable
 	public boolean isPowering()
 	{
 		return tube.isPowering();
+	}
+
+	public void removeItem(int index)
+	{
+		tube.removeItem(index);
 	}
 }

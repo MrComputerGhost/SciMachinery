@@ -8,7 +8,7 @@ import com.sci.machinery.lib.Reference;
 
 public enum PacketTypeHandler
 {
-	ADD_ITEM(PacketAddItem.class);
+	ADD_ITEM(PacketAddItem.class), REMOVE_ITEM(PacketRemoveItem.class);
 
 	private Class<? extends PacketSci> clazz;
 

@@ -1,5 +1,6 @@
 package com.sci.machinery.block.tube;
 
+import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.inventory.IInventory;
@@ -9,100 +10,99 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityHopper;
 import net.minecraftforge.common.ForgeDirection;
-import com.sci.machinery.block.TileTube;
 import com.sci.machinery.core.BlockCoord;
 import com.sci.machinery.core.Utils;
 import com.sci.machinery.network.PacketAddItem;
+import com.sci.machinery.network.PacketRemoveItem;
 import com.sci.machinery.network.PacketTypeHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class TubeNormal extends Tube
 {
 	protected List<TravellingItem> items;
-	protected Speed speed;
+	protected Speed speed = Speed.MEDIUM;
 	private int timer;
 
-	public TubeNormal(TileTube tile)
+	public TubeNormal()
 	{
-		super(tile);
+		this.items = new ArrayList<TravellingItem>();
 	}
 
 	@Override
 	public void update()
 	{
-		if(!tile.isInvalid())
+		if(!tile.isInvalid() && !tile.worldObj.isRemote && !items.isEmpty())
 		{
 			timer++;
 			if(timer == speed.delay)
 			{
 				timer = 0;
 
-				if(!items.isEmpty())
+				TravellingItem item = items.remove(0);
+				PacketDispatcher.sendPacketToAllPlayers(PacketTypeHandler.populatePacket(new PacketRemoveItem(tile.xCoord, tile.yCoord, tile.zCoord, 0)));
+				BlockCoord[] adjacent = Utils.blockCoord(tile).getAdjacent();
+
+				for(int i = 0; i < adjacent.length; i++)
 				{
-					TravellingItem item = items.remove(0);
-					BlockCoord[] adjacent = Utils.blockCoord(tile).getAdjacent();
-
-					for(int i = 0; i < adjacent.length; i++)
+					BlockCoord pos = adjacent[i];
+					if(!pos.equals(item.getLastCoord()))
 					{
-						BlockCoord pos = adjacent[i];
-						if(!pos.equals(item.getLastCoord()))
+						TileEntity tile = this.tile.worldObj.getBlockTileEntity(pos.getX(), pos.getY(), pos.getZ());
+						if(tile != null)
 						{
-							TileEntity tile = this.tile.worldObj.getBlockTileEntity(pos.getX(), pos.getY(), pos.getZ());
-							if(tile != null)
+							if(tile instanceof ISidedInventory)
 							{
-								if(tile instanceof ISidedInventory)
-								{
-									ISidedInventory inv = (ISidedInventory) tile;
-									int[] slots = inv.getAccessibleSlotsFromSide(ForgeDirection.OPPOSITES[i]);
+								ISidedInventory inv = (ISidedInventory) tile;
+								int[] slots = inv.getAccessibleSlotsFromSide(ForgeDirection.OPPOSITES[i]);
 
-									for(int j = 0; j < slots.length; j++)
+								for(int j = 0; j < slots.length; j++)
+								{
+									if(inv.canInsertItem(j, item.getStack(), ForgeDirection.OPPOSITES[i]))
 									{
-										if(inv.canInsertItem(j, item.getStack(), ForgeDirection.OPPOSITES[i]))
+										ItemStack remaining = TileEntityHopper.insertStack(inv, item.getStack(), ForgeDirection.OPPOSITES[i]);
+										if(remaining != null)
 										{
-											ItemStack remaining = TileEntityHopper.insertStack(inv, item.getStack(), ForgeDirection.OPPOSITES[i]);
-											if(remaining != null)
-											{
-												items.add(new TravellingItem(remaining));
-											}
+											items.add(new TravellingItem(remaining));
 										}
+										return;
 									}
-									return;
-								}
-								else if(tile instanceof IInventory)
-								{
-									IInventory inv = (IInventory) tile;
-									ItemStack remaining = TileEntityHopper.insertStack(inv, item.getStack(), ForgeDirection.OPPOSITES[i]);
-									if(remaining != null)
-									{
-										items.add(new TravellingItem(remaining));
-									}
-									return;
 								}
 							}
-						}
-					}
-					for(int i = 0; i < adjacent.length; i++)
-					{
-						BlockCoord pos = adjacent[i];
-						if(!pos.equals(item.getLastCoord()))
-						{
-							TileEntity tile = this.tile.worldObj.getBlockTileEntity(pos.getX(), pos.getY(), pos.getZ());
-							if(tile != null)
+							else if(tile instanceof IInventory)
 							{
-								if(tile instanceof ITubeConnectable)
+								IInventory inv = (IInventory) tile;
+								ItemStack remaining = TileEntityHopper.insertStack(inv, item.getStack(), ForgeDirection.OPPOSITES[i]);
+								if(remaining != null)
 								{
-									if(!item.getLastCoord().equals(pos))
-									{
-										((ITubeConnectable) tile).addItem(item, tile);
-									}
+									items.add(new TravellingItem(remaining));
+								}
+								return;
+							}
+						}
+					}
+				}
+				for(int i = 0; i < adjacent.length; i++)
+				{
+					BlockCoord pos = adjacent[i];
+					if(!pos.equals(item.getLastCoord()))
+					{
+						TileEntity tile = this.tile.worldObj.getBlockTileEntity(pos.getX(), pos.getY(), pos.getZ());
+						if(tile != null)
+						{
+							if(tile instanceof ITubeConnectable)
+							{
+								if(!item.getLastCoord().equals(pos))
+								{
+									((ITubeConnectable) tile).addItem(item, tile);
 									return;
 								}
 							}
 						}
 					}
-					
-					tile.worldObj.spawnEntityInWorld(new EntityItem(tile.worldObj, tile.xCoord, tile.yCoord, tile.zCoord, item.getStack()));
 				}
+
+				if(!tile.worldObj.isRemote)
+					tile.worldObj.spawnEntityInWorld(new EntityItem(tile.worldObj, tile.xCoord, tile.yCoord, tile.zCoord, item.getStack()));
 			}
 		}
 	}
@@ -161,5 +161,14 @@ public class TubeNormal extends Tube
 	public boolean canAcceptItems()
 	{
 		return true;
+	}
+
+	@Override
+	public void removeItem(int index)
+	{
+		if(tile.worldObj.isRemote && !items.isEmpty())
+		{
+			items.remove(index);
+		}
 	}
 }

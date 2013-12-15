@@ -39,7 +39,7 @@ public class TileTube extends TileEntity implements ITubeConnectable
 	@Override
 	public void updateEntity()
 	{
-		if(!items.isEmpty())
+		if(!items.isEmpty() && !this.isInvalid())
 		{
 			timer++;
 			if(timer == speed.delay)

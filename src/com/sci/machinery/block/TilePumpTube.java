@@ -19,96 +19,99 @@ public class TilePumpTube extends TileTube implements ITubeConnectable
 	@Override
 	public void updateEntity()
 	{
-		timer++;
-		if(timer == speed.delay)
+		if(!this.isInvalid())
 		{
-			timer = 0;
-			if(!items.isEmpty())
+			timer++;
+			if(timer == speed.delay)
 			{
-				TileEntity[] t = getAdjacentTiles(this.worldObj, this.xCoord, this.yCoord, this.zCoord);
-				if(allNull(t))
+				timer = 0;
+				if(!items.isEmpty())
 				{
-					if(!this.worldObj.isRemote)
-						this.worldObj.spawnEntityInWorld(new EntityItem(this.worldObj, this.xCoord, this.yCoord, this.zCoord, items.get(0).getStack()));
-					items.remove(0);
+					TileEntity[] t = getAdjacentTiles(this.worldObj, this.xCoord, this.yCoord, this.zCoord);
+					if(allNull(t))
+					{
+						if(!this.worldObj.isRemote)
+							this.worldObj.spawnEntityInWorld(new EntityItem(this.worldObj, this.xCoord, this.yCoord, this.zCoord, items.get(0).getStack()));
+						items.remove(0);
+					}
+					else
+					{
+						boolean sent = true;
+						for(int i = 0; i < t.length; i++)
+						{
+							if(!items.isEmpty())
+							{
+								if(t[i] instanceof ITubeConnectable)
+								{
+									if(i != items.get(0).getLastDir() || items.get(0).getLastDir() == -1 && ((ITubeConnectable) t[i]).canAcceptItems())
+									{
+										items.get(0).setLastDir(i);
+										((ITubeConnectable) t[i]).addItem(items.remove(0));
+										sent = false;
+									}
+								}
+							}
+						}
+						if(!sent && !items.isEmpty())
+						{
+							if(items.get(0) == null)
+							{
+								items.remove(0);
+								return;
+							}
+							else if(items.get(0).getStack() == null)
+							{
+								items.remove(0);
+								return;
+							}
+							if(!this.worldObj.isRemote)
+								this.worldObj.spawnEntityInWorld(new EntityItem(this.worldObj, this.xCoord, this.yCoord, this.zCoord, items.remove(0).getStack()));
+						}
+					}
 				}
-				else
+
+				TileEntity[] t = this.getAdjacentTiles(this.worldObj, this.xCoord, this.yCoord, this.zCoord);
+				if(!allNull(t))
 				{
-					boolean sent = true;
 					for(int i = 0; i < t.length; i++)
 					{
-						if(!items.isEmpty())
+						TileEntity tile = t[i];
+						if(tile instanceof ISidedInventory)
 						{
-							if(t[i] instanceof ITubeConnectable)
+							ISidedInventory inv = (ISidedInventory) tile;
+							int[] aint = inv.getAccessibleSlotsFromSide(ForgeDirection.OPPOSITES[i]);
+
+							for(int j = 0; j < aint.length; ++j)
 							{
-								if(i != items.get(0).getLastDir() || items.get(0).getLastDir() == -1 && ((ITubeConnectable) t[i]).canAcceptItems())
+								ItemStack stack = inv.getStackInSlot(aint[j]);
+								if(stack != null && inv.canExtractItem(aint[j], stack, ForgeDirection.OPPOSITES[i]))
 								{
-									items.get(0).setLastDir(i);
-									((ITubeConnectable) t[i]).addItem(items.remove(0));
-									sent = false;
+									inv.decrStackSize(aint[j], stack.stackSize);
+									inv.onInventoryChanged();
+									if(!worldObj.isRemote)
+									{
+										PacketDispatcher.sendPacketToAllAround(xCoord, yCoord, zCoord, 128, worldObj.provider.dimensionId, PacketTypeHandler.populatePacket(new PacketAddItem(xCoord, yCoord, zCoord, stack.itemID, stack.stackSize)));
+										this.addItem(new TravellingItem(stack));
+									}
 								}
 							}
 						}
-					}
-					if(!sent && !items.isEmpty())
-					{
-						if(items.get(0) == null)
+						else if(tile instanceof IInventory)
 						{
-							items.remove(0);
-							return;
-						}
-						else if(items.get(0).getStack() == null)
-						{
-							items.remove(0);
-							return;
-						}
-						if(!this.worldObj.isRemote)
-							this.worldObj.spawnEntityInWorld(new EntityItem(this.worldObj, this.xCoord, this.yCoord, this.zCoord, items.remove(0).getStack()));
-					}
-				}
-			}
+							int j = ((IInventory) tile).getSizeInventory();
 
-			TileEntity[] t = this.getAdjacentTiles(this.worldObj, this.xCoord, this.yCoord, this.zCoord);
-			if(!allNull(t))
-			{
-				for(int i = 0; i < t.length; i++)
-				{
-					TileEntity tile = t[i];
-					if(tile instanceof ISidedInventory)
-					{
-						ISidedInventory inv = (ISidedInventory) tile;
-						int[] aint = inv.getAccessibleSlotsFromSide(ForgeDirection.OPPOSITES[i]);
-
-						for(int j = 0; j < aint.length; ++j)
-						{
-							ItemStack stack = inv.getStackInSlot(aint[j]);
-							if(stack != null && inv.canExtractItem(aint[j], stack, ForgeDirection.OPPOSITES[i]))
+							for(int k = 0; k < j; ++k)
 							{
-								inv.decrStackSize(aint[j], stack.stackSize);
-								inv.onInventoryChanged();
-								if(!worldObj.isRemote)
+								ItemStack stack = ((IInventory) tile).getStackInSlot(k);
+								if(stack != null)
 								{
-									PacketDispatcher.sendPacketToAllAround(xCoord, yCoord, zCoord, 128, worldObj.provider.dimensionId, PacketTypeHandler.populatePacket(new PacketAddItem(xCoord, yCoord, zCoord, stack.itemID, stack.stackSize)));
-									this.addItem(new TravellingItem(stack));
-								}
-							}
-						}
-					}
-					else if(tile instanceof IInventory)
-					{
-						int j = ((IInventory) tile).getSizeInventory();
-
-						for(int k = 0; k < j; ++k)
-						{
-							ItemStack stack = ((IInventory) tile).getStackInSlot(k);
-							if(stack != null)
-							{
-								((IInventory) tile).decrStackSize(k, stack.stackSize);
-								((IInventory) tile).onInventoryChanged();
-								if(!worldObj.isRemote)
-								{
-									PacketDispatcher.sendPacketToAllAround(xCoord, yCoord, zCoord, 128, worldObj.provider.dimensionId, PacketTypeHandler.populatePacket(new PacketAddItem(xCoord, yCoord, zCoord, stack.itemID, stack.stackSize)));
-									this.addItem(new TravellingItem(stack));
+									((IInventory) tile).decrStackSize(k, stack.stackSize);
+									((IInventory) tile).onInventoryChanged();
+									if(!worldObj.isRemote)
+									{
+										PacketDispatcher.sendPacketToAllAround(xCoord, yCoord, zCoord, 128, worldObj.provider.dimensionId, PacketTypeHandler.populatePacket(new PacketAddItem(xCoord, yCoord, zCoord, stack.itemID, stack.stackSize)));
+										this.addItem(new TravellingItem(stack));
+									}
 								}
 							}
 						}

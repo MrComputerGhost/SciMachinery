@@ -1,0 +1,10 @@
+[
+    "modid":"SciMachinery",
+    "name":"SciMachinery",
+    "description":"Some small, useful pieces of machinery.",
+    "version":"@VERSION@",
+    "mcversion":"1.6.4",
+    "authors":[ "sci4me" ],
+    "credits":"Created by sci4me",
+    "dependencies"[ "mod_MinecraftForge" ]
+]

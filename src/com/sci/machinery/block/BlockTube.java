@@ -19,7 +19,7 @@ public class BlockTube extends BlockContainer
 		this.setCreativeTab(SciMachinery.tab);
 		this.setHardness(0.7F);
 		this.setStepSound(Block.soundMetalFootstep);
-		this.setUnlocalizedName("sm.tube");
+		this.setUnlocalizedName("tube");
 	}
 
 	@Override

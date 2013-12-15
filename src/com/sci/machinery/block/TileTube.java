@@ -94,6 +94,10 @@ public class TileTube extends TileEntity implements ITubeConnectable
 				}
 			}
 		}
+		else
+		{
+			timer = 0;
+		}
 	}
 
 	public Speed getSpeed()
@@ -180,7 +184,7 @@ public class TileTube extends TileEntity implements ITubeConnectable
 		for(int i = 0; i < nbttaglist.tagCount(); ++i)
 		{
 			NBTTagCompound nbttagcompound1 = (NBTTagCompound) nbttaglist.tagAt(i);
-			int j = nbttagcompound1.getByte("Slot");
+			int j = nbttagcompound1.getInteger("Slot");
 
 			this.addItem(new TravellingItem(ItemStack.loadItemStackFromNBT(nbttagcompound1)));
 		}
@@ -195,7 +199,7 @@ public class TileTube extends TileEntity implements ITubeConnectable
 		for(int i = 0; i < this.items.size(); ++i)
 		{
 			NBTTagCompound nbttagcompound1 = new NBTTagCompound();
-			nbttagcompound1.setByte("Slot", (byte) i);
+			nbttagcompound1.setInteger("Slot", i);
 			this.items.get(i).getStack().writeToNBT(nbttagcompound1);
 			nbttaglist.appendTag(nbttagcompound1);
 		}

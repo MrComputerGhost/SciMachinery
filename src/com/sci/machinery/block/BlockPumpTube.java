@@ -8,7 +8,7 @@ public class BlockPumpTube extends BlockTube
 	public BlockPumpTube(int id)
 	{
 		super(id);
-		this.setUnlocalizedName("sm.pumptube");
+		this.setUnlocalizedName("pumpTube");
 	}
 	
 	@Override

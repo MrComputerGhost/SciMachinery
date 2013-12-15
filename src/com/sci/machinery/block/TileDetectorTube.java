@@ -13,6 +13,8 @@ public class TileDetectorTube extends TileTube
 		{
 			lastIsEmpty = items.isEmpty();
 			
+			worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, isPowering() ? 1 : 0, 2);
+			
 			worldObj.notifyBlocksOfNeighborChange(xCoord, yCoord - 1, zCoord, SciMachinery.instance.detectorTube.blockID);
 			worldObj.notifyBlocksOfNeighborChange(xCoord, yCoord + 1, zCoord, SciMachinery.instance.detectorTube.blockID);
 			worldObj.notifyBlocksOfNeighborChange(xCoord - 1, yCoord, zCoord, SciMachinery.instance.detectorTube.blockID);

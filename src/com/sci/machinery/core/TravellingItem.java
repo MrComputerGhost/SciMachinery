@@ -8,6 +8,18 @@ public class TravellingItem
 	private float rotation;
 	private int lastDir = -1;
 	
+	public TravellingItem(ItemStack stack)
+	{
+		if(stack == null)
+			throw new NullPointerException();
+		this.stack = stack;
+	}
+	
+	public float getRotation()
+	{
+		return rotation;
+	}
+	
 	public int getLastDir()
 	{
 		return lastDir;
@@ -18,23 +30,9 @@ public class TravellingItem
 		this.lastDir = lastDir;
 	}
 
-	public TravellingItem()
-	{
-	}
-	
-	public float getRotation()
-	{
-		return rotation;
-	}
-
 	public void setRotation(float rotation)
 	{
 		this.rotation = rotation;
-	}
-
-	public TravellingItem(ItemStack stack)
-	{
-		this.stack = stack;
 	}
 
 	public ItemStack getStack()

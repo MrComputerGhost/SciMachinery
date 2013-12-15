@@ -5,8 +5,10 @@ import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.WeightedRandomChestContent;
 import net.minecraftforge.client.event.sound.PlayStreamingEvent;
 import net.minecraftforge.client.event.sound.SoundLoadEvent;
+import net.minecraftforge.common.ChestGenHooks;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeSubscribe;
@@ -41,22 +43,22 @@ public class SciMachinery
 	public static SciMachinery instance;
 
 	@SidedProxy(clientSide = Reference.CLIENT_PROXY, serverSide = Reference.SERVER_PROXY)
-	public static IProxy proxy;
+	public static IProxy proxy;	
 
 	public static CreativeTabs tab = new CreativeTabSM(CreativeTabs.getNextID(), Reference.MOD_ID);
 
-	public int tubeId;
-	public BlockTube tube;
-
-	public int pumpTubeId;
-	public BlockPumpTube pumpTube;
-
-	public int detectorTubeId;
-	public BlockDetectorTube detectorTube;
-	
 	public int easterEggId;
 	public ItemEasterEgg easterEgg;
+	
+	public int tubeId;
+	public BlockTube tube;	
 
+	public int pumpTubeId;		
+	public BlockPumpTube pumpTube;
+		
+	public int detectorTubeId;	
+	public BlockDetectorTube detectorTube;
+	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent e)
 	{
@@ -84,9 +86,11 @@ public class SciMachinery
 	@EventHandler
 	public void init(FMLInitializationEvent e)
 	{
-		proxy.init(e);
-
+		proxy.init(e);  
+ 
 		easterEgg = new ItemEasterEgg(easterEggId);
+		
+		ChestGenHooks.addItem(ChestGenHooks.DUNGEON_CHEST, new WeightedRandomChestContent(new ItemStack(easterEgg), 1, 1, 1));
 		
 		tube = new BlockTube(tubeId);
 		GameRegistry.registerBlock(tube, "SciMachinery_TileTube");

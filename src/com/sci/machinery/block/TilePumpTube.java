@@ -52,9 +52,18 @@ public class TilePumpTube extends TileTube implements ITubeConnectable
 					}
 					if(!sent && !items.isEmpty())
 					{
+						if(items.get(0) == null)
+						{
+							items.remove(0);
+							return;
+						}
+						else if(items.get(0).getStack() == null)
+						{
+							items.remove(0);
+							return;
+						}
 						if(!this.worldObj.isRemote)
-							this.worldObj.spawnEntityInWorld(new EntityItem(this.worldObj, this.xCoord, this.yCoord, this.zCoord, items.get(0).getStack()));
-						items.remove(0);
+							this.worldObj.spawnEntityInWorld(new EntityItem(this.worldObj, this.xCoord, this.yCoord, this.zCoord, items.remove(0).getStack()));
 					}
 				}
 			}
@@ -73,9 +82,10 @@ public class TilePumpTube extends TileTube implements ITubeConnectable
 						for(int j = 0; j < aint.length; ++j)
 						{
 							ItemStack stack = inv.getStackInSlot(aint[j]);
-							if(stack != null && inv.canExtractItem(aint[j], stack, ForgeDirection.OPPOSITES[j]))
+							if(stack != null && inv.canExtractItem(aint[j], stack, ForgeDirection.OPPOSITES[i]))
 							{
-								inv.decrStackSize(j, stack.stackSize);
+								inv.decrStackSize(aint[j], stack.stackSize);
+								inv.onInventoryChanged();
 								if(!worldObj.isRemote)
 								{
 									PacketDispatcher.sendPacketToAllAround(xCoord, yCoord, zCoord, 128, worldObj.provider.dimensionId, PacketTypeHandler.populatePacket(new PacketAddItem(xCoord, yCoord, zCoord, stack.itemID, stack.stackSize)));
@@ -94,6 +104,7 @@ public class TilePumpTube extends TileTube implements ITubeConnectable
 							if(stack != null)
 							{
 								((IInventory) tile).decrStackSize(k, stack.stackSize);
+								((IInventory) tile).onInventoryChanged();
 								if(!worldObj.isRemote)
 								{
 									PacketDispatcher.sendPacketToAllAround(xCoord, yCoord, zCoord, 128, worldObj.provider.dimensionId, PacketTypeHandler.populatePacket(new PacketAddItem(xCoord, yCoord, zCoord, stack.itemID, stack.stackSize)));

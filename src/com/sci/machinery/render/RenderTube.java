@@ -59,7 +59,7 @@ public class RenderTube extends TileEntitySpecialRenderer implements IItemRender
 		z += OF;
 
 		GL11.glDisable(GL11.GL_LIGHTING);
-		
+
 		Tessellator tess = Tessellator.instance;
 		tess.startDrawingQuads();
 
@@ -207,7 +207,7 @@ public class RenderTube extends TileEntitySpecialRenderer implements IItemRender
 		}
 
 		tess.draw();
-		
+
 		GL11.glEnable(GL11.GL_LIGHTING);
 
 		for(TravellingItem item : tube.getItems())
@@ -224,7 +224,7 @@ public class RenderTube extends TileEntitySpecialRenderer implements IItemRender
 		}
 		else if(t instanceof TileDetectorTube)
 		{
-			setColor(SciMachinery.instance.detectorTubeId, ((TileDetectorTube)t).isPowering() ? 1 : 0);
+			setColor(SciMachinery.instance.detectorTubeId, ((TileDetectorTube) t).isPowering() ? 1 : 0);
 		}
 	}
 
@@ -248,6 +248,10 @@ public class RenderTube extends TileEntitySpecialRenderer implements IItemRender
 
 	public void renderItem(TravellingItem item, double x, double y, double z)
 	{
+		if(item == null)
+			return;
+		if(item.getStack() == null)
+			return;
 		float renderScale = 0.3f;
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float) x + 0.1f, (float) y - 0.175f, (float) z + 0.1f);
@@ -711,7 +715,7 @@ public class RenderTube extends TileEntitySpecialRenderer implements IItemRender
 			GL11.glDisable(GL11.GL_LIGHTING);
 
 			setColor(item.itemID, 0);
-			
+
 			this.bindTexture(new ResourceLocation("scimachinery", "blocks/tube.png"));
 
 			tess.addVertex(x + 0, y + 0, z + 0);

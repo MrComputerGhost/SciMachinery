@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -58,14 +59,26 @@ public class TileTube extends TileEntity implements ITubeConnectable
 						{
 							if(!items.isEmpty())
 							{
-								if(t[i] instanceof IInventory)
+								if(t[i] instanceof ISidedInventory)
+								{
+									ISidedInventory inv = (ISidedInventory) t[i];
+									int[] aint = inv.getAccessibleSlotsFromSide(ForgeDirection.OPPOSITES[i]);
+									ItemStack stack = items.remove(0).getStack();
+									for(int j = 0; j < aint.length; ++j)
+									{
+										if(stack != null && inv.canInsertItem(aint[j], stack, ForgeDirection.OPPOSITES[i]))
+										{
+											ItemStack s = TileEntityHopper.insertStack(inv, stack, ForgeDirection.OPPOSITES[i]);
+											if(s != null)
+												this.addItem(new TravellingItem(s));
+										}
+									}
+								}
+								else if(t[i] instanceof IInventory)
 								{
 									ItemStack s = TileEntityHopper.insertStack((IInventory) t[i], items.remove(0).getStack(), i);
 									if(s != null)
-									{
-										if(!this.worldObj.isRemote)
-											this.worldObj.spawnEntityInWorld(new EntityItem(this.worldObj, this.xCoord, this.yCoord, this.zCoord, s));
-									}
+										this.addItem(new TravellingItem(s));
 								}
 							}
 						}
@@ -75,11 +88,11 @@ public class TileTube extends TileEntity implements ITubeConnectable
 						{
 							if(!items.isEmpty())
 							{
-								if(t[i] instanceof ITubeConnectable)
+								if(t[i] instanceof ITubeConnectable && ((ITubeConnectable) t[i]).canAcceptItems())
 								{
-									if(i != items.get(0).getLastDir() || items.get(0).getLastDir() == -1 && ((ITubeConnectable) t[i]).canAcceptItems())
+									if(i != items.get(0).getLastDir() || items.get(0).getLastDir() == -1)
 									{
-										items.get(0).setLastDir(i);
+										items.get(0).setLastDir(ForgeDirection.OPPOSITES[i]);
 										((ITubeConnectable) t[i]).addItem(items.remove(0));
 										sent = false;
 									}
@@ -88,8 +101,7 @@ public class TileTube extends TileEntity implements ITubeConnectable
 						}
 						if(!sent && !items.isEmpty())
 						{
-							this.worldObj.spawnEntityInWorld(new EntityItem(this.worldObj, this.xCoord, this.yCoord, this.zCoord, items.get(0).getStack()));
-							items.remove(0);
+							this.worldObj.spawnEntityInWorld(new EntityItem(this.worldObj, this.xCoord, this.yCoord, this.zCoord, items.remove(0).getStack()));
 						}
 					}
 				}
@@ -165,6 +177,10 @@ public class TileTube extends TileEntity implements ITubeConnectable
 
 		for(int i = 0; i < this.items.size(); ++i)
 		{
+			if(items.get(i) == null)
+				continue;
+			if(items.get(i).getStack() == null)
+				continue;
 			NBTTagCompound nbttagcompound1 = new NBTTagCompound();
 			nbttagcompound1.setInteger("Slot", i);
 			this.items.get(i).getStack().writeToNBT(nbttagcompound1);

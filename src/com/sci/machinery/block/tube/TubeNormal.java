@@ -92,7 +92,7 @@ public class TubeNormal extends Tube
 						{
 							if(!item.getLastCoord().equals(pos))
 							{
-								((ITubeConnectable) tile).addItem(item, tile);
+								((ITubeConnectable) tile).addItem(item, this.tile);
 								return;
 							}
 						}

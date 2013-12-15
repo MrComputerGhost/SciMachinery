@@ -15,7 +15,9 @@ import com.sci.machinery.core.Utils;
 import com.sci.machinery.network.PacketAddItem;
 import com.sci.machinery.network.PacketRemoveItem;
 import com.sci.machinery.network.PacketTypeHandler;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
+import cpw.mods.fml.relauncher.Side;
 
 public class TubeNormal extends Tube
 {
@@ -31,7 +33,7 @@ public class TubeNormal extends Tube
 	@Override
 	public void update()
 	{
-		if(!tile.isInvalid() && !tile.worldObj.isRemote && !items.isEmpty())
+		if(tile != null && !tile.isInvalid() && !tile.worldObj.isRemote && !items.isEmpty())
 		{
 			timer++;
 			if(timer == speed.delay)
@@ -39,7 +41,7 @@ public class TubeNormal extends Tube
 				timer = 0;
 
 				TravellingItem item = items.remove(0);
-				PacketDispatcher.sendPacketToAllPlayers(PacketTypeHandler.populatePacket(new PacketRemoveItem(tile.xCoord, tile.yCoord, tile.zCoord, 0)));
+				PacketDispatcher.sendPacketToAllPlayers(PacketTypeHandler.populatePacket(new PacketRemoveItem(this.tile.xCoord, this.tile.yCoord, this.tile.zCoord, 0)));
 				BlockCoord[] adjacent = Utils.blockCoord(tile).getAdjacent();
 
 				for(int i = 0; i < adjacent.length; i++)
@@ -81,7 +83,7 @@ public class TubeNormal extends Tube
 						}
 					}
 				}
-				
+
 				for(int i = 0; i < adjacent.length; i++)
 				{
 					BlockCoord pos = adjacent[i];
@@ -100,7 +102,9 @@ public class TubeNormal extends Tube
 				}
 
 				if(!tile.worldObj.isRemote)
+				{
 					tile.worldObj.spawnEntityInWorld(new EntityItem(tile.worldObj, tile.xCoord, tile.yCoord, tile.zCoord, item.getStack()));
+				}
 			}
 		}
 	}
@@ -108,6 +112,8 @@ public class TubeNormal extends Tube
 	@Override
 	public void addItem(TravellingItem item, TileEntity sender)
 	{
+		if(tile == null)
+			return;
 		if(!tile.worldObj.isRemote)
 		{
 			PacketDispatcher.sendPacketToAllPlayers(PacketTypeHandler.populatePacket(new PacketAddItem(tile.xCoord, tile.yCoord, tile.zCoord, item.getStack().itemID, item.getStack().stackSize)));
@@ -164,7 +170,7 @@ public class TubeNormal extends Tube
 	@Override
 	public void removeItem(int index)
 	{
-		if(tile.worldObj.isRemote && !items.isEmpty())
+		if(FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT && !items.isEmpty())
 		{
 			items.remove(index);
 		}

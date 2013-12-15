@@ -4,13 +4,9 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.tileentity.TileEntity;
-import com.sci.machinery.block.TileTube;
-import com.sci.machinery.block.tube.TravellingItem;
-import com.sci.machinery.core.BlockCoord;
+import com.sci.machinery.block.tube.ITubeConnectable;
 import cpw.mods.fml.common.network.Player;
 
 public class PacketRemoveItem extends PacketSci
@@ -57,9 +53,9 @@ public class PacketRemoveItem extends PacketSci
 		if(thePlayer.worldObj.isRemote)
 		{
 			TileEntity t = thePlayer.worldObj.getBlockTileEntity(x, y, z);
-			if(t != null && t instanceof TileTube)
+			if(t != null && t instanceof ITubeConnectable)
 			{
-				((TileTube) t).removeItem(index);
+				((ITubeConnectable) t).removeItem(index);
 			}
 		}
 	}

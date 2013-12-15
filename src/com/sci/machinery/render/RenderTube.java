@@ -206,12 +206,12 @@ public class RenderTube extends TileEntitySpecialRenderer implements IItemRender
 			{
 				renderSide(i, x, y, z);
 			}
-		}
+		} 
 
 		tess.draw();
 
 		GL11.glEnable(GL11.GL_LIGHTING);
-
+ 
 		for(TravellingItem item : tube.getItems())
 		{
 			renderItem(item, x, y, z);

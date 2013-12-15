@@ -9,29 +9,6 @@ public class TravellingItem
 	private float rotation;
 	private BlockCoord lastCoord;
 
-	public TravellingItem(ItemStack stack)
-	{
-		if(stack == null)
-			throw new NullPointerException();
-		this.stack = stack;
-		lastCoord = new BlockCoord(0, 0, 0);
-	}
-
-	public float getRotation()
-	{
-		return rotation;
-	}
-
-	public BlockCoord getLastCoord()
-	{
-		return lastCoord;
-	}
-
-	public void setRotation(float rotation)
-	{
-		this.rotation = rotation;
-	}
-
 	public ItemStack getStack()
 	{
 		return stack;
@@ -42,8 +19,29 @@ public class TravellingItem
 		this.stack = stack;
 	}
 
+	public float getRotation()
+	{
+		return rotation;
+	}
+
+	public void setRotation(float rotation)
+	{
+		this.rotation = rotation;
+	}
+
+	public BlockCoord getLastCoord()
+	{
+		return lastCoord;
+	}
+
 	public void setLastCoord(BlockCoord lastCoord)
 	{
 		this.lastCoord = lastCoord;
+	}
+
+	public TravellingItem(ItemStack stack)
+	{
+		this.stack = stack;
+		this.lastCoord = new BlockCoord(0, 0, 0);
 	}
 }

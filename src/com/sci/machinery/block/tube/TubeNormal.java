@@ -81,21 +81,19 @@ public class TubeNormal extends Tube
 						}
 					}
 				}
+				
 				for(int i = 0; i < adjacent.length; i++)
 				{
 					BlockCoord pos = adjacent[i];
 					if(!pos.equals(item.getLastCoord()))
 					{
 						TileEntity tile = this.tile.worldObj.getBlockTileEntity(pos.getX(), pos.getY(), pos.getZ());
-						if(tile != null)
+						if(tile instanceof ITubeConnectable)
 						{
-							if(tile instanceof ITubeConnectable)
+							if(!item.getLastCoord().equals(pos))
 							{
-								if(!item.getLastCoord().equals(pos))
-								{
-									((ITubeConnectable) tile).addItem(item, tile);
-									return;
-								}
+								((ITubeConnectable) tile).addItem(item, tile);
+								return;
 							}
 						}
 					}
@@ -116,7 +114,7 @@ public class TubeNormal extends Tube
 		}
 		if(sender != null)
 		{
-			item.setLastCoord(Utils.blockCoord(sender));
+			item.setLastCoord(Utils.blockCoord(tile));
 		}
 		items.add(item);
 	}

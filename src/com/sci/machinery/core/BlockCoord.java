@@ -54,9 +54,9 @@ public class BlockCoord
 		if(obj instanceof BlockCoord)
 		{
 			BlockCoord c = (BlockCoord) obj;
-			return c.x == x && c.y == y && c.z == z;
+			return c.x == this.x && c.y == this.y && c.z == this.z;
 		}
-		return super.equals(obj);
+		return false;
 	}
 
 	@Override

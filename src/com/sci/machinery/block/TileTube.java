@@ -27,7 +27,13 @@ public class TileTube extends TileEntity implements ITubeConnectable
 	@Override
 	public void updateEntity()
 	{
-		tube.update();
+		if(!tube.isValid())
+		{
+			tube.setTile(this);
+		}
+		
+		if(!isInvalid())
+			tube.update();
 	}
 
 	@Override
@@ -84,10 +90,18 @@ public class TileTube extends TileEntity implements ITubeConnectable
 		tube.writeToNBT(tag);
 	}
 
+	@Override	
 	public void validate()
 	{
 		super.validate();
 		tube.validate();
+	}
+	
+	@Override
+	public void invalidate()
+	{
+		super.invalidate();
+		tube.invalidate();
 	}
 
 	public void breakTube()

@@ -33,7 +33,10 @@ public class TubeNormal extends Tube
 	@Override
 	public void update()
 	{
-		if(tile != null && !tile.isInvalid() && !tile.worldObj.isRemote && !items.isEmpty())
+		if(!isValid())
+			return;
+
+		if(!tile.worldObj.isRemote && !items.isEmpty())
 		{
 			timer++;
 			if(timer == speed.delay)
@@ -64,9 +67,12 @@ public class TubeNormal extends Tube
 										ItemStack remaining = TileEntityHopper.insertStack(inv, item.getStack(), ForgeDirection.OPPOSITES[i]);
 										if(remaining != null)
 										{
-											items.add(new TravellingItem(remaining));
+											this.addItem(new TravellingItem(remaining), this.tile);
 										}
-										return;
+										else
+										{
+											return;
+										}
 									}
 								}
 							}
@@ -76,9 +82,12 @@ public class TubeNormal extends Tube
 								ItemStack remaining = TileEntityHopper.insertStack(inv, item.getStack(), ForgeDirection.OPPOSITES[i]);
 								if(remaining != null)
 								{
-									items.add(new TravellingItem(remaining));
+									this.addItem(new TravellingItem(remaining), this.tile);
 								}
-								return;
+								else
+								{
+									return;
+								}
 							}
 						}
 					}
@@ -92,7 +101,7 @@ public class TubeNormal extends Tube
 						TileEntity tile = this.tile.worldObj.getBlockTileEntity(pos.getX(), pos.getY(), pos.getZ());
 						if(tile instanceof ITubeConnectable)
 						{
-							if(!item.getLastCoord().equals(pos))
+							if(!item.getLastCoord().equals(pos) && ((ITubeConnectable) tile).canAcceptItems())
 							{
 								((ITubeConnectable) tile).addItem(item, this.tile);
 								return;
@@ -101,11 +110,12 @@ public class TubeNormal extends Tube
 					}
 				}
 
-				if(!tile.worldObj.isRemote)
-				{
-					tile.worldObj.spawnEntityInWorld(new EntityItem(tile.worldObj, tile.xCoord, tile.yCoord, tile.zCoord, item.getStack()));
-				}
+				tile.worldObj.spawnEntityInWorld(new EntityItem(tile.worldObj, tile.xCoord, tile.yCoord, tile.zCoord, item.getStack()));
 			}
+		}
+		else
+		{
+			timer = 0;
 		}
 	}
 

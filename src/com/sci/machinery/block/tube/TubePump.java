@@ -1,5 +1,6 @@
 package com.sci.machinery.block.tube;
 
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
@@ -7,6 +8,10 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import com.sci.machinery.core.BlockCoord;
 import com.sci.machinery.core.Utils;
+import com.sci.machinery.network.PacketAddItem;
+import com.sci.machinery.network.PacketRemoveItem;
+import com.sci.machinery.network.PacketTypeHandler;
+import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class TubePump extends TubeNormal
 {
@@ -15,8 +20,11 @@ public class TubePump extends TubeNormal
 	@Override
 	public void update()
 	{
+		if(!isValid())
+			return;
+
 		timer++;
-		if(timer == speed.delay)
+		if(timer == speed.delay && !tile.worldObj.isRemote)
 		{
 			timer = 0;
 
@@ -38,8 +46,8 @@ public class TubePump extends TubeNormal
 							if(stack != null && inv.canExtractItem(j, stack, ForgeDirection.OPPOSITES[i]))
 							{
 								inv.decrStackSize(slots[j], stack.stackSize);
-								this.addItem(new TravellingItem(stack), tile);
-								break;
+								this.addItem(new TravellingItem(stack), this.tile);
+								return;
 							}
 						}
 					}
@@ -53,8 +61,8 @@ public class TubePump extends TubeNormal
 							if(stack != null)
 							{
 								inv.decrStackSize(j, stack.stackSize);
-								this.addItem(new TravellingItem(stack), tile);
-								break;
+								this.addItem(new TravellingItem(stack), this.tile);
+								return;
 							}
 						}
 					}
@@ -72,8 +80,9 @@ public class TubePump extends TubeNormal
 						TileEntity tile = this.tile.worldObj.getBlockTileEntity(pos.getX(), pos.getY(), pos.getZ());
 						if(tile instanceof ITubeConnectable)
 						{
-							if(!item.getLastCoord().equals(pos))
+							if(!item.getLastCoord().equals(pos) && ((ITubeConnectable) tile).canAcceptItems())
 							{
+								PacketDispatcher.sendPacketToAllPlayers(PacketTypeHandler.populatePacket(new PacketRemoveItem(this.tile.xCoord, this.tile.yCoord, this.tile.zCoord, 0)));
 								((ITubeConnectable) tile).addItem(item, this.tile);
 								return;
 							}
@@ -82,9 +91,15 @@ public class TubePump extends TubeNormal
 				}
 				items.add(item);
 			}
+
+			if(!items.isEmpty())
+			{
+				PacketDispatcher.sendPacketToAllPlayers(PacketTypeHandler.populatePacket(new PacketRemoveItem(this.tile.xCoord, this.tile.yCoord, this.tile.zCoord, 0)));
+				tile.worldObj.spawnEntityInWorld(new EntityItem(tile.worldObj, tile.xCoord, tile.yCoord, tile.zCoord, items.remove(0).getStack()));
+			}
 		}
 	}
-	
+
 	@Override
 	public boolean canAcceptItems()
 	{

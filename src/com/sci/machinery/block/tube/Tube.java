@@ -1,8 +1,8 @@
 package com.sci.machinery.block.tube;
 
 import java.util.List;
-import com.sci.machinery.block.TileTube;
 import net.minecraft.nbt.NBTTagCompound;
+import com.sci.machinery.block.TileTube;
 
 public abstract class Tube implements ITubeConnectable
 {
@@ -19,7 +19,18 @@ public abstract class Tube implements ITubeConnectable
 
 	public abstract void breakTube();
 
-	public abstract void validate();
+	public void validate()
+	{
+	}
+
+	public void invalidate()
+	{
+	}
+
+	public final boolean isValid()
+	{
+		return tile != null;
+	}
 
 	public abstract void writeToNBT(NBTTagCompound tag);
 

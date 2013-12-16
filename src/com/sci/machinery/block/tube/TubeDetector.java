@@ -13,6 +13,9 @@ public class TubeDetector extends TubeNormal
 	@Override
 	public void update()
 	{
+		if(!isValid())
+			return;
+		
 		if(lastIsEmpty != items.isEmpty())
 		{
 			lastIsEmpty = items.isEmpty();

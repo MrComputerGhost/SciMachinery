@@ -35,7 +35,7 @@ public class BlockTube extends BlockSci
 	@Override
 	public int getLightValue(IBlockAccess world, int x, int y, int z)
 	{
-		return world.getBlockMetadata(x, y, z) == 1 ? 3 : 0;
+		return world.getBlockMetadata(x, y, z) == 1 ? 6 : 3;
 	}
 
 	@Override

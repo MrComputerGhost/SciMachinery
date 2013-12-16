@@ -55,6 +55,9 @@ public class SciMachinery
 	public int detectorTubeId;	
 	public BlockTube detectorTube;
 	
+	public int voidTubeId;
+	public BlockTube voidTube;
+	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent e)
 	{
@@ -67,11 +70,12 @@ public class SciMachinery
 		try
 		{
 			cfg.load();
+			easterEggId = cfg.getItem("easterEgg", 419).getInt();
+			
 			tubeId = cfg.getBlock("tube", 420).getInt();
 			pumpTubeId = cfg.getBlock("pumpTube", 421).getInt();
 			detectorTubeId = cfg.getBlock("detectorTube", 422).getInt();
-			
-			easterEggId = cfg.getItem("easterEgg", 423).getInt();
+			voidTubeId = cfg.getBlock("voidTube", 423).getInt();
 		}
 		finally
 		{
@@ -91,6 +95,7 @@ public class SciMachinery
 		GameRegistry.registerTileEntity(TileTube.class, "SciMachinery_TileTube");
 		
 		tube = new BlockTube(tubeId, Tube.NORMAL);
+		tube.setUnlocalizedName("tube");
 		GameRegistry.registerBlock(tube, "SciMachinery_TileTube");
 
 		pumpTube = new BlockTube(pumpTubeId, Tube.PUMP);
@@ -98,7 +103,12 @@ public class SciMachinery
 		GameRegistry.registerBlock(pumpTube, "SciMachinery_TilePumpTube");
 
 		detectorTube = new BlockTube(detectorTubeId, Tube.DETECTOR);
+		detectorTube.setUnlocalizedName("detectorTube");
 		GameRegistry.registerBlock(detectorTube, "SciMachinery_TileDetectorTube");
+		
+		voidTube = new BlockTube(voidTubeId, Tube.VOID);
+		voidTube.setUnlocalizedName("voidTube");
+		GameRegistry.registerBlock(voidTube, "SciMachinery_TileVoidTube");
 
 		GameRegistry.addRecipe(new ItemStack(tube, 16), new Object[]
 		{ "sss", "gpg", "sss", 's', Block.stoneSingleSlab, 'g', Block.glass, 'p', Block.pistonBase });

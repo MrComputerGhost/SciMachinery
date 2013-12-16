@@ -24,20 +24,20 @@ public class TubePump extends TubeNormal
 			return;
 
 		timer++;
-		if(timer == speed.delay && !tile.worldObj.isRemote)
+		if(timer == speed.delay && !getTile().worldObj.isRemote)
 		{
 			timer = 0;
 
-			BlockCoord[] adjacent = Utils.blockCoord(tile).getAdjacent();
+			BlockCoord[] adjacent = Utils.blockCoord(getTile()).getAdjacent();
 			for(int i = 0; i < adjacent.length; i++)
 			{
 				BlockCoord pos = adjacent[i];
-				TileEntity tile = this.tile.worldObj.getBlockTileEntity(pos.getX(), pos.getY(), pos.getZ());
-				if(tile != null)
+				TileEntity adjTile = getTile().worldObj.getBlockTileEntity(pos.getX(), pos.getY(), pos.getZ());
+				if(adjTile != null)
 				{
-					if(tile instanceof ISidedInventory)
+					if(adjTile instanceof ISidedInventory)
 					{
-						ISidedInventory inv = (ISidedInventory) tile;
+						ISidedInventory inv = (ISidedInventory) adjTile;
 						int[] slots = inv.getAccessibleSlotsFromSide(ForgeDirection.OPPOSITES[i]);
 
 						for(int j = 0; j < slots.length; j++)
@@ -46,14 +46,14 @@ public class TubePump extends TubeNormal
 							if(stack != null && inv.canExtractItem(j, stack, ForgeDirection.OPPOSITES[i]))
 							{
 								inv.decrStackSize(slots[j], stack.stackSize);
-								this.addItem(new TravellingItem(stack), this.tile);
+								this.addItem(new TravellingItem(stack), getTile());
 								return;
 							}
 						}
 					}
-					else if(tile instanceof IInventory)
+					else if(adjTile instanceof IInventory)
 					{
-						IInventory inv = (IInventory) tile;
+						IInventory inv = (IInventory) adjTile;
 
 						for(int j = 0; j < inv.getSizeInventory(); j++)
 						{
@@ -61,7 +61,7 @@ public class TubePump extends TubeNormal
 							if(stack != null)
 							{
 								inv.decrStackSize(j, stack.stackSize);
-								this.addItem(new TravellingItem(stack), this.tile);
+								this.addItem(new TravellingItem(stack), getTile());
 								return;
 							}
 						}
@@ -72,30 +72,27 @@ public class TubePump extends TubeNormal
 			if(!items.isEmpty())
 			{
 				TravellingItem item = items.remove(0);
+				PacketDispatcher.sendPacketToAllPlayers(PacketTypeHandler.populatePacket(new PacketRemoveItem(getTile().xCoord, getTile().yCoord, getTile().zCoord, 0)));
 				for(int i = 0; i < adjacent.length; i++)
 				{
 					BlockCoord pos = adjacent[i];
 					if(!pos.equals(item.getLastCoord()))
 					{
-						TileEntity tile = this.tile.worldObj.getBlockTileEntity(pos.getX(), pos.getY(), pos.getZ());
-						if(tile instanceof ITubeConnectable)
+						TileEntity adjTile = getTile().worldObj.getBlockTileEntity(pos.getX(), pos.getY(), pos.getZ());
+						if(adjTile instanceof ITubeConnectable && ((ITubeConnectable) adjTile).canAcceptItems())
 						{
-							if(!item.getLastCoord().equals(pos) && ((ITubeConnectable) tile).canAcceptItems())
-							{
-								PacketDispatcher.sendPacketToAllPlayers(PacketTypeHandler.populatePacket(new PacketRemoveItem(this.tile.xCoord, this.tile.yCoord, this.tile.zCoord, 0)));
-								((ITubeConnectable) tile).addItem(item, this.tile);
-								return;
-							}
+							((ITubeConnectable) adjTile).addItem(item, getTile());
+							return;
 						}
 					}
 				}
-				items.add(item);
+				this.addItem(item, null);
 			}
 
 			if(!items.isEmpty())
 			{
-				PacketDispatcher.sendPacketToAllPlayers(PacketTypeHandler.populatePacket(new PacketRemoveItem(this.tile.xCoord, this.tile.yCoord, this.tile.zCoord, 0)));
-				tile.worldObj.spawnEntityInWorld(new EntityItem(tile.worldObj, tile.xCoord, tile.yCoord, tile.zCoord, items.remove(0).getStack()));
+				PacketDispatcher.sendPacketToAllPlayers(PacketTypeHandler.populatePacket(new PacketRemoveItem(getTile().xCoord, getTile().yCoord, getTile().zCoord, 0)));
+				getTile().worldObj.spawnEntityInWorld(new EntityItem(getTile().worldObj, getTile().xCoord, getTile().yCoord, getTile().zCoord, items.remove(0).getStack()));
 			}
 		}
 	}

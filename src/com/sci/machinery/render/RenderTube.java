@@ -17,6 +17,7 @@ import com.sci.machinery.block.tube.ITubeConnectable;
 import com.sci.machinery.block.tube.TravellingItem;
 import com.sci.machinery.block.tube.TubeDetector;
 import com.sci.machinery.block.tube.TubePump;
+import com.sci.machinery.block.tube.TubeVoid;
 import com.sci.machinery.core.BlockCoord;
 import com.sci.machinery.core.Utils;
 
@@ -206,12 +207,12 @@ public class RenderTube extends TileEntitySpecialRenderer implements IItemRender
 			{
 				renderSide(i, x, y, z);
 			}
-		} 
+		}
 
 		tess.draw();
 
 		GL11.glEnable(GL11.GL_LIGHTING);
- 
+
 		for(TravellingItem item : tube.getItems())
 		{
 			renderItem(item, x, y, z);
@@ -228,6 +229,10 @@ public class RenderTube extends TileEntitySpecialRenderer implements IItemRender
 		{
 			setColor(SciMachinery.instance.detectorTubeId, ((TileTube) t).isPowering() ? 1 : 0);
 		}
+		else if(t.getTube() instanceof TubeVoid)
+		{
+			setColor(SciMachinery.instance.voidTubeId, ((TileTube) t).isPowering() ? 1 : 0);
+		}
 	}
 
 	private void setColor(int id, int b)
@@ -242,9 +247,11 @@ public class RenderTube extends TileEntitySpecialRenderer implements IItemRender
 			if(b == 0)
 				tess.setColorRGBA(200, 200, 20, 150);
 			else if(b == 1)
-			{
 				tess.setColorRGBA(250, 250, 20, 150);
-			}
+		}
+		else if(id == SciMachinery.instance.voidTubeId)
+		{
+			tess.setColorRGBA(20, 20, 200, 150);
 		}
 	}
 

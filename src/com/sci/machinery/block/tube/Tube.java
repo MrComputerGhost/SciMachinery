@@ -6,15 +6,21 @@ import com.sci.machinery.block.TileTube;
 
 public abstract class Tube implements ITubeConnectable
 {
-	protected TileTube tile;
+	private TileTube tile;
 
 	public static final Class<? extends Tube> NORMAL = TubeNormal.class;
 	public static final Class<? extends Tube> PUMP = TubePump.class;
 	public static final Class<? extends Tube> DETECTOR = TubeDetector.class;
+	public static final Class<? extends Tube> VOID = TubeVoid.class;
 
 	public void setTile(TileTube tile)
 	{
 		this.tile = tile;
+	}
+	
+	public TileTube getTile()
+	{
+		return tile;
 	}
 
 	public abstract void breakTube();

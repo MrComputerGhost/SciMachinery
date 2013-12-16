@@ -9,6 +9,7 @@ import com.sci.machinery.block.tube.Tube;
 import com.sci.machinery.block.tube.TubeDetector;
 import com.sci.machinery.block.tube.TubeNormal;
 import com.sci.machinery.block.tube.TubePump;
+import com.sci.machinery.block.tube.TubeVoid;
 
 public class TileTube extends TileEntity implements ITubeConnectable
 {
@@ -63,6 +64,11 @@ public class TileTube extends TileEntity implements ITubeConnectable
 			this.tube = new TubeDetector();
 			break;
 		}
+		case 3:
+		{
+			this.tube = new TubeVoid();
+			break;
+		}
 		default:
 		{
 			break;
@@ -79,6 +85,8 @@ public class TileTube extends TileEntity implements ITubeConnectable
 			return 2;
 		else if(tube instanceof TubeNormal)
 			return 0;
+		else if(tube instanceof TubeVoid)
+			return 3;
 		return -1;
 	}
 

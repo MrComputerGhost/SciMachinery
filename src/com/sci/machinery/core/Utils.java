@@ -28,4 +28,9 @@ public final class Utils
 		}
 		return t;
 	}
+
+	public static TileEntity getTileEntity(World worldObj, BlockCoord lastCoord)
+	{
+		return worldObj.getBlockTileEntity(lastCoord.getX(), lastCoord.getY(), lastCoord.getZ());
+	}
 }

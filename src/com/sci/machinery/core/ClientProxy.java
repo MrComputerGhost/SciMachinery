@@ -33,6 +33,7 @@ public class ClientProxy extends CommonProxy
 		MinecraftForgeClient.registerItemRenderer(SciMachinery.instance.tubeId, tubeRenderer);
 		MinecraftForgeClient.registerItemRenderer(SciMachinery.instance.pumpTubeId, tubeRenderer);
 		MinecraftForgeClient.registerItemRenderer(SciMachinery.instance.detectorTubeId, tubeRenderer);
+		MinecraftForgeClient.registerItemRenderer(SciMachinery.instance.voidTubeId, tubeRenderer);
 	}
 
 	@Override

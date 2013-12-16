@@ -36,7 +36,7 @@ public class TubeNormal extends Tube
 		if(!isValid())
 			return;
 
-		if(!tile.worldObj.isRemote && !items.isEmpty())
+		if(!getTile().worldObj.isRemote && !items.isEmpty())
 		{
 			timer++;
 			if(timer == speed.delay)
@@ -44,20 +44,20 @@ public class TubeNormal extends Tube
 				timer = 0;
 
 				TravellingItem item = items.remove(0);
-				PacketDispatcher.sendPacketToAllPlayers(PacketTypeHandler.populatePacket(new PacketRemoveItem(this.tile.xCoord, this.tile.yCoord, this.tile.zCoord, 0)));
-				BlockCoord[] adjacent = Utils.blockCoord(tile).getAdjacent();
+				PacketDispatcher.sendPacketToAllPlayers(PacketTypeHandler.populatePacket(new PacketRemoveItem(getTile().xCoord, getTile().yCoord, getTile().zCoord, 0)));
+				BlockCoord[] adjacent = Utils.blockCoord(getTile()).getAdjacent();
 
 				for(int i = 0; i < adjacent.length; i++)
 				{
 					BlockCoord pos = adjacent[i];
 					if(!pos.equals(item.getLastCoord()))
 					{
-						TileEntity tile = this.tile.worldObj.getBlockTileEntity(pos.getX(), pos.getY(), pos.getZ());
-						if(tile != null)
+						TileEntity adjTile = getTile().worldObj.getBlockTileEntity(pos.getX(), pos.getY(), pos.getZ());
+						if(adjTile != null)
 						{
-							if(tile instanceof ISidedInventory)
+							if(adjTile instanceof ISidedInventory)
 							{
-								ISidedInventory inv = (ISidedInventory) tile;
+								ISidedInventory inv = (ISidedInventory) adjTile;
 								int[] slots = inv.getAccessibleSlotsFromSide(ForgeDirection.OPPOSITES[i]);
 
 								for(int j = 0; j < slots.length; j++)
@@ -67,7 +67,7 @@ public class TubeNormal extends Tube
 										ItemStack remaining = TileEntityHopper.insertStack(inv, item.getStack(), ForgeDirection.OPPOSITES[i]);
 										if(remaining != null)
 										{
-											this.addItem(new TravellingItem(remaining), this.tile);
+											this.addItem(new TravellingItem(remaining), null);
 										}
 										else
 										{
@@ -76,13 +76,13 @@ public class TubeNormal extends Tube
 									}
 								}
 							}
-							else if(tile instanceof IInventory)
+							else if(adjTile instanceof IInventory)
 							{
-								IInventory inv = (IInventory) tile;
+								IInventory inv = (IInventory) adjTile;
 								ItemStack remaining = TileEntityHopper.insertStack(inv, item.getStack(), ForgeDirection.OPPOSITES[i]);
 								if(remaining != null)
 								{
-									this.addItem(new TravellingItem(remaining), this.tile);
+									this.addItem(new TravellingItem(remaining), null);
 								}
 								else
 								{
@@ -98,19 +98,16 @@ public class TubeNormal extends Tube
 					BlockCoord pos = adjacent[i];
 					if(!pos.equals(item.getLastCoord()))
 					{
-						TileEntity tile = this.tile.worldObj.getBlockTileEntity(pos.getX(), pos.getY(), pos.getZ());
-						if(tile instanceof ITubeConnectable)
+						TileEntity adjTile = getTile().worldObj.getBlockTileEntity(pos.getX(), pos.getY(), pos.getZ());
+						if(adjTile instanceof ITubeConnectable && ((ITubeConnectable) adjTile).canAcceptItems())
 						{
-							if(!item.getLastCoord().equals(pos) && ((ITubeConnectable) tile).canAcceptItems())
-							{
-								((ITubeConnectable) tile).addItem(item, this.tile);
-								return;
-							}
+							((ITubeConnectable) adjTile).addItem(item, getTile());
+							return;
 						}
 					}
 				}
 
-				tile.worldObj.spawnEntityInWorld(new EntityItem(tile.worldObj, tile.xCoord, tile.yCoord, tile.zCoord, item.getStack()));
+				getTile().worldObj.spawnEntityInWorld(new EntityItem(getTile().worldObj, getTile().xCoord, getTile().yCoord, getTile().zCoord, item.getStack()));
 			}
 		}
 		else
@@ -122,11 +119,9 @@ public class TubeNormal extends Tube
 	@Override
 	public void addItem(TravellingItem item, TileEntity sender)
 	{
-		if(tile == null)
-			return;
-		if(!tile.worldObj.isRemote)
+		if(!getTile().worldObj.isRemote)
 		{
-			PacketDispatcher.sendPacketToAllPlayers(PacketTypeHandler.populatePacket(new PacketAddItem(tile.xCoord, tile.yCoord, tile.zCoord, item.getStack().itemID, item.getStack().stackSize)));
+			PacketDispatcher.sendPacketToAllPlayers(PacketTypeHandler.populatePacket(new PacketAddItem(getTile().xCoord, getTile().yCoord, getTile().zCoord, item.getStack().itemID, item.getStack().stackSize)));
 		}
 		if(sender != null)
 		{

@@ -1,10 +1,6 @@
 package com.sci.machinery.block.tube;
 
-import java.util.List;
 import com.sci.machinery.SciMachinery;
-import com.sci.machinery.block.TileTube;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 
 public class TubeDetector extends TubeNormal
 {
@@ -20,15 +16,15 @@ public class TubeDetector extends TubeNormal
 		{
 			lastIsEmpty = items.isEmpty();
 
-			tile.worldObj.setBlockMetadataWithNotify(tile.xCoord, tile.yCoord, tile.zCoord, isPowering() ? 1 : 0, 2);
+			getTile().worldObj.setBlockMetadataWithNotify(getTile().xCoord, getTile().yCoord, getTile().zCoord, isPowering() ? 1 : 0, 2);
 
-			tile.worldObj.notifyBlocksOfNeighborChange(tile.xCoord, tile.yCoord - 1, tile.zCoord, SciMachinery.instance.detectorTube.blockID);
-			tile.worldObj.notifyBlocksOfNeighborChange(tile.xCoord, tile.yCoord + 1, tile.zCoord, SciMachinery.instance.detectorTube.blockID);
-			tile.worldObj.notifyBlocksOfNeighborChange(tile.xCoord - 1, tile.yCoord, tile.zCoord, SciMachinery.instance.detectorTube.blockID);
-			tile.worldObj.notifyBlocksOfNeighborChange(tile.xCoord + 1, tile.yCoord, tile.zCoord, SciMachinery.instance.detectorTube.blockID);
-			tile.worldObj.notifyBlocksOfNeighborChange(tile.xCoord, tile.yCoord, tile.zCoord - 1, SciMachinery.instance.detectorTube.blockID);
-			tile.worldObj.notifyBlocksOfNeighborChange(tile.xCoord, tile.yCoord, tile.zCoord + 1, SciMachinery.instance.detectorTube.blockID);
-			tile.worldObj.notifyBlockChange(tile.xCoord, tile.yCoord, tile.zCoord, SciMachinery.instance.detectorTube.blockID);
+			getTile().worldObj.notifyBlocksOfNeighborChange(getTile().xCoord, getTile().yCoord - 1, getTile().zCoord, SciMachinery.instance.detectorTube.blockID);
+			getTile().worldObj.notifyBlocksOfNeighborChange(getTile().xCoord, getTile().yCoord + 1, getTile().zCoord, SciMachinery.instance.detectorTube.blockID);
+			getTile().worldObj.notifyBlocksOfNeighborChange(getTile().xCoord - 1, getTile().yCoord, getTile().zCoord, SciMachinery.instance.detectorTube.blockID);
+			getTile().worldObj.notifyBlocksOfNeighborChange(getTile().xCoord + 1, getTile().yCoord, getTile().zCoord, SciMachinery.instance.detectorTube.blockID);
+			getTile().worldObj.notifyBlocksOfNeighborChange(getTile().xCoord, getTile().yCoord, getTile().zCoord - 1, SciMachinery.instance.detectorTube.blockID);
+			getTile().worldObj.notifyBlocksOfNeighborChange(getTile().xCoord, getTile().yCoord, getTile().zCoord + 1, SciMachinery.instance.detectorTube.blockID);
+			getTile().worldObj.notifyBlockChange(getTile().xCoord, getTile().yCoord, getTile().zCoord, SciMachinery.instance.detectorTube.blockID);
 		}
 
 		super.update();

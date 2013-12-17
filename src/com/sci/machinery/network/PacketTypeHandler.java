@@ -6,6 +6,13 @@ import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import com.sci.machinery.lib.Reference;
 
+/**
+ * SciMachinery
+ *
+ * @author sci4me
+ * @license Lesser GNU Public License v3 (http://www.gnu.org/licenses/lgpl.html)
+ */
+
 public enum PacketTypeHandler
 {
 	ADD_ITEM(PacketAddItem.class), REMOVE_ITEM(PacketRemoveItem.class);

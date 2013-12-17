@@ -1,5 +1,12 @@
 package com.sci.machinery.block.tube;
 
+/**
+ * SciMachinery
+ *
+ * @author sci4me
+ * @license Lesser GNU Public License v3 (http://www.gnu.org/licenses/lgpl.html)
+ */
+
 public enum Material
 {
 	STONE(200, 200, 200, 150), COBBLESTONE(125, 125, 125, 150), PUMP(200, 20, 20, 150), VOID(20, 20, 200, 150), DETECTOR(200, 200, 20, 150);

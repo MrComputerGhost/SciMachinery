@@ -4,6 +4,13 @@ import com.sci.machinery.SciMachinery;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 
+/**
+ * SciMachinery
+ *
+ * @author sci4me
+ * @license Lesser GNU Public License v3 (http://www.gnu.org/licenses/lgpl.html)
+ */
+
 public class CreativeTabSM extends CreativeTabs
 {
 	public CreativeTabSM(int par1, String par2Str)

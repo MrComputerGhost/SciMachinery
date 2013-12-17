@@ -2,6 +2,13 @@ package com.sci.machinery.core;
 
 import net.minecraftforge.common.ForgeDirection;
 
+/**
+ * SciMachinery
+ *
+ * @author sci4me
+ * @license Lesser GNU Public License v3 (http://www.gnu.org/licenses/lgpl.html)
+ */
+
 public class BlockCoord
 {
 	private int x, y, z;

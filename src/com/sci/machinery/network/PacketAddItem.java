@@ -13,6 +13,13 @@ import com.sci.machinery.block.tube.TravellingItem;
 import com.sci.machinery.core.BlockCoord;
 import cpw.mods.fml.common.network.Player;
 
+/**
+ * SciMachinery
+ *
+ * @author sci4me
+ * @license Lesser GNU Public License v3 (http://www.gnu.org/licenses/lgpl.html)
+ */
+
 public class PacketAddItem extends PacketSci
 {
 	private int x, y, z;

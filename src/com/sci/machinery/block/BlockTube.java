@@ -13,6 +13,13 @@ import com.sci.machinery.core.BlockCoord;
 import com.sci.machinery.core.BlockSci;
 import com.sci.machinery.core.Utils;
 
+/**
+ * SciMachinery
+ *
+ * @author sci4me
+ * @license Lesser GNU Public License v3 (http://www.gnu.org/licenses/lgpl.html)
+ */
+
 public class BlockTube extends BlockSci
 {
 	private Class<? extends Tube> tubeClazz;

@@ -12,6 +12,13 @@ import com.sci.machinery.block.tube.TubeNormal;
 import com.sci.machinery.block.tube.TubePump;
 import com.sci.machinery.block.tube.TubeVoid;
 
+/**
+ * SciMachinery
+ *
+ * @author sci4me
+ * @license Lesser GNU Public License v3 (http://www.gnu.org/licenses/lgpl.html)
+ */
+
 public class TileTube extends TileEntity implements ITubeConnectable
 {
 	private Tube tube;

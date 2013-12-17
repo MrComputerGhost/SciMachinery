@@ -6,6 +6,13 @@ import com.sci.machinery.network.PacketRemoveItem;
 import com.sci.machinery.network.PacketTypeHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
 
+/**
+ * SciMachinery
+ *
+ * @author sci4me
+ * @license Lesser GNU Public License v3 (http://www.gnu.org/licenses/lgpl.html)
+ */
+
 public class TubeVoid extends TubeNormal
 {
 	public TubeVoid()

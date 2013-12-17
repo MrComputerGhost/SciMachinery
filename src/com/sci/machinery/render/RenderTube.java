@@ -18,6 +18,13 @@ import com.sci.machinery.block.tube.TravellingItem;
 import com.sci.machinery.core.BlockCoord;
 import com.sci.machinery.core.Utils;
 
+/**
+ * SciMachinery
+ *
+ * @author sci4me
+ * @license Lesser GNU Public License v3 (http://www.gnu.org/licenses/lgpl.html)
+ */
+
 public class RenderTube extends TileEntitySpecialRenderer implements IItemRenderer
 {
 	public static final double OF = 0.4D;

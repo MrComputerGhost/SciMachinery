@@ -7,6 +7,13 @@ import java.io.IOException;
 import net.minecraft.network.INetworkManager;
 import cpw.mods.fml.common.network.Player;
 
+/**
+ * SciMachinery
+ *
+ * @author sci4me
+ * @license Lesser GNU Public License v3 (http://www.gnu.org/licenses/lgpl.html)
+ */
+
 public abstract class PacketSci
 {
 	public PacketTypeHandler packetType;

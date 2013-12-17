@@ -4,6 +4,13 @@ import java.util.List;
 import net.minecraft.nbt.NBTTagCompound;
 import com.sci.machinery.block.TileTube;
 
+/**
+ * SciMachinery
+ *
+ * @author sci4me
+ * @license Lesser GNU Public License v3 (http://www.gnu.org/licenses/lgpl.html)
+ */
+
 public abstract class Tube implements ITubeConnectable
 {
 	private TileTube tile;

@@ -9,6 +9,13 @@ import net.minecraft.tileentity.TileEntity;
 import com.sci.machinery.block.tube.ITubeConnectable;
 import cpw.mods.fml.common.network.Player;
 
+/**
+ * SciMachinery
+ *
+ * @author sci4me
+ * @license Lesser GNU Public License v3 (http://www.gnu.org/licenses/lgpl.html)
+ */
+
 public class PacketRemoveItem extends PacketSci
 {
 	private int x, y, z;

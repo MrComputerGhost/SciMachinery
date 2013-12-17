@@ -26,8 +26,14 @@ public class TubeNormal extends Tube
 	protected Speed speed = Speed.MEDIUM;
 	private int timer;
 
-	public TubeNormal()
+	protected Material material;
+
+	public TubeNormal(boolean isCobble)
 	{
+		if(isCobble)
+			material = Material.COBBLESTONE;
+		else
+			material = Material.STONE;
 		this.items = new ArrayList<TravellingItem>();
 	}
 
@@ -188,6 +194,21 @@ public class TubeNormal extends Tube
 	@Override
 	public boolean canConnectTube(TileEntity e)
 	{
+		if(e instanceof TileTube)
+		{
+			TileTube tube = (TileTube) e;
+			if(tube.getTube().getClass().getName().equals(TubeNormal.class.getName()))
+			{	
+				TubeNormal ot = (TubeNormal) tube.getTube();
+				return ot.material == this.material;
+			}
+		}
 		return e instanceof ITubeConnectable || e instanceof IInventory;
+	}
+
+	@Override
+	public Material getMaterial()
+	{
+		return material;
 	}
 }

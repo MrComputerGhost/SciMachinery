@@ -15,6 +15,12 @@ import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class TubePump extends TubeNormal
 {
+	public TubePump()
+	{
+		super(false);
+		this.material = Material.PUMP;
+	}
+
 	private int timer;
 
 	@Override

@@ -5,7 +5,6 @@ import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.item.EntityItem;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
@@ -14,10 +13,8 @@ import org.lwjgl.opengl.GL11;
 import com.sci.machinery.SciMachinery;
 import com.sci.machinery.block.TileTube;
 import com.sci.machinery.block.tube.ITubeConnectable;
+import com.sci.machinery.block.tube.Material;
 import com.sci.machinery.block.tube.TravellingItem;
-import com.sci.machinery.block.tube.TubeDetector;
-import com.sci.machinery.block.tube.TubePump;
-import com.sci.machinery.block.tube.TubeVoid;
 import com.sci.machinery.core.BlockCoord;
 import com.sci.machinery.core.Utils;
 
@@ -221,38 +218,13 @@ public class RenderTube extends TileEntitySpecialRenderer implements IItemRender
 
 	private void setColor(TileTube t)
 	{
-		if(t.getTube() instanceof TubePump)
-		{
-			setColor(SciMachinery.instance.pumpTubeId, 0);
-		}
-		else if(t.getTube() instanceof TubeDetector)
-		{
-			setColor(SciMachinery.instance.detectorTubeId, ((TileTube) t).isPowering() ? 1 : 0);
-		}
-		else if(t.getTube() instanceof TubeVoid)
-		{
-			setColor(SciMachinery.instance.voidTubeId, ((TileTube) t).isPowering() ? 1 : 0);
-		}
+		setColor(((TileTube) t).getTube().getMaterial(), ((TileTube) t).isPowering() ? 1 : 0);
 	}
 
-	private void setColor(int id, int b)
+	private void setColor(Material mat, int b)
 	{
 		Tessellator tess = Tessellator.instance;
-		if(id == SciMachinery.instance.pumpTubeId)
-		{
-			tess.setColorRGBA(200, 20, 20, 150);
-		}
-		else if(id == SciMachinery.instance.detectorTubeId)
-		{
-			if(b == 0)
-				tess.setColorRGBA(200, 200, 20, 150);
-			else if(b == 1)
-				tess.setColorRGBA(250, 250, 20, 150);
-		}
-		else if(id == SciMachinery.instance.voidTubeId)
-		{
-			tess.setColorRGBA(20, 20, 200, 150);
-		}
+		tess.setColorRGBA(mat.getR(b), mat.getG(b), mat.getB(b), mat.getA(b));
 	}
 
 	public void renderItem(TravellingItem item, double x, double y, double z)
@@ -862,7 +834,32 @@ public class RenderTube extends TileEntitySpecialRenderer implements IItemRender
 
 			tess.draw();
 
+			tess.addVertex(x + O, y + O - OA, z + O);
 			GL11.glEnable(GL11.GL_LIGHTING);
+		}
+	}
+
+	private void setColor(int itemID, int b)
+	{
+		if(itemID == SciMachinery.instance.pumpTube.blockID)
+		{
+			setColor(Material.PUMP, b);
+		}
+		else if(itemID == SciMachinery.instance.detectorTube.blockID)
+		{
+			setColor(Material.DETECTOR, b);
+		}
+		else if(itemID == SciMachinery.instance.voidTube.blockID)
+		{
+			setColor(Material.VOID, b);
+		}
+		else if(itemID == SciMachinery.instance.stoneTube.blockID)
+		{
+			setColor(Material.STONE, b);
+		}
+		else if(itemID == SciMachinery.instance.cobbleTube.blockID)
+		{
+			setColor(Material.COBBLESTONE, b);
 		}
 	}
 }

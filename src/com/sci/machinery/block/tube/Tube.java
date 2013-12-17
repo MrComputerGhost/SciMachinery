@@ -2,7 +2,6 @@ package com.sci.machinery.block.tube;
 
 import java.util.List;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import com.sci.machinery.block.TileTube;
 
 public abstract class Tube implements ITubeConnectable
@@ -48,4 +47,6 @@ public abstract class Tube implements ITubeConnectable
 	public abstract List<TravellingItem> getItems();
 
 	public abstract boolean isPowering();
+
+	public abstract Material getMaterial();
 }

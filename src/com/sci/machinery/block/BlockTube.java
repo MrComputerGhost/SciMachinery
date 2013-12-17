@@ -2,18 +2,13 @@ package com.sci.machinery.block;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import com.sci.machinery.SciMachinery;
-import com.sci.machinery.block.tube.ITubeConnectable;
-import com.sci.machinery.block.tube.TravellingItem;
 import com.sci.machinery.block.tube.Tube;
+import com.sci.machinery.block.tube.TubeNormal;
 import com.sci.machinery.core.BlockCoord;
 import com.sci.machinery.core.BlockSci;
 import com.sci.machinery.core.Utils;
@@ -57,6 +52,14 @@ public class BlockTube extends BlockSci
 	{
 		try
 		{
+			if(blockID == SciMachinery.instance.stoneTube.blockID)
+			{
+				return new TileTube(new TubeNormal(false));
+			}
+			else if(blockID == SciMachinery.instance.cobbleTube.blockID)
+			{
+				return new TileTube(new TubeNormal(true));
+			}
 			return new TileTube(tubeClazz.newInstance());
 		}
 		catch(Exception e)

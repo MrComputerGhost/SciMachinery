@@ -46,8 +46,11 @@ public class SciMachinery
 	public int easterEggId;
 	public ItemEasterEgg easterEgg;
 
-	public int tubeId;
-	public BlockTube tube;
+	public int stoneTubeId;
+	public BlockTube stoneTube;
+
+	public int cobbleTubeId;
+	public BlockTube cobbleTube;
 
 	public int pumpTubeId;
 	public BlockTube pumpTube;
@@ -71,8 +74,8 @@ public class SciMachinery
 		{
 			cfg.load();
 			easterEggId = cfg.getItem("easterEgg", 419).getInt();
-
-			tubeId = cfg.getBlock("tube", 420).getInt();
+			stoneTubeId = cfg.getBlock("stoneTube", 420).getInt();
+			cobbleTubeId = cfg.getBlock("cobbleTube", 424).getInt();
 			pumpTubeId = cfg.getBlock("pumpTube", 421).getInt();
 			detectorTubeId = cfg.getBlock("detectorTube", 422).getInt();
 			voidTubeId = cfg.getBlock("voidTube", 423).getInt();
@@ -94,9 +97,13 @@ public class SciMachinery
 
 		GameRegistry.registerTileEntity(TileTube.class, "SciMachinery_TileTube");
 
-		tube = new BlockTube(tubeId, Tube.NORMAL);
-		tube.setUnlocalizedName("tube");
-		GameRegistry.registerBlock(tube, "SciMachinery_TileTube");
+		stoneTube = new BlockTube(stoneTubeId, Tube.NORMAL);
+		stoneTube.setUnlocalizedName("stoneTube");
+		GameRegistry.registerBlock(stoneTube, "SciMachinery_TileStoneTube");
+
+		cobbleTube = new BlockTube(cobbleTubeId, Tube.NORMAL);
+		cobbleTube.setUnlocalizedName("cobbleTube");
+		GameRegistry.registerBlock(cobbleTube, "SciMachinery_TileCobbleTube");
 
 		pumpTube = new BlockTube(pumpTubeId, Tube.PUMP);
 		pumpTube.setUnlocalizedName("pumpTube");
@@ -110,14 +117,16 @@ public class SciMachinery
 		voidTube.setUnlocalizedName("voidTube");
 		GameRegistry.registerBlock(voidTube, "SciMachinery_TileVoidTube");
 
-		GameRegistry.addRecipe(new ItemStack(tube, 16), new Object[]
-		{ "sss", "gpg", "sss", 's', Block.stoneSingleSlab, 'g', Block.glass, 'p', Block.pistonBase });
+		GameRegistry.addRecipe(new ItemStack(stoneTube, 16), new Object[]
+		{ "sss", "gpg", "sss", 's', Block.stone, 'g', Block.glass, 'p', Block.pistonBase });
+		GameRegistry.addRecipe(new ItemStack(cobbleTube, 16), new Object[]
+		{ "sss", "gpg", "sss", 's', Block.cobblestone, 'g', Block.glass, 'p', Block.pistonBase });
 		GameRegistry.addRecipe(new ItemStack(pumpTube, 4), new Object[]
-		{ "rhr", "hth", "rhr", 'r', Item.redstone, 'h', Block.hopperBlock, 't', tube });
+		{ "rhr", "hth", "rhr", 'r', Item.redstone, 'h', Block.hopperBlock, 't', stoneTube });
 		GameRegistry.addRecipe(new ItemStack(detectorTube, 3), new Object[]
-		{ "rgr", "ttt", "rgr", 'r', Item.redstone, 'g', Item.ingotGold, 't', tube });
+		{ "rgr", "ttt", "rgr", 'r', Item.redstone, 'g', Item.ingotGold, 't', stoneTube });
 		GameRegistry.addRecipe(new ItemStack(voidTube, 1), new Object[]
-		{ "lgl", "epe", "lgl", 'l', new ItemStack(Item.dyePowder, 4), 'g', Item.glowstone, 'e', Item.enderPearl, 'p', tube });
+		{ "lgl", "epe", "lgl", 'l', new ItemStack(Item.dyePowder, 4), 'g', Item.glowstone, 'e', Item.enderPearl, 'p', stoneTube });
 	}
 
 	@EventHandler

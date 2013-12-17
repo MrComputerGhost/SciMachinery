@@ -4,6 +4,12 @@ import com.sci.machinery.SciMachinery;
 
 public class TubeDetector extends TubeNormal
 {
+	public TubeDetector()
+	{
+		super(false);
+		this.material = Material.DETECTOR;
+	}
+
 	private boolean lastIsEmpty;
 
 	@Override

@@ -14,8 +14,8 @@ public class CreativeTabSM extends CreativeTabs
 	@Override
 	public int getTabIconItemIndex()
 	{
-		if(SciMachinery.instance.tube != null)
-			return SciMachinery.instance.tube.blockID;
+		if(SciMachinery.instance.stoneTube != null)
+			return SciMachinery.instance.stoneTube.blockID;
 		return 0;
 	}
 }

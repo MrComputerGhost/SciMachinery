@@ -4,6 +4,7 @@ import java.util.List;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import com.sci.machinery.block.tube.ITubeConnectable;
+import com.sci.machinery.block.tube.Material;
 import com.sci.machinery.block.tube.TravellingItem;
 import com.sci.machinery.block.tube.Tube;
 import com.sci.machinery.block.tube.TubeDetector;
@@ -51,20 +52,25 @@ public class TileTube extends TileEntity implements ITubeConnectable
 		{
 		case 0:
 		{
-			this.tube = new TubeNormal();
+			this.tube = new TubeNormal(false);
 			break;
 		}
 		case 1:
 		{
-			this.tube = new TubePump();
+			this.tube = new TubeNormal(true);
 			break;
 		}
 		case 2:
 		{
-			this.tube = new TubeDetector();
+			this.tube = new TubePump();
 			break;
 		}
 		case 3:
+		{
+			this.tube = new TubeDetector();
+			break;
+		}
+		case 4:
 		{
 			this.tube = new TubeVoid();
 			break;
@@ -80,13 +86,15 @@ public class TileTube extends TileEntity implements ITubeConnectable
 	private int getTubeID(Tube tube)
 	{
 		if(tube instanceof TubePump)
-			return 1;
-		else if(tube instanceof TubeDetector)
 			return 2;
-		else if(tube instanceof TubeNormal)
-			return 0;
-		else if(tube instanceof TubeVoid)
+		else if(tube instanceof TubeDetector)
 			return 3;
+		else if(tube instanceof TubeNormal)
+		{
+			return ((TubeNormal)tube).getMaterial() == Material.STONE ? 0 : 1;
+		}
+		else if(tube instanceof TubeVoid)
+			return 4;
 		return -1;
 	}
 

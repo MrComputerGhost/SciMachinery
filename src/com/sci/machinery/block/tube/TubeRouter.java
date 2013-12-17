@@ -36,7 +36,7 @@ public final class TubeRouter
 			for(int i = 0; i < adjacent.length; i++)
 			{
 				TileEntity te = Utils.getTileEntity(tube.worldObj, adjacent[i]);
-				if(te instanceof ITubeConnectable && ((ITubeConnectable) te).canAcceptItems())
+				if(te instanceof ITubeConnectable && ((ITubeConnectable) te).canAcceptItems() && ((ITubeConnectable) te).canConnectTube(tube))
 				{
 					if(noneEqual(adjacent[i], item.getLastCoord()))
 					{

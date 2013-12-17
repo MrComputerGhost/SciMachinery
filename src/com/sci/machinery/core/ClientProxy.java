@@ -30,7 +30,8 @@ public class ClientProxy extends CommonProxy
 		tubeRenderer = new RenderTube();
 		ClientRegistry.bindTileEntitySpecialRenderer(TileTube.class, tubeRenderer);
 		
-		MinecraftForgeClient.registerItemRenderer(SciMachinery.instance.tubeId, tubeRenderer);
+		MinecraftForgeClient.registerItemRenderer(SciMachinery.instance.stoneTubeId, tubeRenderer);
+		MinecraftForgeClient.registerItemRenderer(SciMachinery.instance.cobbleTubeId, tubeRenderer);
 		MinecraftForgeClient.registerItemRenderer(SciMachinery.instance.pumpTubeId, tubeRenderer);
 		MinecraftForgeClient.registerItemRenderer(SciMachinery.instance.detectorTubeId, tubeRenderer);
 		MinecraftForgeClient.registerItemRenderer(SciMachinery.instance.voidTubeId, tubeRenderer);

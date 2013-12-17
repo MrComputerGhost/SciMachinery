@@ -39,25 +39,25 @@ public class SciMachinery
 	public static SciMachinery instance;
 
 	@SidedProxy(clientSide = Reference.CLIENT_PROXY, serverSide = Reference.SERVER_PROXY)
-	public static IProxy proxy;	
+	public static IProxy proxy;
 
 	public static CreativeTabs tab = new CreativeTabSM(CreativeTabs.getNextID(), Reference.MOD_ID);
 
 	public int easterEggId;
 	public ItemEasterEgg easterEgg;
-	
-	public int tubeId;
-	public BlockTube tube;	
 
-	public int pumpTubeId;		
+	public int tubeId;
+	public BlockTube tube;
+
+	public int pumpTubeId;
 	public BlockTube pumpTube;
-		
-	public int detectorTubeId;	
+
+	public int detectorTubeId;
 	public BlockTube detectorTube;
-	
+
 	public int voidTubeId;
 	public BlockTube voidTube;
-	
+
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent e)
 	{
@@ -71,7 +71,7 @@ public class SciMachinery
 		{
 			cfg.load();
 			easterEggId = cfg.getItem("easterEgg", 419).getInt();
-			
+
 			tubeId = cfg.getBlock("tube", 420).getInt();
 			pumpTubeId = cfg.getBlock("pumpTube", 421).getInt();
 			detectorTubeId = cfg.getBlock("detectorTube", 422).getInt();
@@ -86,14 +86,14 @@ public class SciMachinery
 	@EventHandler
 	public void init(FMLInitializationEvent e)
 	{
-		proxy.init(e);  
- 
+		proxy.init(e);
+
 		easterEgg = new ItemEasterEgg(easterEggId);
-		
+
 		ChestGenHooks.addItem(ChestGenHooks.DUNGEON_CHEST, new WeightedRandomChestContent(new ItemStack(easterEgg), 1, 1, 1));
-		
+
 		GameRegistry.registerTileEntity(TileTube.class, "SciMachinery_TileTube");
-		
+
 		tube = new BlockTube(tubeId, Tube.NORMAL);
 		tube.setUnlocalizedName("tube");
 		GameRegistry.registerBlock(tube, "SciMachinery_TileTube");
@@ -105,7 +105,7 @@ public class SciMachinery
 		detectorTube = new BlockTube(detectorTubeId, Tube.DETECTOR);
 		detectorTube.setUnlocalizedName("detectorTube");
 		GameRegistry.registerBlock(detectorTube, "SciMachinery_TileDetectorTube");
-		
+
 		voidTube = new BlockTube(voidTubeId, Tube.VOID);
 		voidTube.setUnlocalizedName("voidTube");
 		GameRegistry.registerBlock(voidTube, "SciMachinery_TileVoidTube");
@@ -114,8 +114,10 @@ public class SciMachinery
 		{ "sss", "gpg", "sss", 's', Block.stoneSingleSlab, 'g', Block.glass, 'p', Block.pistonBase });
 		GameRegistry.addRecipe(new ItemStack(pumpTube, 4), new Object[]
 		{ "rhr", "hth", "rhr", 'r', Item.redstone, 'h', Block.hopperBlock, 't', tube });
-		GameRegistry.addRecipe(new ItemStack(detectorTube, 3), new Object[]	
+		GameRegistry.addRecipe(new ItemStack(detectorTube, 3), new Object[]
 		{ "rgr", "ttt", "rgr", 'r', Item.redstone, 'g', Item.ingotGold, 't', tube });
+		GameRegistry.addRecipe(new ItemStack(voidTube, 1), new Object[]
+		{ "lgl", "epe", "lgl", 'l', new ItemStack(Item.dyePowder, 4), 'g', Item.glowstone, 'e', Item.enderPearl, 'p', tube });
 	}
 
 	@EventHandler

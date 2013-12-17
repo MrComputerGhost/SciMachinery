@@ -45,75 +45,75 @@ public class TubeNormal extends Tube
 
 				TravellingItem item = items.remove(0);
 				PacketDispatcher.sendPacketToAllPlayers(PacketTypeHandler.populatePacket(new PacketRemoveItem(getTile().xCoord, getTile().yCoord, getTile().zCoord, 0)));
-				BlockCoord[] adjacent = Utils.blockCoord(getTile()).getAdjacent();
 
-				for(int i = 0; i < adjacent.length; i++)
+				BlockCoord next = TubeRouter.route(getTile(), item);
+				if(next == null)
 				{
-					BlockCoord pos = adjacent[i];
-					if(!pos.equals(item.getLastCoord()))
+					getTile().worldObj.spawnEntityInWorld(new EntityItem(getTile().worldObj, getTile().xCoord, getTile().yCoord, getTile().zCoord, item.getStack()));
+				}
+				else
+				{
+					TileEntity nextTE = Utils.getTileEntity(getTile().worldObj, next);
+					if(nextTE == null)
 					{
-						TileEntity adjTile = getTile().worldObj.getBlockTileEntity(pos.getX(), pos.getY(), pos.getZ());
-						if(adjTile != null)
+						getTile().worldObj.spawnEntityInWorld(new EntityItem(getTile().worldObj, getTile().xCoord, getTile().yCoord, getTile().zCoord, item.getStack()));
+					}
+					else if(nextTE instanceof ISidedInventory)
+					{
+						int side = findSide(Utils.blockCoord(getTile()), next);
+						if(side != -1)
 						{
-							if(adjTile instanceof ISidedInventory)
-							{
-								ISidedInventory inv = (ISidedInventory) adjTile;
-								int[] slots = inv.getAccessibleSlotsFromSide(ForgeDirection.OPPOSITES[i]);
+							side = ForgeDirection.OPPOSITES[side];
+							ISidedInventory inv = (ISidedInventory) nextTE;
+							int[] slots = inv.getAccessibleSlotsFromSide(side);
 
-								for(int j = 0; j < slots.length; j++)
+							for(int j = 0; j < slots.length; j++)
+							{
+								if(inv.canInsertItem(j, item.getStack(), side))
 								{
-									if(inv.canInsertItem(j, item.getStack(), ForgeDirection.OPPOSITES[i]))
+									ItemStack remaining = TileEntityHopper.insertStack(inv, item.getStack(), side);
+									if(remaining != null)
 									{
-										ItemStack remaining = TileEntityHopper.insertStack(inv, item.getStack(), ForgeDirection.OPPOSITES[i]);
-										if(remaining != null)
-										{
-											this.addItem(new TravellingItem(remaining), null);
-										}
-										else
-										{
-											return;
-										}
+										this.addItem(new TravellingItem(remaining), getTile());
 									}
 								}
 							}
-							else if(adjTile instanceof IInventory)
+						}
+					}
+					else if(nextTE instanceof IInventory)
+					{
+						int side = findSide(Utils.blockCoord(getTile()), next);
+						if(side != -1)
+						{
+							side = ForgeDirection.OPPOSITES[side];
+							IInventory inv = (IInventory) nextTE;
+							ItemStack remaining = TileEntityHopper.insertStack(inv, item.getStack(), side);
+							if(remaining != null)
 							{
-								IInventory inv = (IInventory) adjTile;
-								ItemStack remaining = TileEntityHopper.insertStack(inv, item.getStack(), ForgeDirection.OPPOSITES[i]);
-								if(remaining != null)
-								{
-									this.addItem(new TravellingItem(remaining), null);
-								}
-								else
-								{
-									return;
-								}
+								this.addItem(new TravellingItem(remaining), getTile());
 							}
 						}
 					}
-				}
-
-				for(int i = 0; i < adjacent.length; i++)
-				{
-					BlockCoord pos = adjacent[i];
-					if(!pos.equals(item.getLastCoord()))
+					else if(nextTE instanceof ITubeConnectable)
 					{
-						TileEntity adjTile = getTile().worldObj.getBlockTileEntity(pos.getX(), pos.getY(), pos.getZ());
-						if(adjTile instanceof ITubeConnectable && ((ITubeConnectable) adjTile).canAcceptItems())
-						{
-							((ITubeConnectable) adjTile).addItem(item, getTile());
-							return;
-						}
+						((ITubeConnectable)nextTE).addItem(item, getTile());
 					}
 				}
-
-				getTile().worldObj.spawnEntityInWorld(new EntityItem(getTile().worldObj, getTile().xCoord, getTile().yCoord, getTile().zCoord, item.getStack()));
 			}
 		}
 		else
 		{
 			timer = 0;
 		}
+	}
+
+	private int findSide(BlockCoord base, BlockCoord side)
+	{
+		BlockCoord[] adjacent = base.getAdjacent();
+		for(int i = 0; i < adjacent.length; i++)
+			if(adjacent[i].equals(side))
+				return i;
+		return -1;
 	}
 
 	@Override

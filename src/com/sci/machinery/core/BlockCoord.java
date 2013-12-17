@@ -1,10 +1,12 @@
 package com.sci.machinery.core;
 
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.ForgeDirection;
 
 /**
  * SciMachinery
- *
+ * 
  * @author sci4me
  * @license Lesser GNU Public License v3 (http://www.gnu.org/licenses/lgpl.html)
  */
@@ -94,6 +96,25 @@ public class BlockCoord
 		{
 			ret[i] = new BlockCoord(x + ForgeDirection.getOrientation(i).offsetX, y + ForgeDirection.getOrientation(i).offsetY, z + ForgeDirection.getOrientation(i).offsetZ);
 		}
+		return ret;
+	}
+
+	public void writeToNBT(NBTTagList lcl)
+	{
+		NBTTagCompound tag = new NBTTagCompound();
+		tag.setInteger("x", x);
+		tag.setInteger("y", y);
+		tag.setInteger("z", z);
+		lcl.appendTag(tag);
+	}
+
+	public static BlockCoord fromNBT(NBTTagList tagList)
+	{
+		BlockCoord ret = new BlockCoord();
+		NBTTagCompound tag = (NBTTagCompound) tagList.tagAt(0);
+		ret.setX(tag.getInteger("x"));
+		ret.setX(tag.getInteger("y"));
+		ret.setX(tag.getInteger("z"));
 		return ret;
 	}
 }

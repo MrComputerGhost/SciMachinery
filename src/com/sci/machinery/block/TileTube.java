@@ -1,7 +1,9 @@
 package com.sci.machinery.block;
 
 import java.util.List;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import com.sci.machinery.block.tube.ITubeConnectable;
 import com.sci.machinery.block.tube.Material;
@@ -11,10 +13,12 @@ import com.sci.machinery.block.tube.TubeDetector;
 import com.sci.machinery.block.tube.TubeNormal;
 import com.sci.machinery.block.tube.TubePump;
 import com.sci.machinery.block.tube.TubeVoid;
+import com.sci.machinery.core.BlockCoord;
+import com.sci.machinery.core.Utils;
 
 /**
  * SciMachinery
- *
+ * 
  * @author sci4me
  * @license Lesser GNU Public License v3 (http://www.gnu.org/licenses/lgpl.html)
  */
@@ -40,7 +44,7 @@ public class TileTube extends TileEntity implements ITubeConnectable
 		{
 			tube.setTile(this);
 		}
-		
+
 		if(!isInvalid())
 			tube.update();
 	}
@@ -88,6 +92,14 @@ public class TileTube extends TileEntity implements ITubeConnectable
 		}
 		}
 		tube.readFromNBT(tag);
+
+		NBTTagList list = tag.getTagList("Items");
+		for(int i = 0; i < list.tagCount(); ++i)
+		{
+			NBTTagCompound item = (NBTTagCompound) list.tagAt(i);
+			int j = item.getByte("Slot") & 255;
+			this.getTube().addItem(new TravellingItem(ItemStack.loadItemStackFromNBT(item)), Utils.getTileEntity(worldObj, BlockCoord.fromNBT(tag.getTagList("lastCoord"))));
+		}
 	}
 
 	private int getTubeID(Tube tube)
@@ -98,7 +110,7 @@ public class TileTube extends TileEntity implements ITubeConnectable
 			return 3;
 		else if(tube instanceof TubeNormal)
 		{
-			return ((TubeNormal)tube).getMaterial() == Material.STONE ? 0 : 1;
+			return ((TubeNormal) tube).getMaterial() == Material.STONE ? 0 : 1;
 		}
 		else if(tube instanceof TubeVoid)
 			return 4;
@@ -106,20 +118,35 @@ public class TileTube extends TileEntity implements ITubeConnectable
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound tag)
+	public void writeToNBT(NBTTagCompound root)
 	{
-		super.writeToNBT(tag);
-		tag.setInteger("tubeID", getTubeID(tube));
-		tube.writeToNBT(tag);
+		super.writeToNBT(root);
+		root.setInteger("tubeID", getTubeID(tube));
+		tube.writeToNBT(root);
+
+		NBTTagList list = new NBTTagList();
+		for(int i = 0; i < this.getTube().getItems().size(); i++)
+		{
+			NBTTagCompound tag = new NBTTagCompound();
+			tag.setByte("Slot", (byte) i);
+			this.getTube().getItems().get(i).getStack().writeToNBT(tag);
+			list.appendTag(tag);
+		}
+		root.setTag("Items", list);
+
+		NBTTagList lcl = new NBTTagList();
+		BlockCoord c = Utils.blockCoord(this);
+		c.writeToNBT(lcl);
+		root.setTag("lastCoord", lcl);
 	}
 
-	@Override	
+	@Override
 	public void validate()
 	{
 		super.validate();
 		tube.validate();
 	}
-	
+
 	@Override
 	public void invalidate()
 	{

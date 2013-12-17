@@ -142,4 +142,10 @@ public class TileTube extends TileEntity implements ITubeConnectable
 	{
 		tube.removeItem(index);
 	}
+
+	@Override
+	public boolean canConnectTube(TileEntity e)
+	{
+		return tube == null ? false : tube.canConnectTube(e);
+	}
 }

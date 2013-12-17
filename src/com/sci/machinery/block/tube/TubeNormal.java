@@ -10,6 +10,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityHopper;
 import net.minecraftforge.common.ForgeDirection;
+import com.sci.machinery.block.TileTube;
 import com.sci.machinery.core.BlockCoord;
 import com.sci.machinery.core.Utils;
 import com.sci.machinery.network.PacketAddItem;
@@ -74,7 +75,9 @@ public class TubeNormal extends Tube
 									ItemStack remaining = TileEntityHopper.insertStack(inv, item.getStack(), side);
 									if(remaining != null)
 									{
-										this.addItem(new TravellingItem(remaining), nextTE);
+										item.setStack(remaining);
+										this.addItem(item, nextTE);
+										timer = speed.delay - 1;
 									}
 								}
 							}
@@ -90,13 +93,14 @@ public class TubeNormal extends Tube
 							ItemStack remaining = TileEntityHopper.insertStack(inv, item.getStack(), side);
 							if(remaining != null)
 							{
-								this.addItem(new TravellingItem(remaining), nextTE);
+								item.setStack(remaining);
+								this.addItem(item, getTile());
 							}
 						}
 					}
 					else if(nextTE instanceof ITubeConnectable)
 					{
-						((ITubeConnectable)nextTE).addItem(item, getTile());
+						((ITubeConnectable) nextTE).addItem(item, getTile());
 					}
 				}
 			}
@@ -125,7 +129,7 @@ public class TubeNormal extends Tube
 		}
 		if(sender != null)
 		{
-			item.setLastCoord(Utils.blockCoord(sender));
+			item.getLastCoord().add(Utils.blockCoord(sender));
 		}
 		items.add(item);
 	}
@@ -179,5 +183,11 @@ public class TubeNormal extends Tube
 		{
 			items.remove(index);
 		}
+	}
+
+	@Override
+	public boolean canConnectTube(TileEntity e)
+	{
+		return e instanceof ITubeConnectable || e instanceof IInventory;
 	}
 }

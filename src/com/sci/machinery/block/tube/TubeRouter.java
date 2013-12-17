@@ -23,7 +23,7 @@ public final class TubeRouter
 			TileEntity te = Utils.getTileEntity(tube.worldObj, adjacent[i]);
 			if(te instanceof IInventory)
 			{
-				if(!adjacent[i].equals(item.getLastCoord()))
+				if(noneEqual(adjacent[i], item.getLastCoord()))
 				{
 					ret = adjacent[i];
 					break;
@@ -38,7 +38,7 @@ public final class TubeRouter
 				TileEntity te = Utils.getTileEntity(tube.worldObj, adjacent[i]);
 				if(te instanceof ITubeConnectable && ((ITubeConnectable) te).canAcceptItems())
 				{
-					if(!adjacent[i].equals(item.getLastCoord()))
+					if(noneEqual(adjacent[i], item.getLastCoord()))
 					{
 						ret = adjacent[i];
 						break;
@@ -48,5 +48,15 @@ public final class TubeRouter
 		}
 
 		return ret;
+	}
+
+	private static boolean noneEqual(BlockCoord o, List<BlockCoord> e)
+	{
+		for(BlockCoord ob : e)
+		{
+			if(ob.equals(o))
+				return false;
+		}
+		return true;
 	}
 }

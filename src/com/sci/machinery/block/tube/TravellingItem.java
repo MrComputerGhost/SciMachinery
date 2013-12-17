@@ -1,5 +1,7 @@
 package com.sci.machinery.block.tube;
 
+import java.util.ArrayList;
+import java.util.List;
 import net.minecraft.item.ItemStack;
 import com.sci.machinery.core.BlockCoord;
 
@@ -7,7 +9,7 @@ public class TravellingItem
 {
 	private ItemStack stack;
 	private float rotation;
-	private BlockCoord lastCoord;
+	private List<BlockCoord> lastCoord;
 
 	public ItemStack getStack()
 	{
@@ -29,19 +31,14 @@ public class TravellingItem
 		this.rotation = rotation;
 	}
 
-	public BlockCoord getLastCoord()
+	public List<BlockCoord> getLastCoord()
 	{
 		return lastCoord;
-	}
-
-	public void setLastCoord(BlockCoord lastCoord)
-	{
-		this.lastCoord = lastCoord;
 	}
 
 	public TravellingItem(ItemStack stack)
 	{
 		this.stack = stack;
-		this.lastCoord = new BlockCoord(0, 0, 0);
+		this.lastCoord = new ArrayList<BlockCoord>();
 	}
 }

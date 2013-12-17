@@ -6,9 +6,9 @@ import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
+import com.sci.machinery.block.TileTube;
 import com.sci.machinery.core.BlockCoord;
 import com.sci.machinery.core.Utils;
-import com.sci.machinery.network.PacketAddItem;
 import com.sci.machinery.network.PacketRemoveItem;
 import com.sci.machinery.network.PacketTypeHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
@@ -101,5 +101,16 @@ public class TubePump extends TubeNormal
 	public boolean canAcceptItems()
 	{
 		return false;
+	}
+	
+	@Override
+	public boolean canConnectTube(TileEntity e)
+	{
+		if(e instanceof TileTube)
+		{
+			TileTube tube = (TileTube) e;
+			return !(tube.getTube() instanceof TubePump);
+		}
+		return super.canConnectTube(e);
 	}
 }

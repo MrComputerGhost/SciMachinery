@@ -101,9 +101,10 @@ public class BlockTube extends BlockSci
 	@Override
 	public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z)
 	{
-		TileEntity tube = world.getBlockTileEntity(x, y, z);
-		if(tube != null && tube instanceof TileTube)
+		TileEntity te = world.getBlockTileEntity(x, y, z);
+		if(te != null && te instanceof TileTube)
 		{
+			TileTube tube = (TileTube) te;
 			TileEntity[] t = Utils.getAdjacentTiles(world, new BlockCoord(x, y, z));
 
 			float minX = 0.4f;
@@ -113,27 +114,27 @@ public class BlockTube extends BlockSci
 			float maxY = 0.6f;
 			float maxZ = 0.6f;
 
-			if(t[0] != null && t[0] instanceof ITubeConnectable || t[0] instanceof IInventory)
+			if(tube.canConnectTube(t[0]))
 			{
 				minY = 0.0f;
 			}
-			if(t[1] != null && t[1] instanceof ITubeConnectable || t[1] instanceof IInventory)
+			if(tube.canConnectTube(t[1]))
 			{
 				maxY = 1.0f;
 			}
-			if(t[2] != null && t[2] instanceof ITubeConnectable || t[2] instanceof IInventory)
+			if(tube.canConnectTube(t[2]))
 			{
 				minZ = 0.0f;
 			}
-			if(t[3] != null && t[3] instanceof ITubeConnectable || t[3] instanceof IInventory)
+			if(tube.canConnectTube(t[3]))
 			{
 				maxZ = 1.0f;
 			}
-			if(t[4] != null && t[4] instanceof ITubeConnectable || t[4] instanceof IInventory)
+			if(tube.canConnectTube(t[4]))
 			{
 				minX = 0.0f;
 			}
-			if(t[5] != null && t[5] instanceof ITubeConnectable || t[5] instanceof IInventory)
+			if(tube.canConnectTube(t[5]))
 			{
 				maxX = 1.0f;
 			}

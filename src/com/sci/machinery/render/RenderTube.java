@@ -203,7 +203,7 @@ public class RenderTube extends TileEntitySpecialRenderer implements IItemRender
 		TileEntity[] tiles = Utils.getAdjacentTiles(tube.worldObj, new BlockCoord((int) tube.xCoord, (int) tube.yCoord, (int) tube.zCoord));
 		for(int i = 0; i < 6; i++)
 		{
-			if(tiles[i] instanceof ITubeConnectable || tiles[i] instanceof IInventory)
+			if(tube.canConnectTube(tiles[i]))
 			{
 				renderSide(i, x, y, z);
 			}

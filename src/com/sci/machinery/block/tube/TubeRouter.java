@@ -1,5 +1,6 @@
 package com.sci.machinery.block.tube;
 
+import java.util.List;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.tileentity.TileEntity;
 import com.sci.machinery.block.TileTube;
@@ -22,8 +23,11 @@ public final class TubeRouter
 			TileEntity te = Utils.getTileEntity(tube.worldObj, adjacent[i]);
 			if(te instanceof IInventory)
 			{
-				ret = adjacent[i];
-				break;
+				if(!adjacent[i].equals(item.getLastCoord()))
+				{
+					ret = adjacent[i];
+					break;
+				}
 			}
 		}
 

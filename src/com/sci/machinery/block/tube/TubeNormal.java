@@ -74,7 +74,7 @@ public class TubeNormal extends Tube
 									ItemStack remaining = TileEntityHopper.insertStack(inv, item.getStack(), side);
 									if(remaining != null)
 									{
-										this.addItem(new TravellingItem(remaining), getTile());
+										this.addItem(new TravellingItem(remaining), nextTE);
 									}
 								}
 							}
@@ -90,7 +90,7 @@ public class TubeNormal extends Tube
 							ItemStack remaining = TileEntityHopper.insertStack(inv, item.getStack(), side);
 							if(remaining != null)
 							{
-								this.addItem(new TravellingItem(remaining), getTile());
+								this.addItem(new TravellingItem(remaining), nextTE);
 							}
 						}
 					}

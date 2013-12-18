@@ -9,15 +9,21 @@ import com.sci.machinery.core.Utils;
 
 /**
  * SciMachinery
- *
+ * 
  * @author sci4me
  * @license Lesser GNU Public License v3 (http://www.gnu.org/licenses/lgpl.html)
  */
 
 public final class TubeRouter
 {
-	private TubeRouter()
+	private static boolean noneEqual(BlockCoord o, List<BlockCoord> e)
 	{
+		for(BlockCoord ob : e)
+		{
+			if(ob.equals(o))
+				return false;
+		}
+		return true;
 	}
 
 	public static BlockCoord route(TileTube tube, TravellingItem item)
@@ -57,13 +63,7 @@ public final class TubeRouter
 		return ret;
 	}
 
-	private static boolean noneEqual(BlockCoord o, List<BlockCoord> e)
+	private TubeRouter()
 	{
-		for(BlockCoord ob : e)
-		{
-			if(ob.equals(o))
-				return false;
-		}
-		return true;
 	}
 }

@@ -7,17 +7,13 @@ import net.minecraftforge.common.ForgeDirection;
 
 /**
  * SciMachinery
- *
+ * 
  * @author sci4me
  * @license Lesser GNU Public License v3 (http://www.gnu.org/licenses/lgpl.html)
  */
 
 public final class Utils
 {
-	private Utils()
-	{
-	}
-
 	public static BlockCoord blockCoord(TileEntity sender)
 	{
 		return new BlockCoord(sender.xCoord, sender.yCoord, sender.zCoord);
@@ -39,5 +35,9 @@ public final class Utils
 	public static TileEntity getTileEntity(World worldObj, BlockCoord lastCoord)
 	{
 		return worldObj.getBlockTileEntity(lastCoord.getX(), lastCoord.getY(), lastCoord.getZ());
+	}
+
+	private Utils()
+	{
 	}
 }

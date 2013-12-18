@@ -8,7 +8,7 @@ import com.sci.machinery.lib.Reference;
 
 /**
  * SciMachinery
- *
+ * 
  * @author sci4me
  * @license Lesser GNU Public License v3 (http://www.gnu.org/licenses/lgpl.html)
  */
@@ -16,13 +16,6 @@ import com.sci.machinery.lib.Reference;
 public enum PacketTypeHandler
 {
 	ADD_ITEM(PacketAddItem.class), REMOVE_ITEM(PacketRemoveItem.class);
-
-	private Class<? extends PacketSci> clazz;
-
-	PacketTypeHandler(Class<? extends PacketSci> clazz)
-	{
-		this.clazz = clazz;
-	}
 
 	public static PacketSci buildPacket(byte[] data)
 	{
@@ -43,11 +36,11 @@ public enum PacketTypeHandler
 		packet.populate(dis);
 		return packet;
 	}
-	
+
 	public static PacketSci buildPacket(PacketTypeHandler type)
 	{
-		PacketSci packet=null;
-		
+		PacketSci packet = null;
+
 		try
 		{
 			packet = values()[type.ordinal()].clazz.newInstance();
@@ -58,7 +51,7 @@ public enum PacketTypeHandler
 
 		return packet;
 	}
-	
+
 	public static Packet populatePacket(PacketSci packet)
 	{
 		byte[] data = packet.populate();
@@ -68,5 +61,12 @@ public enum PacketTypeHandler
 		p250.length = data.length;
 		p250.isChunkDataPacket = false;
 		return p250;
+	}
+
+	private Class<? extends PacketSci> clazz;
+
+	PacketTypeHandler(Class<? extends PacketSci> clazz)
+	{
+		this.clazz = clazz;
 	}
 }

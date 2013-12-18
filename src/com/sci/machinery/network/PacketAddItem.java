@@ -10,21 +10,20 @@ import net.minecraft.network.INetworkManager;
 import net.minecraft.tileentity.TileEntity;
 import com.sci.machinery.block.TileTube;
 import com.sci.machinery.block.tube.TravellingItem;
-import com.sci.machinery.core.BlockCoord;
 import cpw.mods.fml.common.network.Player;
 
 /**
  * SciMachinery
- *
+ * 
  * @author sci4me
  * @license Lesser GNU Public License v3 (http://www.gnu.org/licenses/lgpl.html)
  */
 
 public class PacketAddItem extends PacketSci
 {
-	private int x, y, z;
-	private int id;
 	private int count;
+	private int id;
+	private int x, y, z;
 
 	public PacketAddItem()
 	{
@@ -39,6 +38,20 @@ public class PacketAddItem extends PacketSci
 		this.z = z;
 		this.id = id;
 		this.count = count;
+	}
+
+	@Override
+	public void execute(INetworkManager manager, Player player)
+	{
+		EntityPlayer thePlayer = (EntityPlayer) player;
+		if(thePlayer.worldObj.isRemote)
+		{
+			TileEntity t = thePlayer.worldObj.getBlockTileEntity(x, y, z);
+			if(t != null && t instanceof TileTube)
+			{
+				((TileTube) t).addItem(new TravellingItem(new ItemStack(Item.itemsList[id], count)), t);
+			}
+		}
 	}
 
 	@Override
@@ -59,19 +72,5 @@ public class PacketAddItem extends PacketSci
 		data.writeInt(this.z);
 		data.writeInt(this.id);
 		data.writeInt(this.count);
-	}
-
-	@Override
-	public void execute(INetworkManager manager, Player player)
-	{
-		EntityPlayer thePlayer = (EntityPlayer) player;
-		if(thePlayer.worldObj.isRemote)
-		{
-			TileEntity t = thePlayer.worldObj.getBlockTileEntity(x, y, z);
-			if(t != null && t instanceof TileTube)
-			{
-				((TileTube) t).addItem(new TravellingItem(new ItemStack(Item.itemsList[id], count)), t);
-			}
-		}
 	}
 }

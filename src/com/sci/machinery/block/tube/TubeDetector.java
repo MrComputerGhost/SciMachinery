@@ -1,32 +1,50 @@
 package com.sci.machinery.block.tube;
 
-import net.minecraft.inventory.IInventory;
-import net.minecraft.tileentity.TileEntity;
 import com.sci.machinery.SciMachinery;
 
 /**
  * SciMachinery
- *
+ * 
  * @author sci4me
  * @license Lesser GNU Public License v3 (http://www.gnu.org/licenses/lgpl.html)
  */
 
-public class TubeDetector extends TubeNormal
+public class TubeDetector extends TubeBase
 {
+	private boolean lastIsEmpty;
+
 	public TubeDetector()
 	{
-		super(false);
-		this.material = Material.DETECTOR;
+		setR(200);
+		setG(200);
+		setB(20);
+		setA(150);
 	}
 
-	private boolean lastIsEmpty;
+	@Override
+	public int getG(int a)
+	{
+		return this.g + (a == 1 ? 50 : 0);
+	}
+
+	@Override
+	public int getR(int a)
+	{
+		return this.r + (a == 1 ? 50 : 0);
+	}
+
+	@Override
+	public boolean isPowering()
+	{
+		return !lastIsEmpty;
+	}
 
 	@Override
 	public void update()
 	{
 		if(!isValid())
 			return;
-		
+
 		if(lastIsEmpty != items.isEmpty())
 		{
 			lastIsEmpty = items.isEmpty();
@@ -43,17 +61,5 @@ public class TubeDetector extends TubeNormal
 		}
 
 		super.update();
-	}
-	
-	@Override
-	public boolean canConnectTube(TileEntity e)
-	{
-		return e instanceof ITubeConnectable || e instanceof IInventory;
-	}
-	
-	@Override
-	public boolean isPowering()
-	{
-		return !lastIsEmpty;
 	}
 }

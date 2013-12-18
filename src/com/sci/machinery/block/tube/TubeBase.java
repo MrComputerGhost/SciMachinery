@@ -20,31 +20,159 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.relauncher.Side;
 
-/**
- * SciMachinery
- *
- * @author sci4me
- * @license Lesser GNU Public License v3 (http://www.gnu.org/licenses/lgpl.html)
- */
-
-public class TubeNormal extends Tube
+public abstract class TubeBase implements ITubeConnectable
 {
+	public static final Class<? extends TubeBase> COBBLE = TubeCobble.class;
+	public static final Class<? extends TubeBase> DETECTOR = TubeDetector.class;
+	public static final Class<? extends TubeBase> PUMP = TubePump.class;
+	public static final Class<? extends TubeBase> STONE = TubeStone.class;
+	public static final Class<? extends TubeBase> VOID = TubeVoid.class;
+
 	protected List<TravellingItem> items;
+
 	protected Speed speed = Speed.MEDIUM;
+	private TileTube tile;
 	private int timer;
 
-	protected Material material;
+	protected int r, g, b, a = 150;
 
-	public TubeNormal(boolean isCobble)
+	public TubeBase()
 	{
-		if(isCobble)
-			material = Material.COBBLESTONE;
-		else
-			material = Material.STONE;
 		this.items = new ArrayList<TravellingItem>();
 	}
 
 	@Override
+	public void addItem(TravellingItem item, TileEntity sender)
+	{
+		if(!getTile().worldObj.isRemote)
+		{
+			PacketDispatcher.sendPacketToAllPlayers(PacketTypeHandler.populatePacket(new PacketAddItem(getTile().xCoord, getTile().yCoord, getTile().zCoord, item.getStack().itemID, item.getStack().stackSize)));
+		}
+		if(sender != null)
+		{
+			item.getLastCoord().add(Utils.blockCoord(sender));
+		}
+		items.add(item);
+	}
+
+	public void breakTube()
+	{
+		while(!items.isEmpty())
+		{
+			getTile().worldObj.spawnEntityInWorld(new EntityItem(getTile().worldObj, getTile().xCoord, getTile().yCoord, getTile().zCoord, items.remove(0).getStack()));
+		}
+	}
+
+	@Override
+	public boolean canAcceptItems()
+	{
+		return true;
+	}
+
+	@Override
+	public boolean canConnectTube(TileEntity e)
+	{
+		return e instanceof ITubeConnectable || e instanceof IInventory;
+	}
+
+	private int findSide(BlockCoord base, BlockCoord side)
+	{
+		BlockCoord[] adjacent = base.getAdjacent();
+		for(int i = 0; i < adjacent.length; i++)
+			if(adjacent[i].equals(side))
+				return i;
+		return -1;
+	}
+
+	public int getR(int a)
+	{
+		return r;
+	}
+
+	public void setR(int r)
+	{
+		this.r = r;
+	}
+
+	public int getG(int a)
+	{
+		return g;
+	}
+
+	public void setG(int g)
+	{
+		this.g = g;
+	}
+
+	public int getB(int a)
+	{
+		return b;
+	}
+
+	public void setB(int b)
+	{
+		this.b = b;
+	}
+
+	public int getA(int a)
+	{
+		return this.a;
+	}
+
+	public void setA(int a)
+	{
+		this.a = a;
+	}
+
+	public List<TravellingItem> getItems()
+	{
+		return items;
+	}
+
+	public final TileTube getTile()
+	{
+		return tile;
+	}
+
+	public void invalidate()
+	{
+
+	}
+
+	public boolean isPowering()
+	{
+		return false;
+	}
+
+	public final boolean isValid()
+	{
+		return tile != null;
+	}
+
+	public void readFromNBT(NBTTagCompound tag)
+	{
+
+	}
+
+	@Override
+	public void removeItem(int index)
+	{
+		if(FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT && !items.isEmpty())
+		{
+			items.remove(index);
+		}
+	}
+
+	public void setSpeed(Speed fast)
+	{
+		this.speed = fast;
+	}
+
+	public final void setTile(TileTube tile)
+	{
+		this.tile = tile;
+	}
+
 	public void update()
 	{
 		if(!isValid())
@@ -124,101 +252,13 @@ public class TubeNormal extends Tube
 		}
 	}
 
-	private int findSide(BlockCoord base, BlockCoord side)
-	{
-		BlockCoord[] adjacent = base.getAdjacent();
-		for(int i = 0; i < adjacent.length; i++)
-			if(adjacent[i].equals(side))
-				return i;
-		return -1;
-	}
-
-	@Override
-	public void addItem(TravellingItem item, TileEntity sender)
-	{
-		if(!getTile().worldObj.isRemote)
-		{
-			PacketDispatcher.sendPacketToAllPlayers(PacketTypeHandler.populatePacket(new PacketAddItem(getTile().xCoord, getTile().yCoord, getTile().zCoord, item.getStack().itemID, item.getStack().stackSize)));
-		}
-		if(sender != null)
-		{
-			item.getLastCoord().add(Utils.blockCoord(sender));
-		}
-		items.add(item);
-	}
-
-	@Override
-	public void breakTube()
-	{
-		while(!items.isEmpty())
-		{
-			getTile().worldObj.spawnEntityInWorld(new EntityItem(getTile().worldObj, getTile().xCoord, getTile().yCoord, getTile().zCoord, items.remove(0).getStack()));
-		}
-	}
-
-	@Override
 	public void validate()
 	{
 
 	}
 
-	@Override
 	public void writeToNBT(NBTTagCompound tag)
 	{
 
-	}
-
-	@Override
-	public void readFromNBT(NBTTagCompound tag)
-	{
-
-	}
-
-	@Override
-	public List<TravellingItem> getItems()
-	{
-		return items;
-	}
-
-	@Override
-	public boolean isPowering()
-	{
-		return false;
-	}
-
-	@Override
-	public boolean canAcceptItems()
-	{
-		return true;
-	}
-
-	@Override
-	public void removeItem(int index)
-	{
-		if(FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT && !items.isEmpty())
-		{
-			items.remove(index);
-		}
-	}
-
-	@Override
-	public boolean canConnectTube(TileEntity e)
-	{
-		if(e instanceof TileTube)
-		{
-			TileTube tube = (TileTube) e;
-			if(tube.getTube().getClass().getName().equals(TubeNormal.class.getName()))
-			{	
-				TubeNormal ot = (TubeNormal) tube.getTube();
-				return ot.material == this.material;
-			}
-		}
-		return e instanceof ITubeConnectable || e instanceof IInventory;
-	}
-
-	@Override
-	public Material getMaterial()
-	{
-		return material;
 	}
 }

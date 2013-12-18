@@ -13,6 +13,16 @@ import net.minecraftforge.common.ForgeDirection;
 
 public class BlockCoord
 {
+	public static BlockCoord fromNBT(NBTTagList tagList)
+	{
+		BlockCoord ret = new BlockCoord();
+		NBTTagCompound tag = (NBTTagCompound) tagList.tagAt(0);
+		ret.setX(tag.getInteger("x"));
+		ret.setX(tag.getInteger("y"));
+		ret.setX(tag.getInteger("z"));
+		return ret;
+	}
+
 	private int x, y, z;
 
 	public BlockCoord()
@@ -27,36 +37,6 @@ public class BlockCoord
 		this.z = z;
 	}
 
-	public int getX()
-	{
-		return x;
-	}
-
-	public void setX(int x)
-	{
-		this.x = x;
-	}
-
-	public int getY()
-	{
-		return y;
-	}
-
-	public void setY(int y)
-	{
-		this.y = y;
-	}
-
-	public int getZ()
-	{
-		return z;
-	}
-
-	public void setZ(int z)
-	{
-		this.z = z;
-	}
-
 	@Override
 	public boolean equals(Object obj)
 	{
@@ -66,6 +46,46 @@ public class BlockCoord
 			return c.x == this.x && c.y == this.y && c.z == this.z;
 		}
 		return false;
+	}
+
+	public BlockCoord[] getAdjacent()
+	{
+		BlockCoord[] ret = new BlockCoord[6];
+		for(int i = 0; i < ret.length; i++)
+		{
+			ret[i] = new BlockCoord(x + ForgeDirection.getOrientation(i).offsetX, y + ForgeDirection.getOrientation(i).offsetY, z + ForgeDirection.getOrientation(i).offsetZ);
+		}
+		return ret;
+	}
+
+	public int getX()
+	{
+		return x;
+	}
+
+	public int getY()
+	{
+		return y;
+	}
+
+	public int getZ()
+	{
+		return z;
+	}
+
+	public void setX(int x)
+	{
+		this.x = x;
+	}
+
+	public void setY(int y)
+	{
+		this.y = y;
+	}
+
+	public void setZ(int z)
+	{
+		this.z = z;
 	}
 
 	@Override
@@ -89,16 +109,6 @@ public class BlockCoord
 		return sb.toString();
 	}
 
-	public BlockCoord[] getAdjacent()
-	{
-		BlockCoord[] ret = new BlockCoord[6];
-		for(int i = 0; i < ret.length; i++)
-		{
-			ret[i] = new BlockCoord(x + ForgeDirection.getOrientation(i).offsetX, y + ForgeDirection.getOrientation(i).offsetY, z + ForgeDirection.getOrientation(i).offsetZ);
-		}
-		return ret;
-	}
-
 	public void writeToNBT(NBTTagList lcl)
 	{
 		NBTTagCompound tag = new NBTTagCompound();
@@ -106,15 +116,5 @@ public class BlockCoord
 		tag.setInteger("y", y);
 		tag.setInteger("z", z);
 		lcl.appendTag(tag);
-	}
-
-	public static BlockCoord fromNBT(NBTTagList tagList)
-	{
-		BlockCoord ret = new BlockCoord();
-		NBTTagCompound tag = (NBTTagCompound) tagList.tagAt(0);
-		ret.setX(tag.getInteger("x"));
-		ret.setX(tag.getInteger("y"));
-		ret.setX(tag.getInteger("z"));
-		return ret;
 	}
 }

@@ -6,12 +6,12 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import com.sci.machinery.block.tube.ITubeConnectable;
-import com.sci.machinery.block.tube.Material;
 import com.sci.machinery.block.tube.TravellingItem;
-import com.sci.machinery.block.tube.Tube;
+import com.sci.machinery.block.tube.TubeBase;
+import com.sci.machinery.block.tube.TubeCobble;
 import com.sci.machinery.block.tube.TubeDetector;
-import com.sci.machinery.block.tube.TubeNormal;
 import com.sci.machinery.block.tube.TubePump;
+import com.sci.machinery.block.tube.TubeStone;
 import com.sci.machinery.block.tube.TubeVoid;
 import com.sci.machinery.core.BlockCoord;
 import com.sci.machinery.core.Utils;
@@ -25,34 +25,76 @@ import com.sci.machinery.core.Utils;
 
 public class TileTube extends TileEntity implements ITubeConnectable
 {
-	private Tube tube;
+	private TubeBase tube;
 
 	public TileTube()
 	{
 	}
 
-	public TileTube(Tube tube)
+	public TileTube(TubeBase tube)
 	{
 		this.tube = tube;
 		tube.setTile(this);
 	}
 
 	@Override
-	public void updateEntity()
+	public void addItem(TravellingItem item, TileEntity entity)
 	{
-		if(!tube.isValid())
-		{
-			tube.setTile(this);
-		}
+		tube.addItem(item, entity);
+	}
 
-		if(!isInvalid())
-			tube.update();
+	public void breakTube()
+	{
+		tube.breakTube();
 	}
 
 	@Override
 	public boolean canAcceptItems()
 	{
 		return tube.canAcceptItems();
+	}
+
+	@Override
+	public boolean canConnectTube(TileEntity e)
+	{
+		return tube == null ? false : tube.canConnectTube(e);
+	}
+
+	public List<TravellingItem> getItems()
+	{
+		return tube.getItems();
+	}
+
+	public TubeBase getTube()
+	{
+		return tube;
+	}
+
+	private int getTubeID(TubeBase tube)
+	{
+		if(tube instanceof TubePump)
+			return 2;
+		else if(tube instanceof TubeDetector)
+			return 3;
+		else if(tube instanceof TubeStone)
+			return 0;
+		else if(tube instanceof TubeCobble)
+			return 1;
+		else if(tube instanceof TubeVoid)
+			return 4;
+		return -1;
+	}
+
+	@Override
+	public void invalidate()
+	{
+		super.invalidate();
+		tube.invalidate();
+	}
+
+	public boolean isPowering()
+	{
+		return tube.isPowering();
 	}
 
 	@Override
@@ -63,12 +105,12 @@ public class TileTube extends TileEntity implements ITubeConnectable
 		{
 		case 0:
 		{
-			this.tube = new TubeNormal(false);
+			this.tube = new TubeStone();
 			break;
 		}
 		case 1:
 		{
-			this.tube = new TubeNormal(true);
+			this.tube = new TubeCobble();
 			break;
 		}
 		case 2:
@@ -102,19 +144,29 @@ public class TileTube extends TileEntity implements ITubeConnectable
 		}
 	}
 
-	private int getTubeID(Tube tube)
+	@Override
+	public void removeItem(int index)
 	{
-		if(tube instanceof TubePump)
-			return 2;
-		else if(tube instanceof TubeDetector)
-			return 3;
-		else if(tube instanceof TubeNormal)
+		tube.removeItem(index);
+	}
+
+	@Override
+	public void updateEntity()
+	{
+		if(!tube.isValid())
 		{
-			return ((TubeNormal) tube).getMaterial() == Material.STONE ? 0 : 1;
+			tube.setTile(this);
 		}
-		else if(tube instanceof TubeVoid)
-			return 4;
-		return -1;
+
+		if(!isInvalid())
+			tube.update();
+	}
+
+	@Override
+	public void validate()
+	{
+		super.validate();
+		tube.validate();
 	}
 
 	@Override
@@ -138,56 +190,5 @@ public class TileTube extends TileEntity implements ITubeConnectable
 		BlockCoord c = Utils.blockCoord(this);
 		c.writeToNBT(lcl);
 		root.setTag("lastCoord", lcl);
-	}
-
-	@Override
-	public void validate()
-	{
-		super.validate();
-		tube.validate();
-	}
-
-	@Override
-	public void invalidate()
-	{
-		super.invalidate();
-		tube.invalidate();
-	}
-
-	public void breakTube()
-	{
-		tube.breakTube();
-	}
-
-	@Override
-	public void addItem(TravellingItem item, TileEntity entity)
-	{
-		tube.addItem(item, entity);
-	}
-
-	public Tube getTube()
-	{
-		return tube;
-	}
-
-	public List<TravellingItem> getItems()
-	{
-		return tube.getItems();
-	}
-
-	public boolean isPowering()
-	{
-		return tube.isPowering();
-	}
-
-	public void removeItem(int index)
-	{
-		tube.removeItem(index);
-	}
-
-	@Override
-	public boolean canConnectTube(TileEntity e)
-	{
-		return tube == null ? false : tube.canConnectTube(e);
 	}
 }

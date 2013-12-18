@@ -11,15 +11,15 @@ import cpw.mods.fml.common.network.Player;
 
 /**
  * SciMachinery
- *
+ * 
  * @author sci4me
  * @license Lesser GNU Public License v3 (http://www.gnu.org/licenses/lgpl.html)
  */
 
 public class PacketRemoveItem extends PacketSci
 {
-	private int x, y, z;
 	private int index;
+	private int x, y, z;
 
 	public PacketRemoveItem()
 	{
@@ -33,6 +33,20 @@ public class PacketRemoveItem extends PacketSci
 		this.y = y;
 		this.z = z;
 		this.index = index;
+	}
+
+	@Override
+	public void execute(INetworkManager manager, Player player)
+	{
+		EntityPlayer thePlayer = (EntityPlayer) player;
+		if(thePlayer.worldObj.isRemote)
+		{
+			TileEntity t = thePlayer.worldObj.getBlockTileEntity(x, y, z);
+			if(t != null && t instanceof ITubeConnectable)
+			{
+				((ITubeConnectable) t).removeItem(index);
+			}
+		}
 	}
 
 	@Override
@@ -51,19 +65,5 @@ public class PacketRemoveItem extends PacketSci
 		data.writeInt(this.y);
 		data.writeInt(this.z);
 		data.writeInt(this.index);
-	}
-
-	@Override
-	public void execute(INetworkManager manager, Player player)
-	{
-		EntityPlayer thePlayer = (EntityPlayer) player;
-		if(thePlayer.worldObj.isRemote)
-		{
-			TileEntity t = thePlayer.worldObj.getBlockTileEntity(x, y, z);
-			if(t != null && t instanceof ITubeConnectable)
-			{
-				((ITubeConnectable) t).removeItem(index);
-			}
-		}
 	}
 }

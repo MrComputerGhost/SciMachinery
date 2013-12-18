@@ -9,7 +9,7 @@ import cpw.mods.fml.common.network.Player;
 
 /**
  * SciMachinery
- *
+ * 
  * @author sci4me
  * @license Lesser GNU Public License v3 (http://www.gnu.org/licenses/lgpl.html)
  */
@@ -20,13 +20,15 @@ public abstract class PacketSci
 
 	public PacketSci()
 	{
-		
+
 	}
-	
+
 	public PacketSci(PacketTypeHandler packetType)
 	{
 		this.packetType = packetType;
 	}
+
+	public abstract void execute(INetworkManager manager, Player player);
 
 	public byte[] populate()
 	{
@@ -59,6 +61,4 @@ public abstract class PacketSci
 	public abstract void read(DataInputStream data) throws IOException;
 
 	public abstract void write(DataOutputStream data) throws IOException;
-
-	public abstract void execute(INetworkManager manager, Player player);
 }

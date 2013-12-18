@@ -1,5 +1,7 @@
 package com.sci.machinery.block.tube;
 
+import net.minecraft.inventory.IInventory;
+import net.minecraft.tileentity.TileEntity;
 import com.sci.machinery.SciMachinery;
 
 /**
@@ -41,6 +43,12 @@ public class TubeDetector extends TubeNormal
 		}
 
 		super.update();
+	}
+	
+	@Override
+	public boolean canConnectTube(TileEntity e)
+	{
+		return e instanceof ITubeConnectable || e instanceof IInventory;
 	}
 	
 	@Override

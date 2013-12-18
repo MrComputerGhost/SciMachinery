@@ -150,7 +150,10 @@ public class TubeNormal extends Tube
 	@Override
 	public void breakTube()
 	{
-
+		while(!items.isEmpty())
+		{
+			getTile().worldObj.spawnEntityInWorld(new EntityItem(getTile().worldObj, getTile().xCoord, getTile().yCoord, getTile().zCoord, items.remove(0).getStack()));
+		}
 	}
 
 	@Override

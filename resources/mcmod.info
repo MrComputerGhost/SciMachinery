@@ -3,8 +3,8 @@
     "modid":"SciMachinery",
     "name":"SciMachinery",
     "description":"Some small, useful pieces of machinery.",
-    "version":"0.0.2",
-    "mcversion":"1.6.4",
+    "version":"@VERSION@",
+    "mcversion":"@MCVERSION@",
     "authors":[ "sci4me" ],
     "credits":"Created by sci4me",
     "requiredMods":[ "Forge" ]

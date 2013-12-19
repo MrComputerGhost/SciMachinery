@@ -1,6 +1,8 @@
 itemGroup.SciMachinery=SciMachinery
 tile.cobbleTube.name=Cobblestone Item Tube
 tile.stoneTube.name=Stone Item Tube
+tile.fastCobbleTube.name=Fast Cobblestone Item Tube
+tile.fastStoneTube.name=Fast Stone Item Tube
 tile.pumpTube.name=Item Pump Tube
 tile.detectorTube.name=Item Detector Tube
 tile.voidTube.name=Item Void Tube

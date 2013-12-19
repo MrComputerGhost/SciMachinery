@@ -139,7 +139,6 @@ public class TileTube extends TileEntity implements ITubeConnectable
 		for(int i = 0; i < list.tagCount(); ++i)
 		{
 			NBTTagCompound item = (NBTTagCompound) list.tagAt(i);
-			int j = item.getByte("Slot") & 255;
 			this.getTube().addItem(new TravellingItem(ItemStack.loadItemStackFromNBT(item)), Utils.getTileEntity(worldObj, BlockCoord.fromNBT(tag.getTagList("lastCoord"))));
 		}
 	}
@@ -180,7 +179,6 @@ public class TileTube extends TileEntity implements ITubeConnectable
 		for(int i = 0; i < this.getTube().getItems().size(); i++)
 		{
 			NBTTagCompound tag = new NBTTagCompound();
-			tag.setByte("Slot", (byte) i);
 			this.getTube().getItems().get(i).getStack().writeToNBT(tag);
 			list.appendTag(tag);
 		}

@@ -15,7 +15,7 @@ public final class Reference
 	public static final String MOD_ID = "SciMachinery";
 	public static final String MOD_NAME = "SciMachinery";
 
-	public static final String MOD_VERSION = "0.0.3";
+	public static final String MOD_VERSION = "@VERSION@";
 	public static final String SERVER_PROXY = "com.sci.machinery.core.CommonProxy";
 
 	private Reference()

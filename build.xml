@@ -1,0 +1,47 @@
+<?xml version="1.0" ?>
+<project name="SciMachinery" default="build">
+
+	<property file="build.properties" prefix="build" />
+
+	<target name="copy_resources">
+		<delete dir="${build.workspace}/Minecraft/bin/assets/scimachinery" />
+
+		<copy todir="${build.workspace}/Minecraft/bin">
+			<fileset dir="${build.project.home}/resources" excludes="*.info" />
+		</copy>
+	</target>
+
+	<target name="build">
+		<delete dir="${build.forge.home}/reobf/minecraft" />
+		<delete dir="${build.forge.home}/mcp/src/minecraft/com/sci" />
+
+		<copy todir="${build.forge.home}/mcp/src/minecraft">
+			<fileset dir="${build.project.home}/src" />
+		</copy>
+
+		<replace dir="${build.forge.home}/mcp/src/minecraft" token="@VERSION@" value="${build.project.version}" />
+
+		<exec dir="${build.forge.home}/mcp" executable="bash" osfamily="unix">
+			<arg line="recompile.sh" />
+		</exec>
+
+		<exec dir="${build.forge.home}/mcp" executable="bash" osfamily="unix">
+			<arg line="reobfuscate.sh" />
+		</exec>
+
+		<copy todir="${build.forge.home}/mcp/reobf/minecraft">
+			<fileset dir="${build.project.home}/resources" />
+		</copy>
+
+		<replace file="${build.forge.home}/mcp/reobf/minecraft/mcmod.info" token="@VERSION@" value="${build.project.version}" />
+		<replace file="${build.forge.home}/mcp/reobf/minecraft/mcmod.info" token="@MCVERSION@" value="${build.minecraft.version}" />
+
+		<mkdir dir="${build.project.home}/build/MC ${build.minecraft.version}" />
+		<jar destfile="${build.project.home}/build/MC ${build.minecraft.version}/SciMachinery_${build.project.version}.jar">
+			<fileset dir="${build.forge.home}/mcp/reobf/minecraft" />
+		</jar>
+
+		<delete dir="${build.forge.home}/mcp/src/minecraft/com/sci" />
+	</target>
+
+</project>

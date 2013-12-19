@@ -3,6 +3,7 @@
 
 	<property file="build.properties" prefix="build" />
 
+	<taskdef resource="net/sf/antcontrib/antlib.xml" />
 	<target name="copy_resources">
 		<delete dir="${build.workspace}/Minecraft/bin/assets/scimachinery" />
 
@@ -11,15 +12,19 @@
 		</copy>
 	</target>
 
-	<target name="build">
+	<target name="doBuild">
 		<delete dir="${build.forge.home}/reobf/minecraft" />
 		<delete dir="${build.forge.home}/mcp/src/minecraft/com/sci" />
 
-		<copy todir="${build.forge.home}/mcp/src/minecraft" failonerror="false" >
+		<propertyfile file="build.properties">
+			<entry key="project.build" type="int" operation="+" default="1" />
+		</propertyfile>
+
+		<copy todir="${build.forge.home}/mcp/src/minecraft" failonerror="false">
 			<fileset dir="${build.project.home}/src" />
 		</copy>
 
-		<replace dir="${build.forge.home}/mcp/src/minecraft" token="@VERSION@" value="${build.project.version}" />
+		<replace dir="${build.forge.home}/mcp/src/minecraft" token="@VERSION@" value="${build.project.version}.@{build.project.build}" />
 
 		<exec dir="${build.forge.home}/mcp" executable="bash" osfamily="unix">
 			<arg line="recompile.sh" />
@@ -33,15 +38,28 @@
 			<fileset dir="${build.project.home}/resources" />
 		</copy>
 
-		<replace file="${build.forge.home}/mcp/reobf/minecraft/mcmod.info" token="@VERSION@" value="${build.project.version}" />
+		<replace file="${build.forge.home}/mcp/reobf/minecraft/mcmod.info" token="@VERSION@" value="${build.project.version}.${build.project.build}" />
 		<replace file="${build.forge.home}/mcp/reobf/minecraft/mcmod.info" token="@MCVERSION@" value="${build.minecraft.version}" />
 
-		<mkdir dir="${build.project.home}/build/MC ${build.minecraft.version}" />
-		<jar destfile="${build.project.home}/build/MC ${build.minecraft.version}/SciMachinery_${build.project.version}.jar">
+		<mkdir dir="${build.project.home}/build/MC ${build.minecraft.version}/${build.project.version}" />
+		<jar destfile="${build.project.home}/build/MC ${build.minecraft.version}/${build.project.version}/SciMachinery_${build.project.version}.${build.project.build}.jar">
 			<fileset dir="${build.forge.home}/mcp/reobf/minecraft" />
 		</jar>
 
 		<delete dir="${build.forge.home}/mcp/src/minecraft/com/sci" />
+
+		<echo message="build{${build.project.version}.${build.project.build},success}${line.separator}" file="build.log" append="true" />
+	</target>
+
+	<target name="build">
+		<trycatch>
+			<try>
+				<antcall target="doBuild" />
+			</try>
+			<catch>
+				<echo message="build{${build.project.version}.${build.project.build},failure}${line.separator}" file="build.log" append="true" />
+			</catch>
+		</trycatch>
 	</target>
 
 </project>

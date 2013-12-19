@@ -51,14 +51,14 @@ public class SciMachinery
 
 	public static CreativeTabs tab = new CreativeTabSM(CreativeTabs.getNextID(), Reference.MOD_ID);
 
+	public ItemEasterEgg easterEgg;
+	public int easterEggId;
+
 	public BlockTube cobbleTube;
 	public int cobbleTubeId;
 
 	public BlockTube detectorTube;
 	public int detectorTubeId;
-
-	public ItemEasterEgg easterEgg;
-	public int easterEggId;
 
 	public int fastCobbleId;
 	public BlockTube fastCobbleTube;
@@ -74,6 +74,9 @@ public class SciMachinery
 
 	public BlockTube voidTube;
 	public int voidTubeId;
+
+	public BlockTube tubeValve;
+	public int valveTubeId;
 
 	@EventHandler
 	public void init(FMLInitializationEvent e)
@@ -114,6 +117,10 @@ public class SciMachinery
 		voidTube.setUnlocalizedName("voidTube");
 		GameRegistry.registerBlock(voidTube, "SciMachinery_TileVoidTube");
 
+		tubeValve = new BlockTube(valveTubeId, TubeBase.VALVE);
+		tubeValve.setUnlocalizedName("valveTube");
+		GameRegistry.registerBlock(tubeValve, "SciMachinery_TileValveTube");
+
 		GameRegistry.addRecipe(new ItemStack(stoneTube, 16), new Object[]
 		{ "sss", "gpg", "sss", 's', Block.stone, 'g', Block.glass, 'p', Block.pistonBase });
 		GameRegistry.addRecipe(new ItemStack(cobbleTube, 16), new Object[]
@@ -129,6 +136,11 @@ public class SciMachinery
 		{ new ItemStack(Item.ingotGold, 1), new ItemStack(fastStoneTube, 1) });
 		GameRegistry.addShapelessRecipe(new ItemStack(fastCobbleTube), new Object[]
 		{ new ItemStack(Item.ingotGold, 1), new ItemStack(fastStoneTube, 1) });
+
+		GameRegistry.addShapelessRecipe(new ItemStack(tubeValve), new Object[]
+		{ new ItemStack(Item.redstone, 1), new ItemStack(stoneTube, 1) });
+		GameRegistry.addShapelessRecipe(new ItemStack(tubeValve), new Object[]
+		{ new ItemStack(Item.redstone, 1), new ItemStack(cobbleTube, 1) });
 	}
 
 	@ForgeSubscribe
@@ -174,6 +186,8 @@ public class SciMachinery
 
 			fastStoneId = cfg.getBlock("fastStoneTube", 425).getInt();
 			fastCobbleId = cfg.getBlock("fastCobbleTube", 426).getInt();
+			
+			valveTubeId = cfg.getBlock("valveTube", 427).getInt();
 		}
 		finally
 		{

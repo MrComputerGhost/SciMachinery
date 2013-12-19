@@ -12,6 +12,7 @@ import com.sci.machinery.block.tube.TubeCobble;
 import com.sci.machinery.block.tube.TubeDetector;
 import com.sci.machinery.block.tube.TubePump;
 import com.sci.machinery.block.tube.TubeStone;
+import com.sci.machinery.block.tube.TubeValve;
 import com.sci.machinery.block.tube.TubeVoid;
 import com.sci.machinery.core.BlockCoord;
 import com.sci.machinery.core.Utils;
@@ -82,6 +83,8 @@ public class TileTube extends TileEntity implements ITubeConnectable
 			return 1;
 		else if(tube instanceof TubeVoid)
 			return 4;
+		else if(tube instanceof TubeValve)
+			return 5;
 		return -1;
 	}
 
@@ -126,6 +129,11 @@ public class TileTube extends TileEntity implements ITubeConnectable
 		case 4:
 		{
 			this.tube = new TubeVoid();
+			break;
+		}
+		case 5:
+		{
+			this.tube = new TubeValve();
 			break;
 		}
 		default:
@@ -188,5 +196,10 @@ public class TileTube extends TileEntity implements ITubeConnectable
 		BlockCoord c = Utils.blockCoord(this);
 		c.writeToNBT(lcl);
 		root.setTag("lastCoord", lcl);
+	}
+
+	public boolean isPowered()
+	{
+		return worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
 	}
 }

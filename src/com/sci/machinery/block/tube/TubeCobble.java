@@ -1,6 +1,5 @@
 package com.sci.machinery.block.tube;
 
-import net.minecraft.inventory.IInventory;
 import net.minecraft.tileentity.TileEntity;
 import com.sci.machinery.block.TileTube;
 
@@ -22,6 +21,6 @@ public class TubeCobble extends TubeBase
 			TileTube tube = (TileTube) e;
 			if(tube.getTube() instanceof TubeStone) { return false; }
 		}
-		return e instanceof ITubeConnectable || e instanceof IInventory;
+		return super.canConnectTube(e);
 	}
 }

@@ -26,8 +26,12 @@ public class TubeVoid extends TubeBase
 	@Override
 	public boolean canConnectTube(TileEntity e)
 	{
-		if(e instanceof TileTube) { return !(((TileTube) e).getTube() instanceof TubeVoid); }
-		return false;
+		if(e instanceof TileTube)
+		{
+			if(((TileTube)e).getTube() instanceof TubeVoid)
+				return false;
+		}
+		return super.canConnectTube(e);
 	}
 
 	@Override

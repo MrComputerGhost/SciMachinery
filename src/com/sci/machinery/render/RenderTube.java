@@ -18,6 +18,7 @@ import com.sci.machinery.block.tube.TubeCobble;
 import com.sci.machinery.block.tube.TubeDetector;
 import com.sci.machinery.block.tube.TubePump;
 import com.sci.machinery.block.tube.TubeStone;
+import com.sci.machinery.block.tube.TubeValve;
 import com.sci.machinery.block.tube.TubeVoid;
 import com.sci.machinery.core.BlockCoord;
 import com.sci.machinery.core.Utils;
@@ -36,6 +37,7 @@ public class RenderTube extends TileEntitySpecialRenderer implements IItemRender
 	private static final TubeBase COBBLE = new TubeCobble();
 	private static final TubeBase VOID = new TubeVoid();
 	private static final TubeBase DETECTOR = new TubeDetector();
+	private static final TubeBase VALVE = new TubeValve();
 
 	public static final double O = 0.2D;
 	public static final double OA = 0.05D;
@@ -860,6 +862,10 @@ public class RenderTube extends TileEntitySpecialRenderer implements IItemRender
 		else if(itemID == SciMachinery.instance.cobbleTube.blockID || itemID == SciMachinery.instance.fastCobbleTube.blockID)
 		{
 			setColor(COBBLE, b);
+		}
+		else if(itemID == SciMachinery.instance.tubeValve.blockID)
+		{
+			setColor(VALVE, b);
 		}
 	}
 

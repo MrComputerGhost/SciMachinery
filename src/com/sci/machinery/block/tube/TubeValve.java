@@ -1,7 +1,7 @@
 package com.sci.machinery.block.tube;
 
+import net.minecraft.inventory.IInventory;
 import net.minecraft.tileentity.TileEntity;
-import com.sci.machinery.block.TileTube;
 
 /**
  * SciMachinery
@@ -10,24 +10,27 @@ import com.sci.machinery.block.TileTube;
  * @license Lesser GNU Public License v3 (http://www.gnu.org/licenses/lgpl.html)
  */
 
-public class TubeStone extends TubeBase
+public class TubeValve extends TubeBase
 {
-	public TubeStone()
+	public TubeValve()
 	{
-		setR(200);
-		setG(200);
-		setB(200);
+		setR(20);
+		setG(20);
+		setB(20);
 		setA(150);
 	}
 
 	@Override
 	public boolean canConnectTube(TileEntity e)
 	{
-		if(e instanceof TileTube)
+		if(isPowered())
 		{
-			TileTube tube = (TileTube) e;
-			if(tube.getTube() instanceof TubeCobble) { return false; }
+			if(e instanceof ITubeConnectable)
+			{
+				return true;
+			}
+			else if(e instanceof IInventory) { return true; }
 		}
-		return super.canConnectTube(e);
+		return false;
 	}
 }

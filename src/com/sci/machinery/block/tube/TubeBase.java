@@ -20,6 +20,13 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.relauncher.Side;
 
+/**
+ * SciMachinery
+ * 
+ * @author sci4me
+ * @license Lesser GNU Public License v3 (http://www.gnu.org/licenses/lgpl.html)
+ */
+
 public abstract class TubeBase implements ITubeConnectable
 {
 	public static final Class<? extends TubeBase> COBBLE = TubeCobble.class;
@@ -27,6 +34,7 @@ public abstract class TubeBase implements ITubeConnectable
 	public static final Class<? extends TubeBase> PUMP = TubePump.class;
 	public static final Class<? extends TubeBase> STONE = TubeStone.class;
 	public static final Class<? extends TubeBase> VOID = TubeVoid.class;
+	public static final Class<? extends TubeBase> VALVE = TubeValve.class;
 
 	protected List<TravellingItem> items;
 
@@ -72,6 +80,11 @@ public abstract class TubeBase implements ITubeConnectable
 	@Override
 	public boolean canConnectTube(TileEntity e)
 	{
+		if(e instanceof TileTube)
+		{
+			if(((TileTube) e).getTube() instanceof TubeValve)
+				return ((TubeValve) ((TileTube) e).getTube()).canConnectTube(e);
+		}
 		return e instanceof ITubeConnectable || e instanceof IInventory;
 	}
 
@@ -260,5 +273,10 @@ public abstract class TubeBase implements ITubeConnectable
 	public void writeToNBT(NBTTagCompound tag)
 	{
 
+	}
+
+	public boolean isPowered()
+	{
+		return getTile().isPowered();
 	}
 }

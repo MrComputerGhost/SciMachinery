@@ -15,7 +15,7 @@
 		<delete dir="${build.forge.home}/reobf/minecraft" />
 		<delete dir="${build.forge.home}/mcp/src/minecraft/com/sci" />
 
-		<copy todir="${build.forge.home}/mcp/src/minecraft">
+		<copy todir="${build.forge.home}/mcp/src/minecraft" failonerror="false" >
 			<fileset dir="${build.project.home}/src" />
 		</copy>
 
@@ -29,7 +29,7 @@
 			<arg line="reobfuscate.sh" />
 		</exec>
 
-		<copy todir="${build.forge.home}/mcp/reobf/minecraft">
+		<copy todir="${build.forge.home}/mcp/reobf/minecraft" failonerror="false">
 			<fileset dir="${build.project.home}/resources" />
 		</copy>
 

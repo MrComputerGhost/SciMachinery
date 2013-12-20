@@ -4,6 +4,32 @@
 	<property file="build.properties" prefix="build" />
 
 	<taskdef resource="net/sf/antcontrib/antlib.xml" />
+
+	<property name="minecraftforge_src_archive" value="minecraftforge-src-${build.minecraft.version}-${build.forge.version}.zip" />
+	<property name="minecraftforge_src_archive_location" value="http://files.minecraftforge.net/minecraftforge/${minecraftforge_src_archive}" />
+
+	<target name="forge-clean">
+		<delete dir="${build.forge.home}" />
+	</target>
+
+	<target name="forge-download">
+		<mkdir dir="${build.project.home}/temp" />
+		<get src="${minecraftforge_src_archive_location}" dest="${build.project.home}/temp/" verbose="true" usetimestamp="true" />
+	</target>
+
+	<target name="forge-uncompress" depends="forge-download">
+		<unzip src="${build.project.home}/temp/${minecraftforge_src_archive}" dest="${build.project.home}" />
+		<delete dir="${build.project.home}/temp" />
+	</target>
+
+	<target name="forge-install" depends="forge-uncompress">
+		<exec dir="${build.forge.home}/" executable="bash" osfamily="unix" failonerror="true">
+			<arg line="install.sh" />
+		</exec>
+	</target>
+
+	<target name="forge-clean-install" depends="forge-clean, forge-install" />
+
 	<target name="copy_resources">
 		<delete dir="${build.workspace}/Minecraft/bin/assets/scimachinery" />
 
@@ -13,8 +39,7 @@
 	</target>
 
 	<target name="doBuild">
-		<delete dir="${build.forge.home}/reobf/minecraft" />
-		<delete dir="${build.forge.home}/mcp/src/minecraft/com/sci" />
+		<antcall target="forge-clean-install" />
 
 		<propertyfile file="build.properties">
 			<entry key="project.build" type="int" operation="+" default="1" />
@@ -59,6 +84,9 @@
 			<catch>
 				<echo message="build{${build.project.version}.${build.project.build},failure}${line.separator}" file="build.log" append="true" />
 			</catch>
+			<finally>
+				<antcall target="forge-clean" />
+			</finally>
 		</trycatch>
 	</target>
 

@@ -1,6 +1,3 @@
-apply plugin: 'java'
-apply plugin: 'maven'
-
 buildscript {
     repositories {
         mavenCentral()
@@ -16,11 +13,41 @@ buildscript {
 
 apply plugin: 'forge'
 
-version = "antiCI-$BUILD_NUMBER"
-group= "com.sci.machinery" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = "SciMachinery"
+ext.configFile = file "build.properties"
 
-minecraft {
-	version = "1.6.4-9.11.1.964"
+configFile.withReader {
+    def prop = new Properties()
+    prop.load(it)
+    ext.config = new ConfigSlurper().parse prop
 }
 
+group = "com.sci.machinery"
+version = config.mod_version + "." + config.build_number
+archiveBaseName = "SciMachinery"
+
+minecraft {
+    version = config.minecraft_version + "-" + config.forge_version
+}
+
+processResources {
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+
+        expand 'version': project.config.mod_version, 'buildnumber': project.config.build_number
+    }
+
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info'
+        exclude 'version.properties'
+    }
+}
+
+task incrementBuildNumber() {
+    doLast {
+        config.build_number = (config.build_number.toString().toInteger()) + 1
+
+        configFile.withWriter {
+            config.toProperties().store(it, "")
+        }
+    }
+}

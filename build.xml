@@ -40,6 +40,7 @@
 
 	<target name="doBuild">
 		<antcall target="forge-clean-install" />
+		<delete dir="${build.project.home}/build" />
 
 		<copy todir="${build.forge.home}/mcp/src/minecraft" failonerror="false">
 			<fileset dir="${build.project.home}/src" />
@@ -70,8 +71,6 @@
 		<delete dir="${build.forge.home}/mcp/src/minecraft/com/sci" />
 
 		<echo message="build{${build.project.version},success}${line.separator}" file="build.log" append="true" />
-
-		<delete dir="${build.project.home}/build" />
 	</target>
 
 	<target name="build">

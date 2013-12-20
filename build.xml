@@ -66,8 +66,8 @@
 		<replace file="${build.forge.home}/mcp/reobf/minecraft/mcmod.info" token="@VERSION@" value="${build.project.version}.${build.project.build}" />
 		<replace file="${build.forge.home}/mcp/reobf/minecraft/mcmod.info" token="@MCVERSION@" value="${build.minecraft.version}" />
 
-		<mkdir dir="${build.project.home}/build/MC ${build.minecraft.version}/${build.project.version}" />
-		<jar destfile="${build.project.home}/build/MC ${build.minecraft.version}/${build.project.version}/SciMachinery_${build.project.version}.${build.project.build}.jar">
+		<mkdir dir="${build.project.home}/build" />
+		<jar destfile="${build.project.home}/build/SciMachinery_${build.project.version}.${build.project.build}.jar">
 			<fileset dir="${build.forge.home}/mcp/reobf/minecraft" />
 		</jar>
 

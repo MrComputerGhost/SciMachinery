@@ -41,10 +41,6 @@
 	<target name="doBuild">
 		<antcall target="forge-clean-install" />
 
-		<propertyfile file="build.properties">
-			<entry key="project.build" type="int" operation="+" default="1" />
-		</propertyfile>
-
 		<copy todir="${build.forge.home}/mcp/src/minecraft" failonerror="false">
 			<fileset dir="${build.project.home}/src" />
 		</copy>
@@ -63,17 +59,19 @@
 			<fileset dir="${build.project.home}/resources" />
 		</copy>
 
-		<replace file="${build.forge.home}/mcp/reobf/minecraft/mcmod.info" token="@VERSION@" value="${build.project.version}.${build.project.build}" />
+		<replace file="${build.forge.home}/mcp/reobf/minecraft/mcmod.info" token="@VERSION@" value="${build.project.version}" />
 		<replace file="${build.forge.home}/mcp/reobf/minecraft/mcmod.info" token="@MCVERSION@" value="${build.minecraft.version}" />
 
 		<mkdir dir="${build.project.home}/build" />
-		<jar destfile="${build.project.home}/build/SciMachinery_${build.project.version}.${build.project.build}.jar">
+		<jar destfile="${build.project.home}/build/SciMachinery_${build.project.version}.jar">
 			<fileset dir="${build.forge.home}/mcp/reobf/minecraft" />
 		</jar>
 
 		<delete dir="${build.forge.home}/mcp/src/minecraft/com/sci" />
 
-		<echo message="build{${build.project.version}.${build.project.build},success}${line.separator}" file="build.log" append="true" />
+		<echo message="build{${build.project.version},success}${line.separator}" file="build.log" append="true" />
+
+		<delete dir="${build.project.home}/build" />
 	</target>
 
 	<target name="build">
@@ -82,7 +80,7 @@
 				<antcall target="doBuild" />
 			</try>
 			<catch>
-				<echo message="build{${build.project.version}.${build.project.build},failure}${line.separator}" file="build.log" append="true" />
+				<echo message="build{${build.project.version},failure}${line.separator}" file="build.log" append="true" />
 			</catch>
 			<finally>
 				<antcall target="forge-clean" />

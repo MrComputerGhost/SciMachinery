@@ -22,11 +22,11 @@ configFile.withReader {
 }
 
 group = "com.sci.machinery"
-version = config.mod_version + "." + config.build_number
+version = config.mod_version
 archiveBaseName = "SciMachinery"
 
 minecraft {
-    version = config.minecraft_version + "-" + config.forge_version
+    version = config.minecraft_version
 }
 
 processResources {

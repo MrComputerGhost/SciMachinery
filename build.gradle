@@ -26,7 +26,7 @@ version = config.mod_version
 archiveBaseName = "SciMachinery"
 
 minecraft {
-    version = config.minecraft_version
+    version = config.minecraft_version + "-" + config.forge_version
 }
 
 processResources {

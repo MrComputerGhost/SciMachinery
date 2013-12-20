@@ -33,21 +33,11 @@ processResources {
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info'
 
-        expand 'version': project.config.mod_version, 'buildnumber': project.config.build_number
+        expand 'version': project.config.mod_version
     }
 
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
         exclude 'version.properties'
-    }
-}
-
-task incrementBuildNumber() {
-    doLast {
-        config.build_number = (config.build_number.toString().toInteger()) + 1
-
-        configFile.withWriter {
-            config.toProperties().store(it, "")
-        }
     }
 }

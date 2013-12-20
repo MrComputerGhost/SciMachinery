@@ -1,0 +1,23 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        maven {
+            name = "forge"
+            url = "http://files.minecraftforge.net/maven"
+        }
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:1.0-SNAPSHOT'
+    }
+}
+
+apply plugin: 'forge'
+
+version = "antiCI-$BUILD_NUMBER"
+group= "com.sci.machinery" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+archivesBaseName = "SciMachinery"
+
+minecraft {
+	version = "1.6.4-9.11.1.964"
+}
+

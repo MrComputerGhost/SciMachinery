@@ -22,7 +22,7 @@ configFile.withReader {
 }
 
 group = "com.sci.machinery"
-version = config.mod_version
+version = config.mod_version + "." + config.build_number
 archiveBaseName = "SciMachinery"
 
 minecraft {
@@ -33,7 +33,7 @@ processResources {
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info'
 
-        expand 'version': project.config.mod_version
+        expand 'version': project.config.mod_version, 'buildnumber': project.config.build_number
     }
 
     from(sourceSets.main.resources.srcDirs) {

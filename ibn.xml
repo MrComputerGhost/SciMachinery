@@ -1,0 +1,7 @@
+<project name="ibn" default="insert">
+	<target name="ibn">
+		<propertyfile file="build.properties">
+			<entry key="build_number" value="${build_number}" />
+		</propertyfile>	
+	</target>
+</project>

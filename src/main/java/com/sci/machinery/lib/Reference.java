@@ -28,7 +28,7 @@ public final class Reference
 			Throwables.propagate(e);
 		}
 		
-		MOD_VERSION = prop.getProperty("version");
+		MOD_VERSION = prop.getProperty("version") + " (build " + prop.getProperty("buildnumber") + ")";
 	}
 	
 	public static final String CHANNEL_NAME = "SciMachinery";

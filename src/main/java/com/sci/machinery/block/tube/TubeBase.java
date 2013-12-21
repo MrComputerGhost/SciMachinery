@@ -224,7 +224,7 @@ public abstract class TubeBase implements ITubeConnectable
 
 							for(int j = 0; j < slots.length; j++)
 							{
-								if(inv.canInsertItem(j, item.getStack(), side))
+								if(inv.canInsertItem(slots[j], item.getStack(), side))
 								{
 									ItemStack remaining = TileEntityHopper.insertStack(inv, item.getStack(), side);
 									if(remaining != null)

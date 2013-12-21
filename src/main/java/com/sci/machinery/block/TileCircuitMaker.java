@@ -146,6 +146,27 @@ public class TileCircuitMaker extends TileEntity implements IInventory
 	@Override
 	public boolean isItemValidForSlot(int i, ItemStack itemstack)
 	{
-		return false;
+		return i == 15 ? false : true;
+	}
+
+	private void tryCraft()
+	{
+		
+	}
+	
+	public void buttonPressed(int id)
+	{
+		switch (id)
+		{
+		case 0:
+		{
+			tryCraft();
+			break;
+		}
+		default:
+		{
+			break;
+		}
+		}
 	}
 }

@@ -37,7 +37,9 @@ public class ItemEasterEgg extends ItemRecord
 		this.setUnlocalizedName("chickenEasterEgg");
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" }) //minecraft, y u no generics?
+	@SuppressWarnings(
+	{ "unchecked", "rawtypes" })
+	// minecraft, y u no generics?
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, List par3List, boolean par4)

@@ -15,7 +15,7 @@ import com.sci.machinery.lib.Reference;
 
 public enum PacketTypeHandler
 {
-	ADD_ITEM(PacketAddItem.class), REMOVE_ITEM(PacketRemoveItem.class);
+	ADD_ITEM(PacketAddItem.class), REMOVE_ITEM(PacketRemoveItem.class), BUTTON_PRESSED(PacketButtonPressed.class);
 
 	public static PacketSci buildPacket(byte[] data)
 	{

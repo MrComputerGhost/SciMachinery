@@ -8,10 +8,15 @@ import net.minecraft.util.StatCollector;
 import org.lwjgl.opengl.GL11;
 import com.sci.machinery.block.TileCircuitMaker;
 import com.sci.machinery.lib.Reference;
+import com.sci.machinery.network.PacketButtonPressed;
+import com.sci.machinery.network.PacketTypeHandler;
+import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class GUICircuitMaker extends GuiContainer
 {
 	private static final ResourceLocation guiTexture = new ResourceLocation(Reference.MOD_ID.toLowerCase(), "guis/circuit_maker.png");
+
+	private TileCircuitMaker tileEntity;
 
 	public GUICircuitMaker(InventoryPlayer inventoryPlayer, TileCircuitMaker tileEntity)
 	{
@@ -30,9 +35,20 @@ public class GUICircuitMaker extends GuiContainer
 	@Override
 	protected void actionPerformed(GuiButton button)
 	{
-		//TODO send packet, do stuffs
+		switch (button.id)
+		{
+		case 0:
+		{
+			PacketDispatcher.sendPacketToAllPlayers(PacketTypeHandler.populatePacket(new PacketButtonPressed(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord, button.id)));
+			break;
+		}
+		default:
+		{
+			break;
+		}
+		}
 	}
-	
+
 	@Override
 	protected void drawGuiContainerForegroundLayer(int param1, int param2)
 	{

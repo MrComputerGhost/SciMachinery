@@ -16,7 +16,7 @@ public final class Reference
 	static
 	{
 		Properties prop = new Properties();
-		
+
 		try
 		{
 			InputStream stream = Reference.class.getClassLoader().getResourceAsStream("version.properties");
@@ -27,10 +27,10 @@ public final class Reference
 		{
 			Throwables.propagate(e);
 		}
-		
+
 		MOD_VERSION = prop.getProperty("version") + " (build " + prop.getProperty("buildnumber") + ")";
 	}
-	
+
 	public static final String CHANNEL_NAME = "SciMachinery";
 
 	public static final String CLIENT_PROXY = "com.sci.machinery.core.ClientProxy";

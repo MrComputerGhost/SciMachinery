@@ -28,7 +28,7 @@ public class TubeVoid extends TubeBase
 	{
 		if(e instanceof TileTube)
 		{
-			if(((TileTube)e).getTube() instanceof TubeVoid)
+			if(((TileTube) e).getTube() instanceof TubeVoid)
 				return false;
 		}
 		return super.canConnectTube(e);

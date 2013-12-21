@@ -22,6 +22,7 @@ import com.sci.machinery.block.tube.TubeValve;
 import com.sci.machinery.block.tube.TubeVoid;
 import com.sci.machinery.core.BlockCoord;
 import com.sci.machinery.core.Utils;
+import com.sci.machinery.lib.Reference;
 
 /**
  * SciMachinery
@@ -32,6 +33,8 @@ import com.sci.machinery.core.Utils;
 
 public class RenderTube extends TileEntitySpecialRenderer implements IItemRenderer
 {
+	private static final ResourceLocation tubeIcon = new ResourceLocation(Reference.MOD_ID.toLowerCase(), "blocks/tube.png");
+
 	private static final TubeBase PUMP = new TubePump();
 	private static final TubeBase STONE = new TubeStone();
 	private static final TubeBase COBBLE = new TubeCobble();
@@ -89,7 +92,7 @@ public class RenderTube extends TileEntitySpecialRenderer implements IItemRender
 
 			setColor(item.itemID, 0);
 
-			this.bindTexture(new ResourceLocation("scimachinery", "blocks/tube.png"));
+			this.bindTexture(tubeIcon);
 
 			tess.addVertex(x + 0, y + 0, z + 0);
 			tess.addVertex(x + 0, y + OA, z + 0);

@@ -1,4 +1,11 @@
 {
+	"language": {
+        "en_US": {
+            "region": "US",
+            "name": "English",
+            "bidirectional": false
+        }
+    },
 	"pack":{
 		"pack_format":1,
 		"description":"SciMachinery contents"

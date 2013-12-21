@@ -3,20 +3,27 @@ package com.sci.machinery;
 import java.io.File;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.WeightedRandomChestContent;
+import net.minecraft.world.World;
 import net.minecraftforge.client.event.sound.PlayStreamingEvent;
 import net.minecraftforge.client.event.sound.SoundLoadEvent;
 import net.minecraftforge.common.ChestGenHooks;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.event.ForgeSubscribe;
+import com.sci.machinery.block.BlockCircuitMaker;
 import com.sci.machinery.block.BlockTube;
+import com.sci.machinery.block.TileCircuitMaker;
 import com.sci.machinery.block.TileTube;
 import com.sci.machinery.block.tube.TubeBase;
 import com.sci.machinery.block.tube.TubeModifier;
 import com.sci.machinery.core.CreativeTabSM;
 import com.sci.machinery.core.IProxy;
+import com.sci.machinery.gui.ContainerCircuitMaker;
+import com.sci.machinery.gui.GUICircuitMaker;
 import com.sci.machinery.item.ItemEasterEgg;
 import com.sci.machinery.lib.Reference;
 import com.sci.machinery.network.PacketHandler;
@@ -28,7 +35,9 @@ import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.network.IGuiHandler;
 import cpw.mods.fml.common.network.NetworkMod;
+import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 /**
@@ -41,7 +50,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 @Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME)
 @NetworkMod(channels =
 { Reference.CHANNEL_NAME }, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketHandler.class)
-public class SciMachinery
+public class SciMachinery implements IGuiHandler
 {
 	@Instance(Reference.MOD_ID)
 	public static SciMachinery instance;
@@ -78,16 +87,22 @@ public class SciMachinery
 	public BlockTube tubeValve;
 	public int valveTubeId;
 
+	public BlockCircuitMaker circuitMaker;
+	public int circuitMakerId;
+
 	@EventHandler
 	public void init(FMLInitializationEvent e)
 	{
 		proxy.init(e);
+
+		NetworkRegistry.instance().registerGuiHandler(instance, instance);
 
 		easterEgg = new ItemEasterEgg(easterEggId);
 
 		ChestGenHooks.addItem(ChestGenHooks.DUNGEON_CHEST, new WeightedRandomChestContent(new ItemStack(easterEgg), 1, 1, 1));
 
 		GameRegistry.registerTileEntity(TileTube.class, "SciMachinery_TileTube");
+		GameRegistry.registerTileEntity(TileCircuitMaker.class, "SciMachinery_TileCircuitMaker");
 
 		stoneTube = new BlockTube(stoneTubeId, TubeBase.STONE);
 		stoneTube.setUnlocalizedName("stoneTube");
@@ -120,6 +135,10 @@ public class SciMachinery
 		tubeValve = new BlockTube(valveTubeId, TubeBase.VALVE);
 		tubeValve.setUnlocalizedName("valveTube");
 		GameRegistry.registerBlock(tubeValve, "SciMachinery_TileValveTube");
+
+		circuitMaker = new BlockCircuitMaker(circuitMakerId);
+		circuitMaker.setUnlocalizedName("circuitMaker");
+		GameRegistry.registerBlock(circuitMaker, "SciMachinery_TileCircuitMaker");
 
 		GameRegistry.addRecipe(new ItemStack(stoneTube, 16), new Object[]
 		{ "sss", "gpg", "sss", 's', Block.stone, 'g', Block.glass, 'p', Block.pistonBase });
@@ -168,7 +187,7 @@ public class SciMachinery
 	public void preInit(FMLPreInitializationEvent e)
 	{
 		e.getModMetadata().version = Reference.MOD_VERSION;
-		
+
 		proxy.preInit(e);
 
 		File folder = new File(e.getModConfigurationDirectory(), "sci4me");
@@ -190,10 +209,28 @@ public class SciMachinery
 			fastCobbleId = cfg.getBlock("fastCobbleTube", 426).getInt();
 
 			valveTubeId = cfg.getBlock("valveTube", 427).getInt();
+
+			circuitMakerId = cfg.getBlock("circuitMaker", 428).getInt();
 		}
 		finally
 		{
 			cfg.save();
 		}
+	}
+
+	@Override
+	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
+	{
+		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
+		if(tileEntity instanceof TileCircuitMaker) { return new ContainerCircuitMaker(player.inventory, (TileCircuitMaker) tileEntity); }
+		return null;
+	}
+
+	@Override
+	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
+	{
+		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
+		if(tileEntity instanceof TileCircuitMaker) { return new GUICircuitMaker(player.inventory, (TileCircuitMaker) tileEntity); }
+		return null;
 	}
 }

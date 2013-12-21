@@ -11,4 +11,6 @@ public interface IRecipe
 	public ItemStack getIngredient(int x, int y);
 	
 	public ItemStack getResult();
+
+	public ItemStack[][] getIngredients();
 }

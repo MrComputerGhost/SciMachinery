@@ -14,12 +14,15 @@ import net.minecraftforge.client.event.sound.SoundLoadEvent;
 import net.minecraftforge.common.ChestGenHooks;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.event.ForgeSubscribe;
+import com.sci.machinery.api.IRecipeRegistry;
 import com.sci.machinery.block.BlockCircuitMaker;
 import com.sci.machinery.block.BlockTube;
 import com.sci.machinery.block.TileCircuitMaker;
 import com.sci.machinery.block.TileTube;
 import com.sci.machinery.block.tube.TubeBase;
 import com.sci.machinery.block.tube.TubeModifier;
+import com.sci.machinery.core.CircuitMakerRecipe;
+import com.sci.machinery.core.CircuitMakerRegistry;
 import com.sci.machinery.core.CreativeTabSM;
 import com.sci.machinery.core.IProxy;
 import com.sci.machinery.gui.ContainerCircuitMaker;
@@ -90,10 +93,14 @@ public class SciMachinery implements IGuiHandler
 	public BlockCircuitMaker circuitMaker;
 	public int circuitMakerId;
 
+	public IRecipeRegistry circuitMakerRegistry;
+
 	@EventHandler
 	public void init(FMLInitializationEvent e)
 	{
 		proxy.init(e);
+
+		circuitMakerRegistry = new CircuitMakerRegistry();
 
 		NetworkRegistry.instance().registerGuiHandler(instance, instance);
 
@@ -160,6 +167,10 @@ public class SciMachinery implements IGuiHandler
 		{ new ItemStack(Item.redstone, 1), new ItemStack(stoneTube, 1) });
 		GameRegistry.addShapelessRecipe(new ItemStack(tubeValve), new Object[]
 		{ new ItemStack(Item.redstone, 1), new ItemStack(cobbleTube, 1) });
+
+		ItemStack[][] stacks = new ItemStack[5][3];
+		stacks[0][0] = new ItemStack(Item.redstone);
+		circuitMakerRegistry.registerRecipe(new CircuitMakerRecipe(100, new ItemStack(Item.diamond), stacks));
 	}
 
 	@ForgeSubscribe

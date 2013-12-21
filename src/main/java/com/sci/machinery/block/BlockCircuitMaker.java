@@ -7,6 +7,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import com.sci.machinery.SciMachinery;
 import com.sci.machinery.core.BlockSci;
+import cpw.mods.fml.common.network.FMLNetworkHandler;
 
 public class BlockCircuitMaker extends BlockSci
 {
@@ -22,9 +23,11 @@ public class BlockCircuitMaker extends BlockSci
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int metadata, float what, float these, float are)
 	{
-		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
-		if(tileEntity == null || player.isSneaking()) { return false; }
-		player.openGui(SciMachinery.instance, 0, world, x, y, z);
+		if(player.isSneaking())
+			return false;
+		else if(world.isRemote)
+			return true;
+		FMLNetworkHandler.openGui(player, SciMachinery.instance, 0, world, x, y, z);
 		return true;
 	}
 

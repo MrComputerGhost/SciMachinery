@@ -19,6 +19,7 @@ public class PacketButtonPressed extends PacketSci
 
 	public PacketButtonPressed(int xCoord, int yCoord, int zCoord, int id)
 	{
+		super(PacketTypeHandler.BUTTON_PRESSED);
 		this.x = xCoord;
 		this.y = yCoord;
 		this.z = zCoord;
@@ -29,14 +30,11 @@ public class PacketButtonPressed extends PacketSci
 	public void execute(INetworkManager manager, Player player)
 	{
 		EntityPlayer thePlayer = (EntityPlayer) player;
-		if(thePlayer.worldObj.isRemote)
+		TileEntity t = thePlayer.worldObj.getBlockTileEntity(x, y, z);
+		if(t != null && t instanceof TileCircuitMaker)
 		{
-			TileEntity t = thePlayer.worldObj.getBlockTileEntity(x, y, z);
-			if(t != null && t instanceof TileCircuitMaker)
-			{
-				TileCircuitMaker circuitMaker = (TileCircuitMaker) t;
-				circuitMaker.buttonPressed(id);
-			}
+			TileCircuitMaker circuitMaker = (TileCircuitMaker) t;
+			circuitMaker.buttonPressed(id);
 		}
 	}
 

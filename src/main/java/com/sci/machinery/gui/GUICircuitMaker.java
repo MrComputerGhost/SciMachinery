@@ -21,6 +21,7 @@ public class GUICircuitMaker extends GuiContainer
 	public GUICircuitMaker(InventoryPlayer inventoryPlayer, TileCircuitMaker tileEntity)
 	{
 		super(new ContainerCircuitMaker(inventoryPlayer, tileEntity));
+		this.tileEntity = tileEntity;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -37,9 +38,9 @@ public class GUICircuitMaker extends GuiContainer
 	{
 		switch (button.id)
 		{
-		case 0:
+		case 1:
 		{
-			PacketDispatcher.sendPacketToAllPlayers(PacketTypeHandler.populatePacket(new PacketButtonPressed(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord, button.id)));
+			PacketDispatcher.sendPacketToServer(PacketTypeHandler.populatePacket(new PacketButtonPressed(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord, button.id)));
 			break;
 		}
 		default:
@@ -64,5 +65,8 @@ public class GUICircuitMaker extends GuiContainer
 		int k = (this.width - this.xSize) / 2;
 		int l = (this.height - this.ySize) / 2;
 		this.drawTexturedModalRect(k, l, 0, 0, this.xSize, this.ySize);
+		
+		int i1 = this.tileEntity.getProgressScaled(24);
+        this.drawTexturedModalRect(k + 108, l + 21, 176, 0, i1 + 1, 16);
 	}
 }

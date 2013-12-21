@@ -1,13 +1,14 @@
 package com.sci.machinery.api;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
 
 public interface IRecipeRegistry
 {
-	public boolean isValidRecipe(IRecipe recipe);
+	public boolean isValidRecipe(ItemStack[][] recipe);
 	
 	public void registerRecipe(IRecipe recipe);
 	
-	public ItemStack getRecipeResult(IRecipe recipe);
+	public ItemStack getRecipeResult(ItemStack[][] recipe);
+
+	public IRecipe getRecipe(ItemStack[][] recipe);
 }

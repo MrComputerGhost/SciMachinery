@@ -32,6 +32,7 @@ minecraft {
 processResources {
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info'
+        include 'version.properties'
 
         expand 'version': project.config.mod_version, 'buildnumber': project.config.build_number
     }

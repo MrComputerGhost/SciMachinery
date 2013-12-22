@@ -20,10 +20,13 @@ public class GUICircuitMaker extends GuiContainer
 
 	public GUICircuitMaker(InventoryPlayer inventoryPlayer, TileCircuitMaker tileEntity)
 	{
-		super(new ContainerCircuitMaker(inventoryPlayer, tileEntity));
+		super(null);
+		ContainerCircuitMaker cont = new ContainerCircuitMaker(inventoryPlayer, tileEntity);
+		this.inventorySlots = cont;
+		cont.setGUI(this);
 		this.tileEntity = tileEntity;
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	// minecraft, USE FECKING GENERICS!
 	@Override
@@ -33,6 +36,11 @@ public class GUICircuitMaker extends GuiContainer
 		this.buttonList.add(new GuiButton(1, guiLeft + 105, guiTop + 47, 59, 20, "Craft"));
 	}
 
+	public void setCraftable(boolean c)
+	{
+		((GuiButton)this.buttonList.get(0)).enabled = c;
+	}
+	
 	@Override
 	protected void actionPerformed(GuiButton button)
 	{

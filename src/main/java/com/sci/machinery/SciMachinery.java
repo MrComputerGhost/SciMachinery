@@ -176,7 +176,23 @@ public class SciMachinery implements IGuiHandler
 
 		ItemStack[][] stacks = new ItemStack[5][3];
 		stacks[0][0] = new ItemStack(Item.redstone);
-		circuitMakerRegistry.registerRecipe(new CircuitMakerRecipe(100, new ItemStack(Item.diamond), stacks));
+		stacks[1][0] = new ItemStack(Item.redstone);
+		stacks[2][0] = new ItemStack(Item.redstone);
+		stacks[3][0] = new ItemStack(Item.redstone);
+		stacks[4][0] = new ItemStack(Item.redstone);
+
+		stacks[0][1] = new ItemStack(Item.ingotIron);
+		stacks[1][1] = new ItemStack(Item.dyePowder, 1, 4);
+		stacks[2][1] = new ItemStack(Item.dyePowder, 1, 4);
+		stacks[3][1] = new ItemStack(Item.dyePowder, 1, 4);
+		stacks[4][1] = new ItemStack(Item.ingotIron);
+
+		stacks[0][2] = new ItemStack(Item.redstone);
+		stacks[1][2] = new ItemStack(Item.redstone);
+		stacks[2][2] = new ItemStack(Item.redstone);
+		stacks[3][2] = new ItemStack(Item.redstone);
+		stacks[4][2] = new ItemStack(Item.redstone);
+		circuitMakerRegistry.registerRecipe(new CircuitMakerRecipe(100, new ItemStack(circuit, 1, 0), stacks));
 	}
 
 	@ForgeSubscribe

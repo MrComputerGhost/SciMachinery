@@ -188,8 +188,6 @@ public class TileCircuitMaker extends TileEntity implements IInventory
 		{
 			crafting = true;
 
-			System.out.println(((CircuitMakerRecipe) registry.getRecipe(recipeStacks)).getTimeToCraft());
-
 			timer = ((CircuitMakerRecipe) registry.getRecipe(recipeStacks)).getTimeToCraft();
 			totalTime = ((CircuitMakerRecipe) registry.getRecipe(recipeStacks)).getTimeToCraft();
 			for(int i = 0; i < 3; i++)
@@ -246,5 +244,22 @@ public class TileCircuitMaker extends TileEntity implements IInventory
 	public void setTimeLeft(int par2)
 	{
 		timer = par2;
+	}
+
+	public int canCraft()
+	{
+		IRecipeRegistry registry = SciMachinery.instance.circuitMakerRegistry;
+		for(int i = 0; i < 3; i++)
+		{
+			for(int j = 0; j < 5; j++)
+			{
+				recipeStacks[j][i] = inventory[j + i * 5];
+			}
+		}
+		if(registry.isValidRecipe(recipeStacks))
+		{
+			return 1;
+		}
+		return 0;
 	}
 }

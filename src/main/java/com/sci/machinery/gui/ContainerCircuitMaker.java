@@ -12,9 +12,12 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class ContainerCircuitMaker extends Container
 {
 	private TileCircuitMaker tile;
-	
+
+	private int canCraft;
 	private int totalTime;
 	private int timer;
+
+	private GUICircuitMaker gui;
 
 	public ContainerCircuitMaker(InventoryPlayer inventoryPlayer, TileCircuitMaker tile)
 	{
@@ -50,6 +53,7 @@ public class ContainerCircuitMaker extends Container
 		super.addCraftingToCrafters(par1ICrafting);
 		par1ICrafting.sendProgressBarUpdate(this, 0, this.tile.getTotalTime());
 		par1ICrafting.sendProgressBarUpdate(this, 1, this.tile.getTimeLeft());
+		par1ICrafting.sendProgressBarUpdate(this, 2, this.tile.canCraft());
 	}
 
 	public void detectAndSendChanges()
@@ -69,29 +73,45 @@ public class ContainerCircuitMaker extends Container
 			{
 				icrafting.sendProgressBarUpdate(this, 1, this.tile.getTimeLeft());
 			}
+			
+			if(this.canCraft != this.tile.canCraft())
+			{
+				icrafting.sendProgressBarUpdate(this, 2, this.tile.canCraft());
+			}
 		}
 
 		this.totalTime = this.tile.getTotalTime();
 		this.timer = this.tile.getTimeLeft();
 	}
-	
-	@SideOnly(Side.CLIENT)
-    public void updateProgressBar(int par1, int par2)
-    {
-        if (par1 == 0)
-        {
-        	this.tile.setTotalTime(par2);
-        }
 
-        if (par1 == 1)
-        {
-        	this.tile.setTimeLeft(par2);
-        }
-    }
+	@SideOnly(Side.CLIENT)
+	public void updateProgressBar(int par1, int par2)
+	{
+		if(par1 == 0)
+		{
+			this.tile.setTotalTime(par2);
+		}
+
+		if(par1 == 1)
+		{
+			this.tile.setTimeLeft(par2);
+		}
+		
+		if(par1 == 2 && gui != null)
+		{
+			this.canCraft = par2;
+			gui.setCraftable(par2 == 1 ? true : false);
+		}
+	}
 
 	@Override
 	public boolean canInteractWith(EntityPlayer entityPlayer)
 	{
 		return tile.isUseableByPlayer(entityPlayer);
+	}
+
+	public void setGUI(GUICircuitMaker g)
+	{
+		this.gui = g;
 	}
 }

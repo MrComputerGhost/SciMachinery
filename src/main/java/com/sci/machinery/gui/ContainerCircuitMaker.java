@@ -21,7 +21,19 @@ public class ContainerCircuitMaker extends Container
 
 	public ContainerCircuitMaker(InventoryPlayer inventoryPlayer, TileCircuitMaker tile)
 	{
+		final ContainerCircuitMaker container = this;
 		this.tile = tile;
+		this.tile.setButtonUpdateCallback(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				for(int j = 0; j < container.crafters.size(); ++j)
+				{
+					((ICrafting) container.crafters.get(j)).sendProgressBarUpdate(container, 2, canCraft);
+				}
+			}
+		});
 
 		// player inventory
 		for(int i = 0; i < 3; i++)
@@ -73,13 +85,14 @@ public class ContainerCircuitMaker extends Container
 			{
 				icrafting.sendProgressBarUpdate(this, 1, this.tile.getTimeLeft());
 			}
-			
+
 			if(this.canCraft != this.tile.canCraft())
 			{
 				icrafting.sendProgressBarUpdate(this, 2, this.tile.canCraft());
 			}
 		}
 
+		this.canCraft = this.tile.canCraft();
 		this.totalTime = this.tile.getTotalTime();
 		this.timer = this.tile.getTimeLeft();
 	}
@@ -96,7 +109,7 @@ public class ContainerCircuitMaker extends Container
 		{
 			this.tile.setTimeLeft(par2);
 		}
-		
+
 		if(par1 == 2 && gui != null)
 		{
 			this.canCraft = par2;

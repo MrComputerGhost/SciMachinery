@@ -50,6 +50,7 @@ public class CircuitMakerRecipe implements IRecipe
 	@Override
 	public ItemStack getResult()
 	{
+		System.out.println(this.result);
 		return this.result;
 	}
 

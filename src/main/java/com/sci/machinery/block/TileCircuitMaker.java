@@ -20,6 +20,8 @@ public class TileCircuitMaker extends TileEntity implements IInventory
 	private int totalTime;
 	private int timer;
 
+	private Runnable cb;
+
 	public TileCircuitMaker()
 	{
 		inventory = new ItemStack[16];
@@ -162,16 +164,25 @@ public class TileCircuitMaker extends TileEntity implements IInventory
 	@Override
 	public void updateEntity()
 	{
-		if(crafting && !worldObj.isRemote)
+		if(crafting)
 		{
 			timer--;
 			if(timer == 0)
 			{
-				if(!worldObj.isRemote)
-					this.setInventorySlotContents(15, SciMachinery.instance.circuitMakerRegistry.getRecipeResult(recipeStacks));
+				for(int i = 0; i < 3; i++)
+				{
+					for(int j = 0; j < 5; j++)
+					{
+						recipeStacks[j][i] = inventory[j + i * 5];
+					}
+				}
+				this.setInventorySlotContents(15, SciMachinery.instance.circuitMakerRegistry.getRecipeResult(recipeStacks));
 				crafting = false;
 			}
 		}
+
+		if(cb != null)
+			cb.run();
 	}
 
 	private void tryCraft()
@@ -256,10 +267,12 @@ public class TileCircuitMaker extends TileEntity implements IInventory
 				recipeStacks[j][i] = inventory[j + i * 5];
 			}
 		}
-		if(registry.isValidRecipe(recipeStacks))
-		{
-			return 1;
-		}
+		if(registry.isValidRecipe(recipeStacks)) { return 1; }
 		return 0;
+	}
+
+	public void setButtonUpdateCallback(Runnable cb)
+	{
+		this.cb = cb;
 	}
 }

@@ -14,7 +14,7 @@ import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class GUICircuitMaker extends GuiContainer
 {
-	private static final ResourceLocation guiTexture = new ResourceLocation(Reference.MOD_ID.toLowerCase(), "guis/circuit_maker.png");
+	private static final ResourceLocation guiTexture = new ResourceLocation(Reference.MOD_ID.toLowerCase(), "textures/guis/circuit_maker.png");
 
 	private TileCircuitMaker tileEntity;
 

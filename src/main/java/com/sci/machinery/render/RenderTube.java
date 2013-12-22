@@ -33,7 +33,7 @@ import com.sci.machinery.lib.Reference;
 
 public class RenderTube extends TileEntitySpecialRenderer implements IItemRenderer
 {
-	private static final ResourceLocation tubeIcon = new ResourceLocation(Reference.MOD_ID.toLowerCase(), "blocks/tube.png");
+	private static final ResourceLocation tubeIcon = new ResourceLocation(Reference.MOD_ID.toLowerCase(), "textures/blocks/tube.png");
 
 	private static final TubeBase PUMP = new TubePump();
 	private static final TubeBase STONE = new TubeStone();

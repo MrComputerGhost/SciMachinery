@@ -14,7 +14,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class ItemCircuit extends Item
 {
 	private static final String[] CIRCUIT_NAMES = new String[]
-	{ "basic" };
+	{ "basic", "timing" };
 
 	@SideOnly(Side.CLIENT)
 	private Icon[] icons;
@@ -43,7 +43,7 @@ public class ItemCircuit extends Item
 	@SideOnly(Side.CLIENT)
 	public Icon getIconFromDamage(int par1)
 	{
-		int i = MathHelper.clamp_int(par1, 0, 10);
+		int i = MathHelper.clamp_int(par1, 0, 15);
 		return this.icons[i];
 	}
 
@@ -53,7 +53,7 @@ public class ItemCircuit extends Item
 	// come on minecraft..
 	public void getSubItems(int par1, CreativeTabs par2CreativeTabs, List par3List)
 	{
-		for(int i = 0; i < 1; i++)
+		for(int i = 0; i < CIRCUIT_NAMES.length; i++)
 		{
 			par3List.add(new ItemStack(par1, 1, i));
 		}

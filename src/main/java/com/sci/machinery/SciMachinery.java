@@ -193,6 +193,9 @@ public class SciMachinery implements IGuiHandler
 		stacks[13] = new ItemStack(Item.redstone);
 		stacks[14] = new ItemStack(Item.redstone);
 		circuitMakerRegistry.registerRecipe(new CircuitMakerRecipe(100, new ItemStack(circuit, 1, 0), stacks));
+
+		stacks[7] = new ItemStack(Item.pocketSundial, 1);
+		circuitMakerRegistry.registerRecipe(new CircuitMakerRecipe(120, new ItemStack(circuit, 1, 1), stacks));
 	}
 
 	@ForgeSubscribe

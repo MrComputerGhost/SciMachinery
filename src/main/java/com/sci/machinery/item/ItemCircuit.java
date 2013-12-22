@@ -33,9 +33,10 @@ public class ItemCircuit extends Item
 		StringBuilder unlocalizedName = new StringBuilder();
 		int meta = MathHelper.clamp_int(itemStack.getItemDamage(), 0, 15);
 
-		unlocalizedName.append("circuit");
+		unlocalizedName.append("item");
 		unlocalizedName.append(".");
 		unlocalizedName.append(CIRCUIT_NAMES[meta]);
+		unlocalizedName.append("Circuit");
 
 		return unlocalizedName.toString();
 	}

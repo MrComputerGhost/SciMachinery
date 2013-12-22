@@ -33,7 +33,7 @@ public class GUICircuitMaker extends GuiContainer
 	public void initGui()
 	{
 		super.initGui();
-		this.buttonList.add(new GuiButton(1, guiLeft + 105, guiTop + 47, 59, 20, "Craft"));
+		this.buttonList.add(new GuiButton(1, guiLeft + 105, guiTop + 49, 59, 20, "Craft"));
 	}
 
 	public void setCraftable(boolean c)
@@ -61,7 +61,7 @@ public class GUICircuitMaker extends GuiContainer
 	@Override
 	protected void drawGuiContainerForegroundLayer(int param1, int param2)
 	{
-		fontRenderer.drawString("Circuit Maker", 8, 6, 4210752);
+		fontRenderer.drawString(StatCollector.translateToLocal("tile.circuitMaker.name"), 8, 6, 4210752);
 		fontRenderer.drawString(StatCollector.translateToLocal("container.inventory"), 8, ySize - 96 + 2, 4210752);
 	}
 

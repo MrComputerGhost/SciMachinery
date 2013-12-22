@@ -2,15 +2,22 @@ package com.sci.machinery.block;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 import com.sci.machinery.SciMachinery;
 import com.sci.machinery.core.BlockSci;
 import cpw.mods.fml.common.network.FMLNetworkHandler;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockCircuitMaker extends BlockSci
 {
+	@SideOnly(Side.CLIENT)
+	private Icon top, bottom, sides;
+	
 	public BlockCircuitMaker(int par1)
 	{
 		super(par1, Material.iron);
@@ -47,4 +54,18 @@ public class BlockCircuitMaker extends BlockSci
 	{
 		return new TileCircuitMaker();
 	}
+	
+	@Override
+	public Icon getIcon(int par1, int par2)
+    {
+        return par1 == 1 ? this.top : (par1 == 0 ? this.bottom : this.sides);
+    }
+	
+	@Override
+	public void registerIcons(IconRegister par1IconRegister)
+    {
+		this.top = par1IconRegister.registerIcon("scimachinery:circuit_maker_top.png");
+		this.bottom = par1IconRegister.registerIcon("scimachinery:circuit_maker_bottom.png");
+		this.sides = par1IconRegister.registerIcon("scimachinery:circuit_maker_sides.png");
+    }
 }

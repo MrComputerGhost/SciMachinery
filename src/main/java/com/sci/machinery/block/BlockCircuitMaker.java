@@ -32,6 +32,17 @@ public class BlockCircuitMaker extends BlockSci
 	}
 
 	@Override
+	public void breakBlock(World par1World, int par2, int par3, int par4, int par5, int par6)
+	{
+		TileEntity t = par1World.getBlockTileEntity(par2, par3, par4);
+		if(t instanceof TileCircuitMaker)
+		{
+			((TileCircuitMaker) t).breakBlock();
+		}
+		super.breakBlock(par1World, par2, par3, par4, par5, par6);
+	}
+	
+	@Override
 	public TileEntity createNewTileEntity(World world)
 	{
 		return new TileCircuitMaker();

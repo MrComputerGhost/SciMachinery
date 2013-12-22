@@ -64,18 +64,10 @@ public class CircuitMakerRegistry implements IRecipeRegistry
 		if(a.getHeight() != b.getHeight())
 			return false;
 
-		if(!a.getResult().equals(b.getResult()))
+		if(!ItemStack.areItemStacksEqual(a.getResult(), b.getResult()))
 			return false;
 
-		for(int x = 0; x < a.getWidth(); x++)
-		{
-			for(int y = 0; y < a.getHeight(); y++)
-			{
-				if(!a.getIngredient(x, y).equals(b.getIngredient(x, y))) { return false; }
-			}
-		}
-
-		return true;
+		return recipesEqual(a.getIngredients(), b);
 	}
 
 	private boolean recipesEqual(ItemStack[][] a, IRecipe b)
@@ -84,10 +76,11 @@ public class CircuitMakerRegistry implements IRecipeRegistry
 		{
 			for(int y = 0; y < a[x].length; y++)
 			{
-				if(b.getIngredient(x, y) == null && a[x][y] == null)
-					continue;
-				if((b.getIngredient(x, y) == null && a[x][y] != null) || (b.getIngredient(x, y) != null && a[x][y] == null)) { return false; }
-				if(b.getIngredient(x, y).itemID != a[x][y].itemID) { return false; }
+				if(!ItemStack.areItemStacksEqual(a[x][y], b.getIngredient(x, y)))
+				{
+					System.out.println(a[x][y] + " " + b.getIngredient(y, x));
+					return false;
+				}
 			}
 		}
 

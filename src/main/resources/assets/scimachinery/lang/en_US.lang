@@ -7,3 +7,4 @@ tile.pumpTube.name=Item Pump Tube
 tile.detectorTube.name=Item Detector Tube
 tile.voidTube.name=Item Void Tube
 tile.valveTube.name=Item Valve Tube
+circuit.basic.name=Basic Circuit

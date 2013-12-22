@@ -27,6 +27,7 @@ import com.sci.machinery.core.CreativeTabSM;
 import com.sci.machinery.core.IProxy;
 import com.sci.machinery.gui.ContainerCircuitMaker;
 import com.sci.machinery.gui.GUICircuitMaker;
+import com.sci.machinery.item.ItemCircuit;
 import com.sci.machinery.item.ItemEasterEgg;
 import com.sci.machinery.lib.Reference;
 import com.sci.machinery.network.PacketHandler;
@@ -93,6 +94,9 @@ public class SciMachinery implements IGuiHandler
 	public BlockCircuitMaker circuitMaker;
 	public int circuitMakerId;
 
+	public ItemCircuit circuit;
+	public int circuitId;
+
 	public IRecipeRegistry circuitMakerRegistry;
 
 	@EventHandler
@@ -102,10 +106,12 @@ public class SciMachinery implements IGuiHandler
 
 		circuitMakerRegistry = new CircuitMakerRegistry();
 
+		circuit = new ItemCircuit(circuitId);
+		GameRegistry.registerItem(circuit, "SciMachinery-Circuit");
+
 		NetworkRegistry.instance().registerGuiHandler(instance, instance);
 
 		easterEgg = new ItemEasterEgg(easterEggId);
-
 		ChestGenHooks.addItem(ChestGenHooks.DUNGEON_CHEST, new WeightedRandomChestContent(new ItemStack(easterEgg), 1, 1, 1));
 
 		GameRegistry.registerTileEntity(TileTube.class, "SciMachinery_TileTube");
@@ -222,6 +228,7 @@ public class SciMachinery implements IGuiHandler
 			valveTubeId = cfg.getBlock("valveTube", 427).getInt();
 
 			circuitMakerId = cfg.getBlock("circuitMaker", 428).getInt();
+			circuitId = cfg.getItem("circuit", 429).getInt();
 		}
 		finally
 		{

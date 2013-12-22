@@ -46,15 +46,11 @@ public class CircuitMakerRegistry implements IRecipeRegistry
 	@Override
 	public ItemStack getRecipeResult(ItemStack[][] recipe)
 	{
-		IRecipe found = null;
 		for(CircuitMakerRecipe rRecipe : recipes)
 		{
-			if(recipesEqual(recipe, rRecipe))
-				found = rRecipe;
+			if(recipesEqual(recipe, rRecipe)) { return rRecipe.getResult(); }
 		}
-		if(found == null)
-			return null;
-		return found.getResult();
+		return null;
 	}
 
 	private boolean recipesEqual(IRecipe a, IRecipe b)
@@ -77,10 +73,7 @@ public class CircuitMakerRegistry implements IRecipeRegistry
 			for(int y = 0; y < a[x].length; y++)
 			{
 				if(!ItemStack.areItemStacksEqual(a[x][y], b.getIngredient(x, y)))
-				{
-					System.out.println(a[x][y] + " " + b.getIngredient(y, x));
 					return false;
-				}
 			}
 		}
 

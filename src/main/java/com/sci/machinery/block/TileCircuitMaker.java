@@ -169,7 +169,15 @@ public class TileCircuitMaker extends TileEntity implements IInventory
 			timer--;
 			if(timer == 0)
 			{
-				this.setInventorySlotContents(15, SciMachinery.instance.circuitMakerRegistry.getRecipeResult(recipeStacks));
+				IRecipeRegistry registry = SciMachinery.instance.circuitMakerRegistry;
+				for(int y = 0; y < 3; y++)
+				{
+					for(int x = 0; x < 5; x++)
+					{
+						recipeStacks[x][y] = inventory[x + y * 5];
+					}
+				}
+				this.setInventorySlotContents(15, registry.getRecipeResult(recipeStacks));
 				crafting = false;
 			}
 		}

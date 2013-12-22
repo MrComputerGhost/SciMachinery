@@ -110,8 +110,6 @@ public class TileCircuitMaker extends TileEntity implements IInventory
 	@Override
 	public void readFromNBT(NBTTagCompound tagCompound)
 	{
-		super.readFromNBT(tagCompound);
-
 		NBTTagList tagList = tagCompound.getTagList("Inventory");
 		for(int i = 0; i < tagList.tagCount(); i++)
 		{
@@ -137,13 +135,13 @@ public class TileCircuitMaker extends TileEntity implements IInventory
 				currentRecipe[slot] = ItemStack.loadItemStackFromNBT(tag);
 			}
 		}
+
+		super.readFromNBT(tagCompound);
 	}
 
 	@Override
 	public void writeToNBT(NBTTagCompound tagCompound)
 	{
-		super.writeToNBT(tagCompound);
-
 		NBTTagList itemList = new NBTTagList();
 		for(int i = 0; i < inventory.length; i++)
 		{
@@ -175,6 +173,8 @@ public class TileCircuitMaker extends TileEntity implements IInventory
 			}
 		}
 		tagCompound.setTag("CurrentRecipe", itemList2);
+
+		super.writeToNBT(tagCompound);
 	}
 
 	@Override
@@ -312,9 +312,10 @@ public class TileCircuitMaker extends TileEntity implements IInventory
 		if(crafting)
 			return 0;
 		IRecipeRegistry registry = SciMachinery.instance.circuitMakerRegistry;
+		ItemStack[] r = new ItemStack[15];
 		for(int i = 0; i < 15; i++)
-			currentRecipe[i] = inventory[i];
-		return registry.isValidRecipe(currentRecipe) ? 1 : 0;
+			r[i] = inventory[i];
+		return registry.isValidRecipe(r) ? 1 : 0;
 	}
 
 	public void setButtonUpdateCallback(Runnable cb)

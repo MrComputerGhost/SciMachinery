@@ -25,6 +25,7 @@ public class ItemCircuit extends Item
 		this.setHasSubtypes(true);
 		this.setMaxDamage(0);
 		this.setCreativeTab(SciMachinery.tab);
+		this.setUnlocalizedName("circuit");
 	}
 
 	@Override

@@ -48,7 +48,7 @@ public class CircuitMakerRegistry implements IRecipeRegistry
 		if(a.getIngredients().length != b.getIngredients().length)
 			return false;
 
-		if(!areItemStacksEqual(a.getResult(), b.getResult()))
+		if(!ItemStack.areItemStacksEqual(a.getResult(), b.getResult()))
 			return false;
 
 		return recipesEqual(a.getIngredients(), b);
@@ -58,7 +58,7 @@ public class CircuitMakerRegistry implements IRecipeRegistry
 	{
 		for(int i = 0; i < a.length; i++)
 		{
-			if(!areItemStacksEqual(a[i], b.getIngredient(i)))
+			if(!ItemStack.areItemStacksEqual(a[i], b.getIngredient(i)))
 				return false;
 		}
 
@@ -75,14 +75,4 @@ public class CircuitMakerRegistry implements IRecipeRegistry
 		}
 		return null;
 	}
-
-	private boolean areItemStacksEqual(ItemStack par0ItemStack, ItemStack par1ItemStack)
-	{
-		return par0ItemStack == null && par1ItemStack == null ? true : (par0ItemStack != null && par1ItemStack != null ? isItemStackEqual(par0ItemStack, par1ItemStack) : false);
-	}
-
-	private boolean isItemStackEqual(ItemStack par0ItemStack, ItemStack par1ItemStack)
-    {
-        return par0ItemStack.itemID != par1ItemStack.itemID ? false : (par0ItemStack.getItemDamage() != par1ItemStack.getItemDamage() ? false : true);
-    }
 }

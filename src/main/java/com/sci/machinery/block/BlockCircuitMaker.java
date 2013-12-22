@@ -17,7 +17,7 @@ public class BlockCircuitMaker extends BlockSci
 {
 	@SideOnly(Side.CLIENT)
 	private Icon top, bottom, sides;
-	
+
 	public BlockCircuitMaker(int par1)
 	{
 		super(par1, Material.iron);
@@ -48,24 +48,24 @@ public class BlockCircuitMaker extends BlockSci
 		}
 		super.breakBlock(par1World, par2, par3, par4, par5, par6);
 	}
-	
+
 	@Override
 	public TileEntity createNewTileEntity(World world)
 	{
 		return new TileCircuitMaker();
 	}
-	
+
 	@Override
 	public Icon getIcon(int par1, int par2)
-    {
-        return par1 == 1 ? this.top : (par1 == 0 ? this.bottom : this.sides);
-    }
-	
+	{
+		return par1 == 1 ? this.top : (par1 == 0 ? this.bottom : this.sides);
+	}
+
 	@Override
 	public void registerIcons(IconRegister par1IconRegister)
-    {
-		this.top = par1IconRegister.registerIcon("scimachinery:circuit_maker_top.png");
-		this.bottom = par1IconRegister.registerIcon("scimachinery:circuit_maker_bottom.png");
-		this.sides = par1IconRegister.registerIcon("scimachinery:circuit_maker_sides.png");
-    }
+	{
+		this.top = par1IconRegister.registerIcon("scimachinery:circuit_maker_top");
+		this.bottom = par1IconRegister.registerIcon("scimachinery:circuit_maker_bottom");
+		this.sides = par1IconRegister.registerIcon("scimachinery:circuit_maker_sides");
+	}
 }

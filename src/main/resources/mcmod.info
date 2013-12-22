@@ -2,10 +2,10 @@
 {
     "modid":"SciMachinery",
     "name":"SciMachinery",
-    "description":"Some small, useful pieces of machinery.",
+    "description":"Some small, useful pieces of machinery. \"Just another tech mod.\"",
     "version":"${version}.${buildnumber}",
-    "authors":[ "sci4me" ],
-    "credits":"Created by sci4me",
+    "authors":[ "sci4me", "YSPilot" ],
+    "credits":"Coded by sci4me, some textures by YSPilot",
     "requiredMods":[ "Forge" ]
 }
 ]

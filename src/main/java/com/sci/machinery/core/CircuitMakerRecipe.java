@@ -5,9 +5,9 @@ import com.sci.machinery.api.IRecipe;
 
 public class CircuitMakerRecipe implements IRecipe
 {
-	private ItemStack result;
-	private ItemStack[] ingredients;
-	private int timeToCraft;
+	private final ItemStack result;
+	private final ItemStack[] ingredients;
+	private final int timeToCraft;
 
 	public CircuitMakerRecipe(int timeToCraft, ItemStack result, ItemStack[] ingredients)
 	{
@@ -44,5 +44,15 @@ public class CircuitMakerRecipe implements IRecipe
 	public int getTimeToCraft()
 	{
 		return timeToCraft;
+	}
+
+	@Override
+	public String toString()
+	{
+		StringBuilder sb = new StringBuilder();
+		sb.append("CR[");
+		sb.append(result);
+		sb.append("]");
+		return sb.toString();
 	}
 }

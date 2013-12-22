@@ -164,6 +164,9 @@ public class SciMachinery implements IGuiHandler
 		GameRegistry.addRecipe(new ItemStack(voidTube, 1), new Object[]
 		{ "lgl", "epe", "lgl", 'l', new ItemStack(Item.dyePowder, 4), 'g', Item.glowstone, 'e', Item.enderPearl, 'p', stoneTube });
 
+		GameRegistry.addRecipe(new ItemStack(circuitMaker), new Object[]
+		{ "ici", "ipi", "iri", 'i', Item.ingotIron, 'c', Item.comparator, 'p', Block.pistonBase, 'r', Item.redstone });
+
 		GameRegistry.addShapelessRecipe(new ItemStack(fastStoneTube), new Object[]
 		{ new ItemStack(Item.ingotGold, 1), new ItemStack(fastStoneTube, 1) });
 		GameRegistry.addShapelessRecipe(new ItemStack(fastCobbleTube), new Object[]
@@ -194,7 +197,24 @@ public class SciMachinery implements IGuiHandler
 		stacks[14] = new ItemStack(Item.redstone);
 		circuitMakerRegistry.registerRecipe(new CircuitMakerRecipe(100, new ItemStack(circuit, 1, 0), stacks));
 
-		stacks[7] = new ItemStack(Item.pocketSundial, 1);
+		stacks = new ItemStack[15];
+		stacks[0] = new ItemStack(Item.redstone);
+		stacks[1] = new ItemStack(Item.redstone);
+		stacks[2] = new ItemStack(Item.redstone);
+		stacks[3] = new ItemStack(Item.redstone);
+		stacks[4] = new ItemStack(Item.redstone);
+
+		stacks[5] = new ItemStack(Item.ingotIron);
+		stacks[6] = new ItemStack(Item.dyePowder, 1, 4);
+		stacks[7] = new ItemStack(Item.pocketSundial);
+		stacks[8] = new ItemStack(Item.dyePowder, 1, 4);
+		stacks[9] = new ItemStack(Item.ingotIron);
+
+		stacks[10] = new ItemStack(Item.redstone);
+		stacks[11] = new ItemStack(Item.redstone);
+		stacks[12] = new ItemStack(Item.redstone);
+		stacks[13] = new ItemStack(Item.redstone);
+		stacks[14] = new ItemStack(Item.redstone);
 		circuitMakerRegistry.registerRecipe(new CircuitMakerRecipe(120, new ItemStack(circuit, 1, 1), stacks));
 	}
 

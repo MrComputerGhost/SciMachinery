@@ -1,5 +1,6 @@
 package com.sci.machinery.block;
 
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -121,11 +122,11 @@ public class TileCircuitMaker extends TileEntity implements IInventory
 				inventory[slot] = ItemStack.loadItemStackFromNBT(tag);
 			}
 		}
-		
+
 		this.crafting = tagCompound.getBoolean("crafting");
 		this.totalTime = tagCompound.getInteger("totalTime");
 		this.timer = tagCompound.getInteger("timeLeft");
-		
+
 		NBTTagList tagList2 = tagCompound.getTagList("CurrentRecipe");
 		for(int i = 0; i < tagList.tagCount(); i++)
 		{
@@ -160,7 +161,7 @@ public class TileCircuitMaker extends TileEntity implements IInventory
 		tagCompound.setBoolean("crafting", crafting);
 		tagCompound.setInteger("totalTime", totalTime);
 		tagCompound.setInteger("timeLeft", timer);
-		
+
 		NBTTagList itemList2 = new NBTTagList();
 		for(int i = 0; i < inventory.length; i++)
 		{
@@ -204,7 +205,10 @@ public class TileCircuitMaker extends TileEntity implements IInventory
 			{
 				IRecipeRegistry registry = SciMachinery.instance.circuitMakerRegistry;
 				ItemStack res = registry.getRecipe(currentRecipe).getResult();
-				this.setInventorySlotContents(15, res);
+				if(inventory[15] == null)
+					this.setInventorySlotContents(15, res);
+				else
+					inventory[15].stackSize++;
 				crafting = false;
 			}
 		}
@@ -221,16 +225,27 @@ public class TileCircuitMaker extends TileEntity implements IInventory
 			return;
 		IRecipeRegistry registry = SciMachinery.instance.circuitMakerRegistry;
 		for(int i = 0; i < 15; i++)
+		{
 			currentRecipe[i] = inventory[i];
+		}
 		if(registry.isValidRecipe(currentRecipe))
 		{
+			if(inventory[15] != null)
+			{
+				ItemStack item = registry.getRecipe(currentRecipe).getResult();
+				if(inventory[15].itemID != item.itemID || inventory[15].getItemDamage() != item.getItemDamage())
+				return;
+				
+				if(inventory[15].stackSize == 64)
+					return;
+			}
 			timer = ((CircuitMakerRecipe) registry.getRecipe(currentRecipe)).getTimeToCraft();
 			totalTime = ((CircuitMakerRecipe) registry.getRecipe(currentRecipe)).getTimeToCraft();
 			for(int i = 0; i < 3; i++)
 			{
 				for(int j = 0; j < 5; j++)
 				{
-					this.setInventorySlotContents(j + i * 5, null);
+					this.decrStackSize(j + i * 5, 1);
 				}
 			}
 
@@ -301,13 +316,23 @@ public class TileCircuitMaker extends TileEntity implements IInventory
 
 	public void breakBlock()
 	{
+		if(worldObj.isRemote)
+			return;
 		if(crafting)
 		{
-			
+			for(int i = 0; i < currentRecipe.length; i++)
+			{
+				if(currentRecipe[i] != null)
+					worldObj.spawnEntityInWorld(new EntityItem(worldObj, xCoord, yCoord, zCoord, currentRecipe[i]));
+			}
 		}
 		else
 		{
-			
+			for(int i = 0; i < inventory.length; i++)
+			{
+				if(inventory[i] != null)
+					worldObj.spawnEntityInWorld(new EntityItem(worldObj, xCoord, yCoord, zCoord, inventory[i]));
+			}
 		}
 	}
 }

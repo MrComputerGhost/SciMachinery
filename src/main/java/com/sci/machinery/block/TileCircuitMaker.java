@@ -203,13 +203,21 @@ public class TileCircuitMaker extends TileEntity implements IInventory
 			timer--;
 			if(timer == 0)
 			{
+				crafting = false;
+
 				IRecipeRegistry registry = SciMachinery.instance.circuitMakerRegistry;
 				ItemStack res = registry.getRecipe(currentRecipe).getResult();
+
 				if(inventory[15] == null)
+				{
 					this.setInventorySlotContents(15, res);
+				}
 				else
-					inventory[15].stackSize++;
-				crafting = false;
+				{
+					ItemStack stackInSlot = inventory[15];
+					stackInSlot.stackSize++;
+					this.setInventorySlotContents(15, stackInSlot);
+				}
 			}
 		}
 
@@ -234,8 +242,8 @@ public class TileCircuitMaker extends TileEntity implements IInventory
 			{
 				ItemStack item = registry.getRecipe(currentRecipe).getResult();
 				if(inventory[15].itemID != item.itemID || inventory[15].getItemDamage() != item.getItemDamage())
-				return;
-				
+					return;
+
 				if(inventory[15].stackSize == 64)
 					return;
 			}

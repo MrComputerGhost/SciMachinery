@@ -18,11 +18,14 @@ public class TileCircuitMaker extends TileEntity implements IInventory
 	private int totalTime;
 	private int timer;
 
+	private ItemStack[] currentRecipe;
+	
 	private Runnable cb;
 
 	public TileCircuitMaker()
 	{
 		inventory = new ItemStack[16];
+		currentRecipe = new ItemStack[15];
 		totalTime = 1;
 	}
 
@@ -167,10 +170,7 @@ public class TileCircuitMaker extends TileEntity implements IInventory
 			if(timer == 0)
 			{
 				IRecipeRegistry registry = SciMachinery.instance.circuitMakerRegistry;
-				ItemStack[] recipeStacks = new ItemStack[15];
-				for(int i = 0; i < 15; i++)
-					recipeStacks[i] = inventory[i];
-				this.setInventorySlotContents(15, registry.getRecipeResult(recipeStacks));
+				this.setInventorySlotContents(15, registry.getRecipe(currentRecipe).getResult());
 				crafting = false;
 			}
 		}
@@ -182,15 +182,14 @@ public class TileCircuitMaker extends TileEntity implements IInventory
 	private void tryCraft()
 	{
 		IRecipeRegistry registry = SciMachinery.instance.circuitMakerRegistry;
-		ItemStack[] recipeStacks = new ItemStack[15];
 		for(int i = 0; i < 15; i++)
-			recipeStacks[i] = inventory[i];
-		if(registry.isValidRecipe(recipeStacks))
+			currentRecipe[i] = inventory[i];
+		if(registry.isValidRecipe(currentRecipe))
 		{
 			crafting = true;
 
-			timer = ((CircuitMakerRecipe) registry.getRecipe(recipeStacks)).getTimeToCraft();
-			totalTime = ((CircuitMakerRecipe) registry.getRecipe(recipeStacks)).getTimeToCraft();
+			timer = ((CircuitMakerRecipe) registry.getRecipe(currentRecipe)).getTimeToCraft();
+			totalTime = ((CircuitMakerRecipe) registry.getRecipe(currentRecipe)).getTimeToCraft();
 			for(int i = 0; i < 3; i++)
 			{
 				for(int j = 0; j < 5; j++)
@@ -250,10 +249,9 @@ public class TileCircuitMaker extends TileEntity implements IInventory
 	public int canCraft()
 	{
 		IRecipeRegistry registry = SciMachinery.instance.circuitMakerRegistry;
-		ItemStack[] recipeStacks = new ItemStack[15];
 		for(int i = 0; i < 15; i++)
-			recipeStacks[i] = inventory[i];
-		return registry.isValidRecipe(recipeStacks) ? 1 : 0;
+			currentRecipe[i] = inventory[i];
+		return registry.isValidRecipe(currentRecipe) ? 1 : 0;
 	}
 
 	public void setButtonUpdateCallback(Runnable cb)

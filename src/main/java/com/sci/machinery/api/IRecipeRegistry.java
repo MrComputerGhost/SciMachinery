@@ -8,7 +8,5 @@ public interface IRecipeRegistry
 	
 	public void registerRecipe(IRecipe recipe);
 	
-	public ItemStack getRecipeResult(ItemStack[] recipe);
-
 	public IRecipe getRecipe(ItemStack[] recipe);
 }

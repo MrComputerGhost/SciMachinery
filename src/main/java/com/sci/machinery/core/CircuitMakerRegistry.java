@@ -43,16 +43,6 @@ public class CircuitMakerRegistry implements IRecipeRegistry
 		recipes.add((CircuitMakerRecipe) recipe);
 	}
 
-	@Override
-	public ItemStack getRecipeResult(ItemStack[] recipe)
-	{
-		for(CircuitMakerRecipe rRecipe : recipes)
-		{
-			if(recipesEqual(recipe, rRecipe)) { return rRecipe.getResult(); }
-		}
-		return null;
-	}
-
 	private boolean recipesEqual(IRecipe a, IRecipe b)
 	{
 		if(a.getIngredients().length != b.getIngredients().length)

@@ -268,8 +268,7 @@ public class TileCircuitMaker extends TileEntity implements IInventory
 				recipeStacks[j][i] = inventory[j + i * 5];
 			}
 		}
-		if(registry.isValidRecipe(recipeStacks)) { return 1; }
-		return 0;
+		return registry.isValidRecipe(recipeStacks) ? 1 : 0;
 	}
 
 	public void setButtonUpdateCallback(Runnable cb)

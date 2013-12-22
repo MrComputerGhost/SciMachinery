@@ -9,6 +9,8 @@ import net.minecraft.tileentity.TileEntity;
 import com.sci.machinery.SciMachinery;
 import com.sci.machinery.api.IRecipeRegistry;
 import com.sci.machinery.core.CircuitMakerRecipe;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class TileCircuitMaker extends TileEntity implements IInventory
 {
@@ -19,7 +21,7 @@ public class TileCircuitMaker extends TileEntity implements IInventory
 	private int timer;
 
 	private ItemStack[] currentRecipe;
-	
+
 	private Runnable cb;
 
 	public TileCircuitMaker()
@@ -170,7 +172,14 @@ public class TileCircuitMaker extends TileEntity implements IInventory
 			if(timer == 0)
 			{
 				IRecipeRegistry registry = SciMachinery.instance.circuitMakerRegistry;
-				this.setInventorySlotContents(15, registry.getRecipe(currentRecipe).getResult());
+				if(!worldObj.isRemote)
+				{
+					this.setInventorySlotContents(15, registry.getRecipe(currentRecipe).getResult());
+				}
+				else
+				{
+					
+				}
 				crafting = false;
 			}
 		}
@@ -257,5 +266,11 @@ public class TileCircuitMaker extends TileEntity implements IInventory
 	public void setButtonUpdateCallback(Runnable cb)
 	{
 		this.cb = cb;
+	}
+	
+	@SideOnly(Side.CLIENT)
+	public void itemCrafted(ItemStack itemStack)
+	{
+		this.setInventorySlotContents(15, itemStack);
 	}
 }

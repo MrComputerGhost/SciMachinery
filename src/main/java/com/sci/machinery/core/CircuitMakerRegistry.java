@@ -16,7 +16,7 @@ public class CircuitMakerRegistry implements IRecipeRegistry
 	}
 
 	@Override
-	public boolean isValidRecipe(ItemStack[][] recipe)
+	public boolean isValidRecipe(ItemStack[] recipe)
 	{
 		boolean contains = false;
 		for(CircuitMakerRecipe rRecipe : recipes)
@@ -44,7 +44,7 @@ public class CircuitMakerRegistry implements IRecipeRegistry
 	}
 
 	@Override
-	public ItemStack getRecipeResult(ItemStack[][] recipe)
+	public ItemStack getRecipeResult(ItemStack[] recipe)
 	{
 		for(CircuitMakerRecipe rRecipe : recipes)
 		{
@@ -55,9 +55,7 @@ public class CircuitMakerRegistry implements IRecipeRegistry
 
 	private boolean recipesEqual(IRecipe a, IRecipe b)
 	{
-		if(a.getWidth() != b.getWidth())
-			return false;
-		if(a.getHeight() != b.getHeight())
+		if(a.getIngredients().length != b.getIngredients().length)
 			return false;
 
 		if(!ItemStack.areItemStacksEqual(a.getResult(), b.getResult()))
@@ -66,22 +64,19 @@ public class CircuitMakerRegistry implements IRecipeRegistry
 		return recipesEqual(a.getIngredients(), b);
 	}
 
-	private boolean recipesEqual(ItemStack[][] a, IRecipe b)
+	private boolean recipesEqual(ItemStack[] a, IRecipe b)
 	{
-		for(int x = 0; x < a.length; x++)
+		for(int i = 0; i < a.length; i++)
 		{
-			for(int y = 0; y < a[x].length; y++)
-			{
-				if(!ItemStack.areItemStacksEqual(a[x][y], b.getIngredient(x, y)))
-					return false;
-			}
+			if(!ItemStack.areItemStacksEqual(a[i], b.getIngredient(i)))
+				return false;
 		}
 
 		return true;
 	}
 
 	@Override
-	public IRecipe getRecipe(ItemStack[][] recipe)
+	public IRecipe getRecipe(ItemStack[] recipe)
 	{
 		for(CircuitMakerRecipe rRecipe : recipes)
 		{

@@ -174,24 +174,24 @@ public class SciMachinery implements IGuiHandler
 		GameRegistry.addShapelessRecipe(new ItemStack(tubeValve), new Object[]
 		{ new ItemStack(Item.redstone, 1), new ItemStack(cobbleTube, 1) });
 
-		ItemStack[][] stacks = new ItemStack[5][3];
-		stacks[0][0] = new ItemStack(Item.redstone);
-		stacks[1][0] = new ItemStack(Item.redstone);
-		stacks[2][0] = new ItemStack(Item.redstone);
-		stacks[3][0] = new ItemStack(Item.redstone);
-		stacks[4][0] = new ItemStack(Item.redstone);
+		ItemStack[] stacks = new ItemStack[15];
+		stacks[0] = new ItemStack(Item.redstone);
+		stacks[1] = new ItemStack(Item.redstone);
+		stacks[2] = new ItemStack(Item.redstone);
+		stacks[3] = new ItemStack(Item.redstone);
+		stacks[4] = new ItemStack(Item.redstone);
 
-		stacks[0][1] = new ItemStack(Item.ingotIron);
-		stacks[1][1] = new ItemStack(Item.dyePowder, 1, 4);
-		stacks[2][1] = new ItemStack(Item.dyePowder, 1, 4);
-		stacks[3][1] = new ItemStack(Item.dyePowder, 1, 4);
-		stacks[4][1] = new ItemStack(Item.ingotIron);
+		stacks[5] = new ItemStack(Item.ingotIron);
+		stacks[6] = new ItemStack(Item.dyePowder, 1, 4);
+		stacks[7] = new ItemStack(Item.dyePowder, 1, 4);
+		stacks[8] = new ItemStack(Item.dyePowder, 1, 4);
+		stacks[9] = new ItemStack(Item.ingotIron);
 
-		stacks[0][2] = new ItemStack(Item.redstone);
-		stacks[1][2] = new ItemStack(Item.redstone);
-		stacks[2][2] = new ItemStack(Item.redstone);
-		stacks[3][2] = new ItemStack(Item.redstone);
-		stacks[4][2] = new ItemStack(Item.redstone);
+		stacks[10] = new ItemStack(Item.redstone);
+		stacks[11] = new ItemStack(Item.redstone);
+		stacks[12] = new ItemStack(Item.redstone);
+		stacks[13] = new ItemStack(Item.redstone);
+		stacks[14] = new ItemStack(Item.redstone);
 		circuitMakerRegistry.registerRecipe(new CircuitMakerRecipe(100, new ItemStack(circuit, 1, 0), stacks));
 	}
 

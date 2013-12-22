@@ -15,8 +15,6 @@ public class TileCircuitMaker extends TileEntity implements IInventory
 	private boolean crafting;
 	private ItemStack[] inventory;
 
-	private ItemStack[][] recipeStacks;
-
 	private int totalTime;
 	private int timer;
 
@@ -25,7 +23,6 @@ public class TileCircuitMaker extends TileEntity implements IInventory
 	public TileCircuitMaker()
 	{
 		inventory = new ItemStack[16];
-		recipeStacks = new ItemStack[5][3];
 		totalTime = 1;
 	}
 
@@ -170,13 +167,9 @@ public class TileCircuitMaker extends TileEntity implements IInventory
 			if(timer == 0)
 			{
 				IRecipeRegistry registry = SciMachinery.instance.circuitMakerRegistry;
-				for(int y = 0; y < 3; y++)
-				{
-					for(int x = 0; x < 5; x++)
-					{
-						recipeStacks[x][y] = inventory[x + y * 5];
-					}
-				}
+				ItemStack[] recipeStacks = new ItemStack[15];
+				for(int i = 0; i < 15; i++)
+					recipeStacks[i] = inventory[i];
 				this.setInventorySlotContents(15, registry.getRecipeResult(recipeStacks));
 				crafting = false;
 			}
@@ -189,13 +182,9 @@ public class TileCircuitMaker extends TileEntity implements IInventory
 	private void tryCraft()
 	{
 		IRecipeRegistry registry = SciMachinery.instance.circuitMakerRegistry;
-		for(int i = 0; i < 3; i++)
-		{
-			for(int j = 0; j < 5; j++)
-			{
-				recipeStacks[j][i] = inventory[j + i * 5];
-			}
-		}
+		ItemStack[] recipeStacks = new ItemStack[15];
+		for(int i = 0; i < 15; i++)
+			recipeStacks[i] = inventory[i];
 		if(registry.isValidRecipe(recipeStacks))
 		{
 			crafting = true;
@@ -261,13 +250,9 @@ public class TileCircuitMaker extends TileEntity implements IInventory
 	public int canCraft()
 	{
 		IRecipeRegistry registry = SciMachinery.instance.circuitMakerRegistry;
-		for(int i = 0; i < 3; i++)
-		{
-			for(int j = 0; j < 5; j++)
-			{
-				recipeStacks[j][i] = inventory[j + i * 5];
-			}
-		}
+		ItemStack[] recipeStacks = new ItemStack[15];
+		for(int i = 0; i < 15; i++)
+			recipeStacks[i] = inventory[i];
 		return registry.isValidRecipe(recipeStacks) ? 1 : 0;
 	}
 

@@ -6,10 +6,10 @@ import com.sci.machinery.api.IRecipe;
 public class CircuitMakerRecipe implements IRecipe
 {
 	private ItemStack result;
-	private ItemStack[][] ingredients;
+	private ItemStack[] ingredients;
 	private int timeToCraft;
 
-	public CircuitMakerRecipe(int timeToCraft, ItemStack result, ItemStack[][] ingredients)
+	public CircuitMakerRecipe(int timeToCraft, ItemStack result, ItemStack[] ingredients)
 	{
 		if(!areIngredientsValid(ingredients))
 			throw new IllegalArgumentException("Invalid ingredients!");
@@ -18,33 +18,15 @@ public class CircuitMakerRecipe implements IRecipe
 		this.ingredients = ingredients;
 	}
 
-	private boolean areIngredientsValid(ItemStack[][] ingredients)
+	private boolean areIngredientsValid(ItemStack[] ingredients)
 	{
-		boolean ret = ingredients.length == getWidth();
-		for(int x = 0; x < getWidth(); x++)
-		{
-			if(ingredients[x].length != getHeight())
-				ret = false;
-		}
-		return ret;
+		return ingredients.length == 15;
 	}
 
 	@Override
-	public int getWidth()
+	public ItemStack getIngredient(int i)
 	{
-		return 5;
-	}
-
-	@Override
-	public int getHeight()
-	{
-		return 3;
-	}
-
-	@Override
-	public ItemStack getIngredient(int x, int y)
-	{
-		return this.ingredients[x][y];
+		return this.ingredients[i];
 	}
 
 	@Override
@@ -54,11 +36,11 @@ public class CircuitMakerRecipe implements IRecipe
 	}
 
 	@Override
-	public ItemStack[][] getIngredients()
+	public ItemStack[] getIngredients()
 	{
 		return ingredients;
 	}
-	
+
 	public int getTimeToCraft()
 	{
 		return timeToCraft;

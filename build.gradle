@@ -52,7 +52,7 @@ task sourcesJar(type: Jar, dependsOn: classes) {
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
     classifier = 'javadoc'
-    archiveName = "SciMachinery" + config.mod_version + "." + config.build_number + "-javadoc.jar"
+    archiveName = "SciMachinery-" + config.mod_version + "." + config.build_number + "-javadoc.jar"
     from javadoc.destinationDir
 }
 

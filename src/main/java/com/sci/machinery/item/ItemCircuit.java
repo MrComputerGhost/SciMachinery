@@ -14,7 +14,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class ItemCircuit extends Item
 {
 	private static final String[] CIRCUIT_NAMES = new String[]
-	{ "basic", "timing" };
+	{ "basic", "timing", "alu", "control", "cpu" };
 
 	@SideOnly(Side.CLIENT)
 	private Icon[] icons;

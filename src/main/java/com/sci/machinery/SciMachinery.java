@@ -14,6 +14,7 @@ import net.minecraftforge.client.event.sound.SoundLoadEvent;
 import net.minecraftforge.common.ChestGenHooks;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.event.ForgeSubscribe;
+import com.sci.machinery.api.IProxy;
 import com.sci.machinery.api.IRecipeRegistry;
 import com.sci.machinery.block.BlockCircuitMaker;
 import com.sci.machinery.block.BlockTube;
@@ -24,7 +25,6 @@ import com.sci.machinery.block.tube.TubeModifier;
 import com.sci.machinery.core.CircuitMakerRecipe;
 import com.sci.machinery.core.CircuitMakerRegistry;
 import com.sci.machinery.core.CreativeTabSM;
-import com.sci.machinery.core.IProxy;
 import com.sci.machinery.gui.ContainerCircuitMaker;
 import com.sci.machinery.gui.GUICircuitMaker;
 import com.sci.machinery.item.ItemCircuit;
@@ -121,15 +121,15 @@ public class SciMachinery implements IGuiHandler
 		stoneTube.setUnlocalizedName("stoneTube");
 		GameRegistry.registerBlock(stoneTube, "SciMachinery_TileStoneTube");
 
-		cobbleTube = new BlockTube(cobbleTubeId, TubeBase.COBBLE);
+		cobbleTube = new BlockTube(cobbleTubeId, TubeBase.COBBLE, TubeModifier.SPEED_DOWN);
 		cobbleTube.setUnlocalizedName("cobbleTube");
 		GameRegistry.registerBlock(cobbleTube, "SciMachinery_TileCobbleTube");
 
-		fastStoneTube = new BlockTube(fastStoneId, TubeBase.STONE, TubeModifier.SPEED);
+		fastStoneTube = new BlockTube(fastStoneId, TubeBase.STONE, TubeModifier.SPEED_UP);
 		fastStoneTube.setUnlocalizedName("fastStoneTube");
 		GameRegistry.registerBlock(fastStoneTube, "SciMachinery_TileFastStoneTube");
 
-		fastCobbleTube = new BlockTube(fastCobbleId, TubeBase.COBBLE, TubeModifier.SPEED);
+		fastCobbleTube = new BlockTube(fastCobbleId, TubeBase.COBBLE, TubeModifier.SPEED_NORMAL);
 		fastCobbleTube.setUnlocalizedName("fastCobbleTube");
 		GameRegistry.registerBlock(fastCobbleTube, "SciMachinery_TileFastCobbleTube");
 
@@ -216,6 +216,66 @@ public class SciMachinery implements IGuiHandler
 		stacks[13] = new ItemStack(Item.redstone);
 		stacks[14] = new ItemStack(Item.redstone);
 		circuitMakerRegistry.registerRecipe(new CircuitMakerRecipe(120, new ItemStack(circuit, 1, 1), stacks));
+
+		stacks = new ItemStack[15];
+		stacks[0] = new ItemStack(Item.redstone);
+		stacks[1] = new ItemStack(Item.redstone);
+		stacks[2] = new ItemStack(Item.redstone);
+		stacks[3] = new ItemStack(Item.redstone);
+		stacks[4] = new ItemStack(Item.redstone);
+
+		stacks[5] = new ItemStack(Item.ingotIron);
+		stacks[6] = new ItemStack(Item.comparator);
+		stacks[7] = new ItemStack(circuit, 1, 0);
+		stacks[8] = new ItemStack(Item.comparator);
+		stacks[9] = new ItemStack(Item.ingotIron);
+
+		stacks[10] = new ItemStack(Item.redstone);
+		stacks[11] = new ItemStack(Item.redstone);
+		stacks[12] = new ItemStack(Item.redstone);
+		stacks[13] = new ItemStack(Item.redstone);
+		stacks[14] = new ItemStack(Item.redstone);
+		circuitMakerRegistry.registerRecipe(new CircuitMakerRecipe(120, new ItemStack(circuit, 1, 2), stacks));
+
+		stacks = new ItemStack[15];
+		stacks[0] = new ItemStack(Item.redstone);
+		stacks[1] = new ItemStack(Item.redstone);
+		stacks[2] = new ItemStack(Item.redstone);
+		stacks[3] = new ItemStack(Item.redstone);
+		stacks[4] = new ItemStack(Item.redstone);
+
+		stacks[5] = new ItemStack(Item.ingotIron);
+		stacks[6] = new ItemStack(Item.redstoneRepeater);
+		stacks[7] = new ItemStack(circuit, 1, 0);
+		stacks[8] = new ItemStack(Item.redstoneRepeater);
+		stacks[9] = new ItemStack(Item.ingotIron);
+
+		stacks[10] = new ItemStack(Item.redstone);
+		stacks[11] = new ItemStack(Item.redstone);
+		stacks[12] = new ItemStack(Item.redstone);
+		stacks[13] = new ItemStack(Item.redstone);
+		stacks[14] = new ItemStack(Item.redstone);
+		circuitMakerRegistry.registerRecipe(new CircuitMakerRecipe(120, new ItemStack(circuit, 1, 3), stacks));
+
+		stacks = new ItemStack[15];
+		stacks[0] = new ItemStack(Item.redstone);
+		stacks[1] = new ItemStack(Item.redstone);
+		stacks[2] = new ItemStack(Item.redstone);
+		stacks[3] = new ItemStack(Item.redstone);
+		stacks[4] = new ItemStack(Item.redstone);
+
+		stacks[5] = new ItemStack(Item.ingotIron);
+		stacks[6] = new ItemStack(circuit, 1, 1);
+		stacks[7] = new ItemStack(circuit, 1, 2);
+		stacks[8] = new ItemStack(circuit, 1, 3);
+		stacks[9] = new ItemStack(Item.ingotIron);
+
+		stacks[10] = new ItemStack(Item.redstone);
+		stacks[11] = new ItemStack(Item.redstone);
+		stacks[12] = new ItemStack(Item.redstone);
+		stacks[13] = new ItemStack(Item.redstone);
+		stacks[14] = new ItemStack(Item.redstone);
+		circuitMakerRegistry.registerRecipe(new CircuitMakerRecipe(120, new ItemStack(circuit, 1, 4), stacks));
 	}
 
 	@ForgeSubscribe

@@ -4,20 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.ISidedInventory;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityHopper;
-import net.minecraftforge.common.ForgeDirection;
 import com.sci.machinery.block.TileTube;
-import com.sci.machinery.core.BlockCoord;
-import com.sci.machinery.core.Utils;
-import com.sci.machinery.network.PacketAddItem;
-import com.sci.machinery.network.PacketRemoveItem;
-import com.sci.machinery.network.PacketTypeHandler;
 import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.relauncher.Side;
 
 /**
@@ -37,12 +27,14 @@ public abstract class TubeBase implements ITubeConnectable
 	public static final Class<? extends TubeBase> VALVE = TubeValve.class;
 
 	protected List<TravellingItem> items;
+	protected Speed speed;
+	protected TileTube tile;
+	protected int timer;
 
-	protected Speed speed = Speed.MEDIUM;
-	private TileTube tile;
-	private int timer;
-
-	protected int r, g, b, a = 150;
+	protected int r = 0;
+	protected int g = 0;
+	protected int b = 0;
+	protected int a = 150;
 
 	public TubeBase()
 	{
@@ -52,14 +44,7 @@ public abstract class TubeBase implements ITubeConnectable
 	@Override
 	public void addItem(TravellingItem item, TileEntity sender)
 	{
-		if(!getTile().worldObj.isRemote)
-		{
-			PacketDispatcher.sendPacketToAllPlayers(PacketTypeHandler.populatePacket(new PacketAddItem(getTile().xCoord, getTile().yCoord, getTile().zCoord, item.getStack().itemID, item.getStack().stackSize)));
-		}
-		if(sender != null)
-		{
-			item.getLastCoord().add(Utils.blockCoord(sender));
-		}
+		// TODO
 		items.add(item);
 	}
 
@@ -86,15 +71,6 @@ public abstract class TubeBase implements ITubeConnectable
 				return ((TubeValve) ((TileTube) e).getTube()).canConnectTube(e);
 		}
 		return e instanceof ITubeConnectable || e instanceof IInventory;
-	}
-
-	private int findSide(BlockCoord base, BlockCoord side)
-	{
-		BlockCoord[] adjacent = base.getAdjacent();
-		for(int i = 0; i < adjacent.length; i++)
-			if(adjacent[i].equals(side))
-				return i;
-		return -1;
 	}
 
 	public int getR(int a)
@@ -162,11 +138,6 @@ public abstract class TubeBase implements ITubeConnectable
 		return tile != null;
 	}
 
-	public void readFromNBT(NBTTagCompound tag)
-	{
-
-	}
-
 	@Override
 	public void removeItem(int index)
 	{
@@ -191,88 +162,32 @@ public abstract class TubeBase implements ITubeConnectable
 		if(!isValid())
 			return;
 
-		if(!getTile().worldObj.isRemote && !items.isEmpty())
+		if(isValid() && !tile.isInvalid())
 		{
 			timer++;
 			if(timer == speed.delay)
 			{
 				timer = 0;
-
-				TravellingItem item = items.remove(0);
-				PacketDispatcher.sendPacketToAllPlayers(PacketTypeHandler.populatePacket(new PacketRemoveItem(getTile().xCoord, getTile().yCoord, getTile().zCoord, 0)));
-
-				BlockCoord next = TubeRouter.route(getTile(), item);
-				if(next == null)
-				{
-					getTile().worldObj.spawnEntityInWorld(new EntityItem(getTile().worldObj, getTile().xCoord, getTile().yCoord, getTile().zCoord, item.getStack()));
-				}
-				else
-				{
-					TileEntity nextTE = Utils.getTileEntity(getTile().worldObj, next);
-					if(nextTE == null)
-					{
-						getTile().worldObj.spawnEntityInWorld(new EntityItem(getTile().worldObj, getTile().xCoord, getTile().yCoord, getTile().zCoord, item.getStack()));
-					}
-					else if(nextTE instanceof ISidedInventory)
-					{
-						int side = findSide(Utils.blockCoord(getTile()), next);
-						if(side != -1)
-						{
-							side = ForgeDirection.OPPOSITES[side];
-							ISidedInventory inv = (ISidedInventory) nextTE;
-							int[] slots = inv.getAccessibleSlotsFromSide(side);
-
-							for(int j = 0; j < slots.length; j++)
-							{
-								if(inv.canInsertItem(slots[j], item.getStack(), side))
-								{
-									ItemStack remaining = TileEntityHopper.insertStack(inv, item.getStack(), side);
-									if(remaining != null)
-									{
-										item.setStack(remaining);
-										this.addItem(item, nextTE);
-										timer = speed.delay - 1;
-									}
-								}
-							}
-						}
-					}
-					else if(nextTE instanceof IInventory)
-					{
-						int side = findSide(Utils.blockCoord(getTile()), next);
-						if(side != -1)
-						{
-							side = ForgeDirection.OPPOSITES[side];
-							IInventory inv = (IInventory) nextTE;
-							ItemStack remaining = TileEntityHopper.insertStack(inv, item.getStack(), side);
-							if(remaining != null)
-							{
-								item.setStack(remaining);
-								this.addItem(item, getTile());
-							}
-						}
-					}
-					else if(nextTE instanceof ITubeConnectable)
-					{
-						((ITubeConnectable) nextTE).addItem(item, getTile());
-					}
-				}
+				tick();
 			}
 		}
-		else
-		{
-			timer = 0;
-		}
 	}
+
+	public abstract void tick();
 
 	public void validate()
 	{
 
 	}
+	
+	public void readFromNBT(NBTTagCompound tag)
+	{
+		this.speed = Speed.forDelay(tag.getInteger("delay"));
+	}
 
 	public void writeToNBT(NBTTagCompound tag)
 	{
-
+		tag.setInteger("delay", speed.delay);
 	}
 
 	public boolean isPowered()

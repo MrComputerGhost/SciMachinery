@@ -12,3 +12,6 @@ tile.circuitMaker.name=Circuit Maker
 
 item.basicCircuit.name=Basic Circuit
 item.timingCircuit.name=Timing Circuit
+item.aluCircuit.name=Arithmetic Logic Unit
+item.controlCircuit.name=Control Unit
+item.cpuCircuit.name=Central Processing Unit

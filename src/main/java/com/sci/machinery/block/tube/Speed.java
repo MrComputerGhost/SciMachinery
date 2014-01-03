@@ -17,4 +17,12 @@ public enum Speed
 	{
 		this.delay = delay;
 	}
+	
+	public static Speed forDelay(int delay)
+	{
+		for(Speed s : values())
+			if(s.delay == delay)
+				return s;
+		return null;
+	}
 }

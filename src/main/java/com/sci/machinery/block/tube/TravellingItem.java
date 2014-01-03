@@ -14,24 +14,15 @@ import com.sci.machinery.core.BlockCoord;
 
 public class TravellingItem
 {
-	private List<BlockCoord> lastCoord;
-	private float rotation;
 	private ItemStack stack;
+	private float rotation;
+	private List<BlockCoord> visitedTubes;
 
 	public TravellingItem(ItemStack stack)
 	{
 		this.stack = stack;
-		this.lastCoord = new ArrayList<BlockCoord>();
-	}
-
-	public List<BlockCoord> getLastCoord()
-	{
-		return lastCoord;
-	}
-
-	public float getRotation()
-	{
-		return rotation;
+		this.rotation = 0.0f;
+		this.visitedTubes = new ArrayList<BlockCoord>();
 	}
 
 	public ItemStack getStack()
@@ -39,13 +30,28 @@ public class TravellingItem
 		return stack;
 	}
 
+	public void setStack(ItemStack stack)
+	{
+		this.stack = stack;
+	}
+
+	public float getRotation()
+	{
+		return rotation;
+	}
+
 	public void setRotation(float rotation)
 	{
 		this.rotation = rotation;
 	}
 
-	public void setStack(ItemStack stack)
+	public List<BlockCoord> getVisitedTubes()
 	{
-		this.stack = stack;
+		return visitedTubes;
+	}
+
+	public void setVisitedTubes(List<BlockCoord> visitedTubes)
+	{
+		this.visitedTubes = visitedTubes;
 	}
 }

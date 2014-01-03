@@ -9,7 +9,7 @@ import com.sci.machinery.SciMachinery;
  * @license Lesser GNU Public License v3 (http://www.gnu.org/licenses/lgpl.html)
  */
 
-public class TubeDetector extends TubeBase
+public class TubeDetector extends TubeTransport
 {
 	private boolean lastIsEmpty;
 
@@ -40,11 +40,8 @@ public class TubeDetector extends TubeBase
 	}
 
 	@Override
-	public void update()
+	public void tick()
 	{
-		if(!isValid())
-			return;
-
 		if(lastIsEmpty != items.isEmpty())
 		{
 			lastIsEmpty = items.isEmpty();
@@ -60,6 +57,6 @@ public class TubeDetector extends TubeBase
 			getTile().worldObj.notifyBlockChange(getTile().xCoord, getTile().yCoord, getTile().zCoord, SciMachinery.instance.detectorTube.blockID);
 		}
 
-		super.update();
+		super.tick();
 	}
 }

@@ -10,7 +10,7 @@ import net.minecraft.tileentity.TileEntity;
  * @license Lesser GNU Public License v3 (http://www.gnu.org/licenses/lgpl.html)
  */
 
-public class TubeValve extends TubeBase
+public class TubeValve extends TubeTransport
 {
 	public TubeValve()
 	{

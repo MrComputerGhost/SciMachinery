@@ -35,7 +35,7 @@ public class TubeVoid extends TubeBase
 	}
 
 	@Override
-	public void update()
+	public void tick() //TODO this may need to change, we'll see
 	{
 		if(!items.isEmpty())
 		{

@@ -1,6 +1,5 @@
-package com.sci.machinery.core;
+package com.sci.machinery.api;
 
-import com.sci.machinery.api.IProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
@@ -12,23 +11,11 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
  * @license Lesser GNU Public License v3 (http://www.gnu.org/licenses/lgpl.html)
  */
 
-public class CommonProxy implements IProxy
+public interface IProxy
 {
-	@Override
-	public void init(FMLInitializationEvent e)
-	{
+	public void init(FMLInitializationEvent e);
 
-	}
+	public void postInit(FMLPostInitializationEvent e);
 
-	@Override
-	public void postInit(FMLPostInitializationEvent e)
-	{
-
-	}
-
-	@Override
-	public void preInit(FMLPreInitializationEvent e)
-	{
-
-	}
+	public void preInit(FMLPreInitializationEvent e);
 }

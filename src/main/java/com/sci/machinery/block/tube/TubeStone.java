@@ -10,7 +10,7 @@ import com.sci.machinery.block.TileTube;
  * @license Lesser GNU Public License v3 (http://www.gnu.org/licenses/lgpl.html)
  */
 
-public class TubeStone extends TubeBase
+public class TubeStone extends TubeTransport
 {
 	public TubeStone()
 	{

@@ -58,7 +58,16 @@ public class CircuitMakerRegistry implements IRecipeRegistry
 	{
 		for(int i = 0; i < a.length; i++)
 		{
-			if(!ItemStack.areItemStacksEqual(a[i], b.getIngredient(i)))
+			if(a[i] == null && b.getIngredient(i) == null)
+				continue;
+			if((a[i] == null && b.getIngredient(i) != null) || (a[i] != null && b.getIngredient(i) == null))
+				return false;
+
+			ItemStack s1 = a[i].copy();
+			ItemStack s2 = b.getIngredient(i).copy();
+			s2.stackSize = s1.stackSize;
+
+			if(!ItemStack.areItemStacksEqual(s1, s2))
 				return false;
 		}
 

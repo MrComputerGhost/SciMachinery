@@ -7,6 +7,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import com.sci.machinery.block.TileTube;
+import com.sci.machinery.block.tube.route.Router;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 
@@ -25,6 +26,8 @@ public abstract class TubeBase implements ITubeConnectable
 	public static final Class<? extends TubeBase> STONE = TubeStone.class;
 	public static final Class<? extends TubeBase> VOID = TubeVoid.class;
 	public static final Class<? extends TubeBase> VALVE = TubeValve.class;
+
+	protected Router router;
 
 	protected List<TravellingItem> items;
 	protected Speed speed;
@@ -177,9 +180,9 @@ public abstract class TubeBase implements ITubeConnectable
 
 	public void validate()
 	{
-
+		router = new Router(tile.worldObj, tile);
 	}
-	
+
 	public void readFromNBT(NBTTagCompound tag)
 	{
 		this.speed = Speed.forDelay(tag.getInteger("delay"));

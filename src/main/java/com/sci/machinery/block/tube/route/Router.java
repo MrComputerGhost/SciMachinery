@@ -7,12 +7,12 @@ import net.minecraftforge.common.ForgeDirection;
 import com.sci.machinery.block.TileTube;
 import com.sci.machinery.core.BlockCoord;
 
-public class RouteFinder
+public class Router
 {
 	protected World world;
 	protected TileTube tube;
 
-	public RouteFinder(World world, TileTube tube)
+	public Router(World world, TileTube tube)
 	{
 		this.world = world;
 		this.tube = tube;
@@ -21,11 +21,11 @@ public class RouteFinder
 	public BlockCoord route()
 	{
 		Map<ForgeDirection, Integer> costs = new HashMap<ForgeDirection, Integer>();
-		
-		//TODO calculate costs
-		
-		//TODO routing.. :P
-		
+
+		// TODO calculate costs
+
+		// TODO routing.. :P
+
 		return null;
 	}
 }

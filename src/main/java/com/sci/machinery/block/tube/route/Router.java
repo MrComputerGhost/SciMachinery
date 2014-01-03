@@ -1,6 +1,7 @@
 package com.sci.machinery.block.tube.route;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
@@ -22,10 +23,31 @@ public class Router
 	{
 		Map<ForgeDirection, Integer> costs = new HashMap<ForgeDirection, Integer>();
 
-		// TODO calculate costs
+		for(ForgeDirection fd : ForgeDirection.VALID_DIRECTIONS)
+		{
+			costs.put(fd, findCost(fd));
+		}
 
-		// TODO routing.. :P
+		int lowest = 0;
+		ForgeDirection next = ForgeDirection.UNKNOWN;
+		Iterator<ForgeDirection> it = costs.keySet().iterator();
+		while(it.hasNext())
+		{
+			ForgeDirection dir = it.next();
+			int cost = costs.get(dir);
+			if(cost < lowest)
+				lowest = cost;
+		}
 
-		return null;
+		if(lowest == -1 || next == ForgeDirection.UNKNOWN)
+			return null;
+
+		return new BlockCoord(tube.xCoord + next.offsetX, tube.yCoord + next.offsetY, tube.zCoord + next.offsetZ);
+	}
+
+	private int findCost(ForgeDirection fd)
+	{
+
+		return -1;
 	}
 }

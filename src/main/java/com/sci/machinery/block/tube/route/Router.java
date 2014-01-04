@@ -53,11 +53,28 @@ public class Router
 	private int findCost(BlockCoord current, ForgeDirection fd, int lastCost)
 	{
 		BlockCoord offs = new BlockCoord(current.getX() + fd.offsetX, current.getY() + fd.offsetY, current.getZ() + fd.offsetZ);
-		if(!(world.getBlockTileEntity(offs.getX(),  offs.getY(),  offs.getZ()) instanceof TileTube))
+		if(!(world.getBlockTileEntity(offs.getX(), offs.getY(), offs.getZ()) instanceof TileTube))
 			return lastCost;
+
+		Map<BlockCoord, Integer> adjacentCosts = new HashMap<BlockCoord, Integer>();
+		for(ForgeDirection afd : ForgeDirection.VALID_DIRECTIONS)
+		{
+			BlockCoord a = new BlockCoord(offs.getX() + afd.offsetX, offs.getY() + afd.offsetY, offs.getZ() + afd.offsetZ);
+			if(!current.equals(a) && (world.getBlockTileEntity(a.getX(), a.getY(), a.getZ()) instanceof TileTube))
+			{
+				adjacentCosts.put(a, findCost(offs, afd, lastCost + 1));
+			}
+		}
 		
-		
-		
-		return -1;
+		int lowest = -1;
+		Iterator<BlockCoord> keys = adjacentCosts.keySet().iterator();
+		while(keys.hasNext())
+		{
+			BlockCoord key = keys.next();
+			if(adjacentCosts.get(key) < lowest)
+				lowest = adjacentCosts.get(key);
+		}
+
+		return lowest;
 	}
 }

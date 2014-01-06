@@ -52,11 +52,7 @@ public final class Router
 				TileEntity adjTile = Utils.getTileEntity(world, adj);
 				if(!adj.equals(current) && (adjTile instanceof TileTube || adjTile instanceof IInventory))
 				{
-					int cost = findCost(newCurrent, afd, ret + 1);
-					if(cost < ret) //this "is" wrong ... i think. my brain cant figure it out atm :/
-					{
-						ret = cost;
-					}
+					//TODO figure out this logic...
 				}
 			}
 		}

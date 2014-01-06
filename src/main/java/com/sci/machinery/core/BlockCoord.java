@@ -88,6 +88,11 @@ public class BlockCoord
 		this.z = z;
 	}
 
+	public BlockCoord offset(ForgeDirection fd)
+	{
+		return new BlockCoord(x + fd.offsetX, y + fd.offsetY, z + fd.offsetZ);
+	}
+
 	@Override
 	public String toString()
 	{
@@ -95,14 +100,10 @@ public class BlockCoord
 
 		sb.append("BlockCoord");
 		sb.append('[');
-		sb.append("x:");
 		sb.append(x);
-		sb.append(',');
-		sb.append("y:");
 		sb.append(',');
 		sb.append(y);
 		sb.append(',');
-		sb.append("z:");
 		sb.append(z);
 		sb.append(']');
 

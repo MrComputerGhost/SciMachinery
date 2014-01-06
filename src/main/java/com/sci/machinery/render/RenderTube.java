@@ -243,7 +243,7 @@ public class RenderTube extends TileEntitySpecialRenderer implements IItemRender
 
 			setColor(item.itemID, 0);
 
-			this.bindTexture(new ResourceLocation("scimachinery", "blocks/tube.png"));
+			this.bindTexture(tubeIcon);
 
 			tess.addVertex(x + 0, y + 0, z + 0);
 			tess.addVertex(x + 0, y + OA, z + 0);
@@ -693,7 +693,7 @@ public class RenderTube extends TileEntitySpecialRenderer implements IItemRender
 
 		setColor(tube);
 
-		this.bindTexture(new ResourceLocation("scimachinery", "blocks/tube.png"));
+		this.bindTexture(tubeIcon);
 
 		tess.addVertex(x + 0, y + 0, z + 0);
 		tess.addVertex(x + 0, y + OA, z + 0);

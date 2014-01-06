@@ -10,6 +10,9 @@ import net.minecraftforge.common.ForgeDirection;
 import com.sci.machinery.block.TileTube;
 import com.sci.machinery.core.BlockCoord;
 import com.sci.machinery.core.Utils;
+import com.sci.machinery.network.PacketRemoveItem;
+import com.sci.machinery.network.PacketTypeHandler;
+import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class TubeTransport extends TubeBase
 {
@@ -28,6 +31,7 @@ public class TubeTransport extends TubeBase
 		if(!this.items.isEmpty())
 		{
 			TravellingItem item = this.items.remove(0);
+			PacketDispatcher.sendPacketToAllPlayers(PacketTypeHandler.populatePacket(new PacketRemoveItem(getTile().xCoord, getTile().yCoord, getTile().zCoord, 0)));
 			BlockCoord next = this.router.route();
 			if(next == null)
 			{

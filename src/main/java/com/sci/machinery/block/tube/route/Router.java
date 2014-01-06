@@ -1,9 +1,7 @@
 package com.sci.machinery.block.tube.route;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import com.sci.machinery.block.TileTube;
@@ -42,22 +40,27 @@ public final class Router
 
 	private int findCost(BlockCoord current, ForgeDirection fd, int lastCost)
 	{
-		BlockCoord offs = current.offset(fd);
-		if(!((world.getBlockTileEntity(offs.getX(), offs.getY(), offs.getZ()) instanceof TileTube) || (world.getBlockTileEntity(offs.getX(), offs.getY(), offs.getZ()) instanceof IInventory)))
-			return lastCost;
+		int ret = lastCost;
+		BlockCoord newCurrent = current.offset(fd);
+		TileEntity tile = Utils.getTileEntity(world, newCurrent);
 
-		int lowest = -1;
-		for(ForgeDirection afd : ForgeDirection.VALID_DIRECTIONS)
+		if(tile instanceof TileTube || tile instanceof IInventory)
 		{
-			BlockCoord a = new BlockCoord(offs.getX() + afd.offsetX, offs.getY() + afd.offsetY, offs.getZ() + afd.offsetZ);
-			if(!current.equals(a) && (Utils.getTileEntity(world, a) instanceof TileTube))
+			for(ForgeDirection afd : ForgeDirection.VALID_DIRECTIONS)
 			{
-				int cost = findCost(offs, afd, lastCost + 1);
-				if(cost < lowest)
-					lowest = cost;
+				BlockCoord adj = newCurrent.offset(afd);
+				TileEntity adjTile = Utils.getTileEntity(world, adj);
+				if(!adj.equals(current) && (adjTile instanceof TileTube || adjTile instanceof IInventory))
+				{
+					int cost = findCost(newCurrent, afd, ret + 1);
+					if(cost < ret) //this "is" wrong ... i think. my brain cant figure it out atm :/
+					{
+						ret = cost;
+					}
+				}
 			}
 		}
 
-		return lowest == -1 ? lastCost : lowest;
+		return ret;
 	}
 }

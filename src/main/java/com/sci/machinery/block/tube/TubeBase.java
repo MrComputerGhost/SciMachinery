@@ -7,7 +7,8 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import com.sci.machinery.block.TileTube;
-import com.sci.machinery.block.tube.route.Router;
+import com.sci.machinery.block.tube.network.TubeNetwork;
+import com.sci.machinery.core.Utils;
 import com.sci.machinery.network.PacketAddItem;
 import com.sci.machinery.network.PacketTypeHandler;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -30,8 +31,7 @@ public abstract class TubeBase implements ITubeConnectable
 	public static final Class<? extends TubeBase> VOID = TubeVoid.class;
 	public static final Class<? extends TubeBase> VALVE = TubeValve.class;
 
-	protected Router router;
-
+	protected TubeNetwork network;
 	protected List<TravellingItem> items;
 	protected Speed speed;
 	protected TileTube tile;
@@ -187,7 +187,8 @@ public abstract class TubeBase implements ITubeConnectable
 
 	public void validate()
 	{
-		router = new Router(tile.worldObj, tile);
+		network = TubeLib.findNetwork(tile.worldObj, tile);
+		network.addNode(Utils.blockCoord(tile));
 	}
 
 	public void readFromNBT(NBTTagCompound tag)
@@ -203,5 +204,10 @@ public abstract class TubeBase implements ITubeConnectable
 	public boolean isPowered()
 	{
 		return getTile().isPowered();
+	}
+
+	public TubeNetwork getNetwork()
+	{
+		return network;
 	}
 }

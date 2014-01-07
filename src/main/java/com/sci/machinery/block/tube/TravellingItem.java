@@ -1,7 +1,7 @@
 package com.sci.machinery.block.tube;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedList;
+import java.util.Queue;
 import net.minecraft.item.ItemStack;
 import com.sci.machinery.core.BlockCoord;
 
@@ -16,13 +16,13 @@ public class TravellingItem
 {
 	private ItemStack stack;
 	private float rotation;
-	private List<BlockCoord> visitedTubes;
+	private Queue<BlockCoord> route;
 
 	public TravellingItem(ItemStack stack)
 	{
 		this.stack = stack;
 		this.rotation = 0.0f;
-		this.visitedTubes = new ArrayList<BlockCoord>();
+		this.route = new LinkedList<BlockCoord>();
 	}
 
 	public ItemStack getStack()
@@ -45,13 +45,8 @@ public class TravellingItem
 		this.rotation = rotation;
 	}
 
-	public List<BlockCoord> getVisitedTubes()
+	public BlockCoord pollNode()
 	{
-		return visitedTubes;
-	}
-
-	public void setVisitedTubes(List<BlockCoord> visitedTubes)
-	{
-		this.visitedTubes = visitedTubes;
+		return this.route.poll();
 	}
 }

@@ -27,6 +27,11 @@ public class TubeNetwork
 		return route;
 	}
 	
+	public List<BlockCoord> getNodes()
+	{
+		return this.nodes;
+	}
+	
 	public void addNode(BlockCoord node)
 	{
 		this.nodes.add(node);

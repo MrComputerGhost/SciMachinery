@@ -206,6 +206,11 @@ public abstract class TubeBase implements ITubeConnectable
 		return getTile().isPowered();
 	}
 
+	public void setNetwork(TubeNetwork network)
+	{
+		this.network = network;
+	}
+
 	public TubeNetwork getNetwork()
 	{
 		return network;

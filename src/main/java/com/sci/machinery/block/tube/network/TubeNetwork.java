@@ -2,6 +2,7 @@ package com.sci.machinery.block.tube.network;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
@@ -30,22 +31,30 @@ public class TubeNetwork
 		Map<Integer, Queue<BlockCoord>> possibleRoutes = new HashMap<Integer, Queue<BlockCoord>>();
 		int lowestCostingRoute = -1;
 
-		//TODO calculate all routes
+		// TODO calculate all routes
+
+		Iterator<Integer> keys = possibleRoutes.keySet().iterator();
+		while(keys.hasNext())
+		{
+			int cost = keys.next();
+			if(cost < lowestCostingRoute || lowestCostingRoute == -1)
+				lowestCostingRoute = cost;
+		}
 
 		return possibleRoutes.get(lowestCostingRoute);
 	}
-	
+
 	private List<BlockCoord> getAdjacentNodes(BlockCoord node)
 	{
 		BlockCoord[] adjacent = node.getAdjacent();
 		List<BlockCoord> adjacentNodes = new ArrayList<BlockCoord>();
-		
+
 		for(BlockCoord adj : adjacent)
 		{
 			if(this.nodes.contains(adj))
 				adjacentNodes.add(adj);
 		}
-		
+
 		return adjacentNodes;
 	}
 
@@ -57,10 +66,7 @@ public class TubeNetwork
 			if(adjTE instanceof TileTube)
 			{
 				TileTube tube = (TileTube) adjTE;
-				if(tube.canAcceptItems() && tube.canConnectTube(Utils.getTileEntity(world, node)) || adjTE instanceof IInventory) 
-				{
-					return node.offset(fd);
-				}
+				if(tube.canAcceptItems() && tube.canConnectTube(Utils.getTileEntity(world, node)) || adjTE instanceof IInventory) { return node.offset(fd); }
 			}
 		}
 

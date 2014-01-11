@@ -48,7 +48,7 @@ public class Computer
 		isDecomissioned = true;
 	}
 
-	public void writeTONBT(NBTTagCompound root)
+	public void writeToNBT(NBTTagCompound root)
 	{
 
 	}
@@ -61,7 +61,13 @@ public class Computer
 	public static Computer fromNBT(World world, NBTTagCompound root)
 	{
 		int id = root.getInteger("computer-id");
-		Computer comp = new Computer(world, id);
+		Computer comp;
+		
+		if(id == 0)
+			comp = new Computer(world);
+		else
+			comp = new Computer(world, id);
+		
 		comp.readFromNBT(root);
 		return comp;
 	}

@@ -24,56 +24,9 @@ public final class CompLib
 	{
 	}
 
+	private static boolean init = false;
 	private static int nextID = 1;
 	private static BitSet usedIDs = new BitSet();
-
-	static
-	{
-		File folder = getSMCFolder(DimensionManager.getWorld(0));
-		if(!folder.exists())
-			folder.mkdirs();
-
-		File ids = new File(folder, "ids.txt");
-		if(ids.exists())
-		{
-			StringBuilder sb = new StringBuilder();
-
-			try
-			{
-				BufferedReader reader = new BufferedReader(new FileReader(ids));
-
-				String line;
-				while((line = reader.readLine()) != null)
-				{
-					sb.append(line);
-				}
-
-				reader.close();
-			}
-			catch(IOException e)
-			{
-				e.printStackTrace();
-			}
-
-			String[] spl = sb.toString().split(",");
-
-			for(String i : spl)
-			{
-				assignID(Integer.valueOf(i));
-			}
-		}
-		else
-		{
-			try
-			{
-				ids.createNewFile();
-			}
-			catch(IOException e)
-			{
-				e.printStackTrace();
-			}
-		}
-	}
 
 	public static int assignID()
 	{
@@ -102,6 +55,59 @@ public final class CompLib
 			nextID = id;
 
 		writeFile();
+	}
+
+	public static void initIfNeeded()
+	{
+		if(!init)
+		{
+			File folder = getSMCFolder(DimensionManager.getWorld(0));
+			if(!folder.exists())
+				folder.mkdirs();
+
+			File ids = new File(folder, "ids.txt");
+			System.out.println(ids);
+			if(ids.exists())
+			{
+				StringBuilder sb = new StringBuilder();
+
+				try
+				{
+					BufferedReader reader = new BufferedReader(new FileReader(ids));
+
+					String line;
+					while((line = reader.readLine()) != null)
+					{
+						sb.append(line);
+					}
+
+					reader.close();
+				}
+				catch(IOException e)
+				{
+					e.printStackTrace();
+				}
+
+				String[] spl = sb.toString().split(",");
+
+				for(String i : spl)
+				{
+					assignID(Integer.valueOf(i));
+				}
+			}
+			else
+			{
+				try
+				{
+					ids.createNewFile();
+				}
+				catch(IOException e)
+				{
+					e.printStackTrace();
+				}
+			}
+			init = true;
+		}
 	}
 
 	private static void writeFile()

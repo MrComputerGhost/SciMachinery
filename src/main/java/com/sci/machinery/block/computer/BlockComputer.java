@@ -1,9 +1,10 @@
 package com.sci.machinery.block.computer;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import com.sci.machinery.SciMachinery;
 import com.sci.machinery.core.BlockSci;
 /**
  * SciMachinery
@@ -14,9 +15,12 @@ import com.sci.machinery.core.BlockSci;
 
 public class BlockComputer extends BlockSci
 {
-	protected BlockComputer(int id)
+	public BlockComputer(int id)
 	{
 		super(id, Material.iron);
+		this.setCreativeTab(SciMachinery.tab);
+		this.setHardness(0.7F);
+		this.setStepSound(Block.soundMetalFootstep);
 	}
 
 	@Override

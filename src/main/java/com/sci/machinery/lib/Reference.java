@@ -2,7 +2,6 @@ package com.sci.machinery.lib;
 
 import java.io.InputStream;
 import java.util.Properties;
-import com.google.common.base.Throwables;
 
 /**
  * SciMachinery
@@ -25,7 +24,7 @@ public final class Reference
 		}
 		catch(Exception e)
 		{
-			Throwables.propagate(e);
+
 		}
 
 		MOD_VERSION = prop.getProperty("version") + " (build " + prop.getProperty("buildnumber") + ")";

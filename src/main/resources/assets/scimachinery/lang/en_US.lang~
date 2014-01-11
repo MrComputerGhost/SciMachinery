@@ -9,7 +9,6 @@ tile.detectorTube.name=Item Detector Tube
 tile.voidTube.name=Item Void Tube
 tile.valveTube.name=Item Valve Tube
 tile.circuitMaker.name=Circuit Maker
-tile.computer.name=Computer
 
 item.basicCircuit.name=Basic Circuit
 item.timingCircuit.name=Timing Circuit

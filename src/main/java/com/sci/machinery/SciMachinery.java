@@ -20,6 +20,8 @@ import com.sci.machinery.block.BlockCircuitMaker;
 import com.sci.machinery.block.BlockTube;
 import com.sci.machinery.block.TileCircuitMaker;
 import com.sci.machinery.block.TileTube;
+import com.sci.machinery.block.computer.BlockComputer;
+import com.sci.machinery.block.computer.TileEntityComputer;
 import com.sci.machinery.block.tube.TubeBase;
 import com.sci.machinery.block.tube.TubeModifier;
 import com.sci.machinery.core.CircuitMakerRecipe;
@@ -97,6 +99,9 @@ public class SciMachinery implements IGuiHandler
 	public ItemCircuit circuit;
 	public int circuitId;
 
+	public BlockComputer computer;
+	public int computerId;
+
 	public IRecipeRegistry circuitMakerRegistry;
 
 	@EventHandler
@@ -116,6 +121,7 @@ public class SciMachinery implements IGuiHandler
 
 		GameRegistry.registerTileEntity(TileTube.class, "SciMachinery_TileTube");
 		GameRegistry.registerTileEntity(TileCircuitMaker.class, "SciMachinery_TileCircuitMaker");
+		GameRegistry.registerTileEntity(TileEntityComputer.class, "SciMachinery_TileComputer");
 
 		stoneTube = new BlockTube(stoneTubeId, TubeBase.STONE);
 		stoneTube.setUnlocalizedName("stoneTube");
@@ -152,6 +158,10 @@ public class SciMachinery implements IGuiHandler
 		circuitMaker = new BlockCircuitMaker(circuitMakerId);
 		circuitMaker.setUnlocalizedName("circuitMaker");
 		GameRegistry.registerBlock(circuitMaker, "SciMachinery_TileCircuitMaker");
+		
+		computer = new BlockComputer(computerId);
+		computer.setUnlocalizedName("computer");
+		GameRegistry.registerBlock(computer, "SciMachinery_TileComputer");
 
 		GameRegistry.addRecipe(new ItemStack(stoneTube, 16), new Object[]
 		{ "sss", "gpg", "sss", 's', Block.stone, 'g', Block.glass, 'p', Block.pistonBase });
@@ -328,6 +338,8 @@ public class SciMachinery implements IGuiHandler
 
 			circuitMakerId = cfg.getBlock("circuitMaker", 428).getInt();
 			circuitId = cfg.getItem("circuit", 429).getInt();
+
+			computerId = cfg.getBlock("computer", 430).getInt();
 		}
 		finally
 		{

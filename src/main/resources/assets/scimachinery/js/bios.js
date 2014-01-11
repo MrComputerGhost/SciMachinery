@@ -1,4 +1,2 @@
-while(true)
-{
-	term.writeLine(os.clock())
-}
+term.writeLine(os.id())
+os.reboot()

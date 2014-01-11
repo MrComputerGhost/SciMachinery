@@ -29,8 +29,9 @@ public class Computer
 	private World world;
 	private File root;
 	private boolean isDecomissioned;
-	private int tickTime;
 
+	private State state;
+	
 	// apis
 	private Terminal terminal;
 	private OS os;
@@ -62,8 +63,8 @@ public class Computer
 			e.printStackTrace();
 		}
 
-		this.terminal = new Terminal();
 		this.os = new OS();
+		this.terminal = new Terminal();
 	}
 
 	public void init()
@@ -75,6 +76,21 @@ public class Computer
 		this.engine.put("os", os);
 		this.engine.put("term", terminal);
 		
+		boot();
+	}
+
+	public void tick()
+	{
+		if(state == State.REBOOTING)
+		{
+			boot();
+		}
+	}
+	
+	public void boot()
+	{
+		this.state = State.RUNNING;
+		
 		try
 		{
 			this.engine.eval(new InputStreamReader(Computer.class.getResourceAsStream("/assets/scimachinery/js/bios.js")));
@@ -83,13 +99,6 @@ public class Computer
 		{
 			e.printStackTrace();
 		}
-	}
-
-	public void tick()
-	{
-		this.tickTime++;
-		if(this.tickTime == 20)
-			this.tickTime = 0;
 	}
 
 	public boolean isDecomissioned()
@@ -129,12 +138,27 @@ public class Computer
 		comp.readFromNBT(root);
 		return comp;
 	}
+	
+	public enum State
+	{
+		RUNNING, REBOOTING, SHUTDOWN;
+	}
 
 	public class OS
 	{
-		public int clock()
+		public int id()
 		{
-			return tickTime;
+			return id;
+		}
+		
+		public void reboot()
+		{
+			state = State.REBOOTING;
+		}
+		
+		public void shutdown()
+		{
+			state = State.SHUTDOWN;
 		}
 	}
 

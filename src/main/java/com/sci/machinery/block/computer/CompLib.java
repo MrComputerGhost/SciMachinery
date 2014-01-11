@@ -8,8 +8,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.BitSet;
 import net.minecraft.world.World;
+import net.minecraft.world.storage.SaveHandler;
 import net.minecraftforge.common.DimensionManager;
-import cpw.mods.fml.common.FMLCommonHandler;
 
 /**
  * SciMachinery
@@ -24,49 +24,17 @@ public final class CompLib
 	{
 	}
 
-	private static boolean init = false;
 	private static int nextID = 1;
 	private static BitSet usedIDs = new BitSet();
 
-	public static int assignID()
+	static
 	{
-		int id = usedIDs.nextClearBit(nextID);
-		nextID = id + 1;
-		usedIDs.set(id);
-		writeFile();
-		return id;
-	}
-
-	public static void assignID(int id)
-	{
-		if(usedIDs.get(id))
-			throw new RuntimeException("Cannot steal id " + id);
-
-		usedIDs.set(id);
-		nextID = usedIDs.nextClearBit(0);
-
-		writeFile();
-	}
-
-	public static void releaseID(int id)
-	{
-		usedIDs.clear(id);
-		if(id < nextID)
-			nextID = id;
-
-		writeFile();
-	}
-
-	public static void initIfNeeded()
-	{
-		if(!init)
+		try
 		{
-			File folder = getSMCFolder(DimensionManager.getWorld(0));
-			if(!folder.exists())
-				folder.mkdirs();
+			File ids = new File(getSMCFolder(DimensionManager.getWorld(0)), "ids.txt");
+			if(!ids.exists())
+				ids.createNewFile();
 
-			File ids = new File(folder, "ids.txt");
-			System.out.println(ids);
 			if(ids.exists())
 			{
 				StringBuilder sb = new StringBuilder();
@@ -88,11 +56,13 @@ public final class CompLib
 					e.printStackTrace();
 				}
 
-				String[] spl = sb.toString().split(",");
-
-				for(String i : spl)
+				if(!sb.toString().isEmpty())
 				{
-					assignID(Integer.valueOf(i));
+					String[] spl = sb.toString().split(",");
+					for(String i : spl)
+					{
+						assignID(Integer.valueOf(i));
+					}
 				}
 			}
 			else
@@ -106,27 +76,62 @@ public final class CompLib
 					e.printStackTrace();
 				}
 			}
-			init = true;
+		}
+		catch(IOException e)
+		{
+			e.printStackTrace();
 		}
 	}
 
-	private static void writeFile()
+	public static int assignID()
 	{
-		File folder = getSMCFolder(DimensionManager.getWorld(0));
-		if(!folder.exists())
-			folder.mkdirs();
+		int id = usedIDs.nextClearBit(nextID);
+		nextID = id + 1;
+		usedIDs.set(id);
+		save();
+		return id;
+	}
 
+	public static void assignID(int id)
+	{
+		if(usedIDs.get(id))
+			throw new RuntimeException("Cannot steal id " + id);
+
+		usedIDs.set(id);
+		nextID = usedIDs.nextClearBit(0);
+		save();
+	}
+
+	public static void releaseID(int id)
+	{
+		usedIDs.clear(id);
+		if(id < nextID)
+			nextID = id;
+		save();
+	}
+
+	private static void save()
+	{
 		try
 		{
-			File ids = new File(folder, "ids.txt");
-			if(!ids.exists())
-				ids.createNewFile();
+			File file = new File(getSMCFolder(DimensionManager.getWorld(0)), "ids.txt");
+			if(!file.exists())
+				file.createNewFile();
 
-			BufferedWriter writer = new BufferedWriter(new FileWriter(ids));
+			BufferedWriter writer = new BufferedWriter(new FileWriter(file));
 
-			for(int i = 0; i < usedIDs.size(); i++)
+			StringBuilder sb = new StringBuilder();
+
+			for(int i = 0; i < usedIDs.length(); i++)
+			{
 				if(usedIDs.get(i))
-					writer.write(i + (i == usedIDs.size() - 1 ? "" : ","));
+				{
+					sb.append(i);
+					sb.append(',');
+				}
+			}
+
+			writer.write(sb.toString().substring(0, sb.toString().length() - 1));
 
 			writer.flush();
 			writer.close();
@@ -137,13 +142,12 @@ public final class CompLib
 		}
 	}
 
-	public static File getSMCFolder(World world)
+	public static File getSMCFolder(World world) throws IOException
 	{
-		return new File(getWorldFolder(world), "SciMachinery/Computer");
-	}
-
-	public static File getWorldFolder(World world)
-	{
-		return new File(FMLCommonHandler.instance().getMinecraftServerInstance().getFile(""), DimensionManager.getWorld(0).getSaveHandler().getWorldDirectoryName());
+		SaveHandler sh = (SaveHandler) world.getSaveHandler();
+		File ret = new File(sh.getWorldDirectory().getCanonicalFile(), "SciMachinery/Computer");
+		if(!ret.exists())
+			ret.mkdirs();
+		return ret;
 	}
 }

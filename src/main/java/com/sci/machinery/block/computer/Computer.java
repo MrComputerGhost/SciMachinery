@@ -23,14 +23,15 @@ public class Computer
 
 	public Computer(World world)
 	{
-		this(world, CompLib.assignID());
+		this(world, CompLib.assignID(), false);
 	}
 
-	private Computer(World world, int id)
+	private Computer(World world, int id, boolean claim)
 	{
 		this.world = world;
 		this.id = id;
-		CompLib.assignID(this.id);
+		if(claim)
+			CompLib.assignID(this.id);
 		ScriptEngineManager manager = new ScriptEngineManager();
 		this.engine = manager.getEngineByName(JAVASCRIPT);
 	}
@@ -62,12 +63,12 @@ public class Computer
 	{
 		int id = root.getInteger("computer-id");
 		Computer comp;
-		
+
 		if(id == 0)
 			comp = new Computer(world);
 		else
-			comp = new Computer(world, id);
-		
+			comp = new Computer(world, id, true);
+
 		comp.readFromNBT(root);
 		return comp;
 	}

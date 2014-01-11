@@ -14,24 +14,13 @@ public class TileEntityComputer extends TileEntity
 {
 	private Computer computer;
 
-	public void updateEntity()
-	{
-		super.updateEntity();
-
-		if(!this.worldObj.isRemote)
-		{
-			System.out.println(this.computer);
-
-			if(computer == null)
-			{
-				computer = new Computer(this.worldObj);
-			}
-		}
-	}
-
 	public void validate()
 	{
 		super.validate();
+
+		if(!this.worldObj.isRemote)
+			if(computer == null)
+				computer = new Computer(this.worldObj);
 	}
 
 	public void readFromNBT(NBTTagCompound par1NBTTagCompound)
@@ -52,5 +41,10 @@ public class TileEntityComputer extends TileEntity
 		{
 			this.computer.writeToNBT(par1NBTTagCompound);
 		}
+	}
+
+	public void breakBlock()
+	{
+		this.computer.decomission();
 	}
 }

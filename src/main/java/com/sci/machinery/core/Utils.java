@@ -1,5 +1,6 @@
 package com.sci.machinery.core;
 
+import java.io.File;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -39,5 +40,20 @@ public final class Utils
 
 	private Utils()
 	{
+	}
+
+	public static void delete(File root)
+	{
+		if(root.isDirectory())
+		{
+			for(File f : root.listFiles())
+			{
+				if(f.isDirectory())
+					delete(f);
+				else
+					f.delete();
+			}
+		}
+		root.delete();
 	}
 }

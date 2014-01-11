@@ -24,6 +24,15 @@ public class BlockComputer extends BlockSci
 		this.setStepSound(Block.soundMetalFootstep);
 	}
 
+	public void breakBlock(World par1World, int par2, int par3, int par4, int par5, int par6)
+	{
+		TileEntityComputer computer = (TileEntityComputer) par1World.getBlockTileEntity(par2, par3, par4);
+		if(computer != null)
+			computer.breakBlock();
+	
+		super.breakBlock(par1World, par2, par3, par4, par5, par6);
+	}
+
 	@Override
 	public TileEntity createNewTileEntity(World world)
 	{

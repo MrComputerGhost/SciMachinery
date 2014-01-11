@@ -144,6 +144,6 @@ public final class CompLib
 
 	public static File getWorldFolder(World world)
 	{
-		return new File(FMLCommonHandler.instance().getMinecraftServerInstance().getFile("."), DimensionManager.getWorld(0).getSaveHandler().getWorldDirectoryName());
+		return new File(FMLCommonHandler.instance().getMinecraftServerInstance().getFile(""), DimensionManager.getWorld(0).getSaveHandler().getWorldDirectoryName());
 	}
 }

@@ -2,10 +2,14 @@ package com.sci.machinery.block.computer;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+import sun.org.mozilla.javascript.Context;
+import sun.org.mozilla.javascript.Scriptable;
 import com.sci.machinery.core.Utils;
 
 /**
@@ -22,10 +26,18 @@ public class Computer
 	private static final ScriptEngineManager manager = new ScriptEngineManager();
 
 	private final int id;
-	private ScriptEngine engine;
 	private World world;
 	private File root;
 	private boolean isDecomissioned;
+	private int tickTime;
+
+	// apis
+	private Terminal terminal;
+	private OS os;
+
+	private ScriptEngine engine;
+	private Context jsContext;
+	private Scriptable jsScope;
 
 	public Computer(World world)
 	{
@@ -39,8 +51,6 @@ public class Computer
 		if(claim)
 			CompLib.assignID(this.id);
 
-		this.engine = manager.getEngineByName(JAVASCRIPT);
-
 		try
 		{
 			root = new File(CompLib.getSMCFolder(this.world), String.valueOf(this.id));
@@ -51,6 +61,35 @@ public class Computer
 		{
 			e.printStackTrace();
 		}
+
+		this.terminal = new Terminal();
+		this.os = new OS();
+	}
+
+	public void init()
+	{
+		this.engine = manager.getEngineByName(JAVASCRIPT);
+		this.jsContext = Context.enter();
+		this.jsScope = this.jsContext.initStandardObjects();
+
+		this.engine.put("os", os);
+		this.engine.put("term", terminal);
+		
+		try
+		{
+			this.engine.eval(new InputStreamReader(Computer.class.getResourceAsStream("/assets/scimachinery/js/bios.js")));
+		}
+		catch(ScriptException e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	public void tick()
+	{
+		this.tickTime++;
+		if(this.tickTime == 20)
+			this.tickTime = 0;
 	}
 
 	public boolean isDecomissioned()
@@ -89,5 +128,47 @@ public class Computer
 
 		comp.readFromNBT(root);
 		return comp;
+	}
+
+	public class OS
+	{
+		public int clock()
+		{
+			return tickTime;
+		}
+	}
+
+	public class Terminal
+	{
+		private int cursorX, cursorY;
+
+		public void write(String s)
+		{
+		}
+
+		public void writeLine(String s)
+		{
+			System.out.println(s);
+		}
+
+		public void clear()
+		{
+		}
+
+		public void clearLine()
+		{
+		}
+
+		public void setCursorPos(int x, int y)
+		{
+			this.cursorX = x;
+			this.cursorY = y;
+		}
+
+		public int[] getCursorPos()
+		{
+			return new int[]
+			{ cursorX, cursorY };
+		}
 	}
 }

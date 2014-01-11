@@ -131,7 +131,10 @@ public final class CompLib
 				}
 			}
 
-			writer.write(sb.toString().substring(0, sb.toString().length() - 1));
+			String w = sb.toString();
+			if(w.endsWith(","))
+				w = w.substring(0, w.length() - 1);
+			writer.write(w);
 
 			writer.flush();
 			writer.close();

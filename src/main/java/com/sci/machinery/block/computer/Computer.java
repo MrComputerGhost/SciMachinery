@@ -30,9 +30,7 @@ public class Computer
 	{
 		this.world = world;
 		this.id = id;
-		
-		CompLib.stealID(this.id);
-
+		CompLib.assignID(this.id);
 		ScriptEngineManager manager = new ScriptEngineManager();
 		this.engine = manager.getEngineByName(JAVASCRIPT);
 	}

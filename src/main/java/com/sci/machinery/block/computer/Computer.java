@@ -55,7 +55,7 @@ public class Computer
 
 	public void tick()
 	{
-		
+
 	}
 
 	public boolean isDecomissioned()

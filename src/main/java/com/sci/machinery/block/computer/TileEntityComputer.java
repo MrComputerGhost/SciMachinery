@@ -28,7 +28,7 @@ public class TileEntityComputer extends TileSci
 			if(this.computer == null)
 				this.computer = new Computer(this.worldObj);
 
-			this.computer.init();
+			this.computer.boot();
 		}
 	}
 

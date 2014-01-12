@@ -49,4 +49,9 @@ public class FileSystem
 	{
 		return new File(root, path); // TODO make this.. not.. terrible..
 	}
+
+	public void close()
+	{
+		
+	}
 }

@@ -48,7 +48,7 @@ public class Computer
 		this.fileSystem = new FileSystem(root);
 	}
 
-	public void init()
+	public void boot()
 	{
 		fileSystem.initFS();
 	}
@@ -68,6 +68,9 @@ public class Computer
 		if(this.isDecomissioned)
 			return;
 		CompLib.releaseID(this.id);
+		
+		fileSystem.close();
+		
 		Utils.delete(this.fileSystem.getRoot());
 		isDecomissioned = true;
 	}

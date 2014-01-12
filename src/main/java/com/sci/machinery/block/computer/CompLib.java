@@ -98,7 +98,7 @@ public final class CompLib
 			throw new RuntimeException("Cannot steal id " + id);
 
 		usedIDs.set(id);
-		nextID = usedIDs.nextClearBit(0);
+		nextID = usedIDs.nextClearBit(1);
 		save();
 	}
 

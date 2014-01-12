@@ -2,10 +2,12 @@ package com.sci.machinery.block.computer;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import com.sci.machinery.SciMachinery;
 import com.sci.machinery.core.BlockSci;
+import cpw.mods.fml.common.network.FMLNetworkHandler;
 
 /**
  * SciMachinery
@@ -24,6 +26,7 @@ public class BlockComputer extends BlockSci
 		this.setStepSound(Block.soundMetalFootstep);
 	}
 
+	@Override
 	public void breakBlock(World par1World, int par2, int par3, int par4, int par5, int par6)
 	{
 		TileEntityComputer computer = (TileEntityComputer) par1World.getBlockTileEntity(par2, par3, par4);
@@ -31,6 +34,17 @@ public class BlockComputer extends BlockSci
 			computer.breakBlock();
 	
 		super.breakBlock(par1World, par2, par3, par4, par5, par6);
+	}
+	
+	@Override
+	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int metadata, float what, float these, float are)
+	{
+		if(player.isSneaking())
+			return false;
+		else if(world.isRemote)
+			return true;
+		FMLNetworkHandler.openGui(player, SciMachinery.instance, 1, world, x, y, z);
+		return true;
 	}
 
 	@Override

@@ -19,6 +19,7 @@ import com.sci.machinery.api.IRecipeRegistry;
 import com.sci.machinery.block.BlockCircuitMaker;
 import com.sci.machinery.block.TileCircuitMaker;
 import com.sci.machinery.block.computer.BlockComputer;
+import com.sci.machinery.block.computer.GUIComputerTerminal;
 import com.sci.machinery.block.computer.TileEntityComputer;
 import com.sci.machinery.block.tube.BlockTube;
 import com.sci.machinery.block.tube.TileTube;
@@ -371,6 +372,7 @@ public class SciMachinery implements IGuiHandler
 	{
 		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
 		if(tileEntity instanceof TileCircuitMaker) { return new GUICircuitMaker(player.inventory, (TileCircuitMaker) tileEntity); }
+		if(tileEntity instanceof TileEntityComputer) { return new GUIComputerTerminal((TileEntityComputer) tileEntity); }
 		return null;
 	}
 }

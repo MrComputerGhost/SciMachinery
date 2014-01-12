@@ -24,7 +24,7 @@ public class BlockCircuitMaker extends BlockSci
 		this.setCreativeTab(SciMachinery.tab);
 		this.setHardness(0.7F);
 		this.setStepSound(Block.soundMetalFootstep);
-		this.setUnlocalizedName("tube");
+		this.setUnlocalizedName("circuitMaker");
 	}
 
 	@Override

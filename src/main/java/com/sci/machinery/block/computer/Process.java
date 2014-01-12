@@ -22,4 +22,9 @@ public class Process
 			this.proc.mkdir();
 		}
 	}
+	
+	public File getProcessFile(String path)
+	{
+		return new File(proc, path); //TODO make sure they dont go outside of proc with ..
+	}
 }

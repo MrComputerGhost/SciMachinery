@@ -47,7 +47,7 @@ public class FileSystem
 
 	public File getFile(String path)
 	{
-		return new File(root, path); // TODO make this.. not.. terrible..
+		return new File(root, path); // TODO make sure they dont go outside of root with ..
 	}
 
 	public void close()

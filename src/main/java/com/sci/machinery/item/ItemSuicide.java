@@ -56,7 +56,10 @@ public class ItemSuicide extends Item
 		root.setString("SkullOwner", p.username);
 		t.setTagCompound(root);
 		if(!world.isRemote)
-			world.spawnEntityInWorld(new EntityItem(world, p.posX, p.posY, p.posZ, t));
+		{
+			if(RANDOM.nextInt(100) < 25)
+				world.spawnEntityInWorld(new EntityItem(world, p.posX, p.posY, p.posZ, t));
+		}
 
 		p.setLastAttacker(p);
 		p.attackEntityFrom(new DamageSuicide(p), 420);

@@ -2,10 +2,6 @@ package com.sci.machinery.block.computer;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
-import javax.script.ScriptException;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import com.sci.machinery.core.Utils;
@@ -19,22 +15,11 @@ import com.sci.machinery.core.Utils;
 
 public class Computer
 {
-	public static final String JAVASCRIPT = "JavaScript";
-
-	private static final ScriptEngineManager manager = new ScriptEngineManager();
-
 	private final int id;
 	private World world;
-	private File root;
 	private boolean isDecomissioned;
 
-	private State state;
-	
-	// apis
-	private Terminal terminal;
-	private OS os;
-
-	private ScriptEngine engine;
+	private FileSystem fileSystem;
 
 	public Computer(World world)
 	{
@@ -48,6 +33,7 @@ public class Computer
 		if(claim)
 			CompLib.assignID(this.id);
 
+		File root = null;
 		try
 		{
 			root = new File(CompLib.getSMCFolder(this.world), String.valueOf(this.id));
@@ -59,40 +45,16 @@ public class Computer
 			e.printStackTrace();
 		}
 
-		this.os = new OS();
-		this.terminal = new Terminal();
+		this.fileSystem = new FileSystem(root);
 	}
 
 	public void init()
 	{
-		this.engine = manager.getEngineByName(JAVASCRIPT);
-
-		this.engine.put("os", os);
-		this.engine.put("term", terminal);
-		
-		boot();
+		fileSystem.initFS();
 	}
 
 	public void tick()
 	{
-		if(state == State.REBOOTING)
-		{
-			boot();
-		}
-	}
-	
-	public void boot()
-	{
-		this.state = State.RUNNING;
-		
-		try
-		{
-			this.engine.eval(new InputStreamReader(Computer.class.getResourceAsStream("/assets/scimachinery/js/bios.js")));
-		}
-		catch(ScriptException e)
-		{
-			e.printStackTrace();
-		}
 	}
 
 	public boolean isDecomissioned()
@@ -105,7 +67,7 @@ public class Computer
 		if(this.isDecomissioned)
 			return;
 		CompLib.releaseID(this.id);
-		Utils.delete(this.root);
+		Utils.delete(this.fileSystem.getRoot());
 		isDecomissioned = true;
 	}
 
@@ -131,62 +93,5 @@ public class Computer
 
 		comp.readFromNBT(root);
 		return comp;
-	}
-	
-	public enum State
-	{
-		RUNNING, REBOOTING, SHUTDOWN;
-	}
-
-	public class OS
-	{
-		public int id()
-		{
-			return id;
-		}
-		
-		public void reboot()
-		{
-			state = State.REBOOTING;
-		}
-		
-		public void shutdown()
-		{
-			state = State.SHUTDOWN;
-		}
-	}
-
-	public class Terminal
-	{
-		private int cursorX, cursorY;
-
-		public void write(String s)
-		{
-		}
-
-		public void writeLine(String s)
-		{
-			System.out.println(s);
-		}
-
-		public void clear()
-		{
-		}
-
-		public void clearLine()
-		{
-		}
-
-		public void setCursorPos(int x, int y)
-		{
-			this.cursorX = x;
-			this.cursorY = y;
-		}
-
-		public int[] getCursorPos()
-		{
-			return new int[]
-			{ cursorX, cursorY };
-		}
 	}
 }

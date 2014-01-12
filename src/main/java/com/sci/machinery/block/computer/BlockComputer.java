@@ -7,7 +7,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import com.sci.machinery.SciMachinery;
 import com.sci.machinery.core.BlockSci;
-import cpw.mods.fml.common.network.FMLNetworkHandler;
 
 /**
  * SciMachinery
@@ -32,18 +31,16 @@ public class BlockComputer extends BlockSci
 		TileEntityComputer computer = (TileEntityComputer) par1World.getBlockTileEntity(par2, par3, par4);
 		if(computer != null)
 			computer.breakBlock();
-	
+
 		super.breakBlock(par1World, par2, par3, par4, par5, par6);
 	}
-	
+
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int metadata, float what, float these, float are)
 	{
-		if(player.isSneaking())
-			return false;
-		else if(world.isRemote)
-			return true;
-		FMLNetworkHandler.openGui(player, SciMachinery.instance, 1, world, x, y, z);
+		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
+		if(tileEntity == null || player.isSneaking()) { return false; }
+		player.openGui(SciMachinery.instance, 1, world, x, y, z);
 		return true;
 	}
 

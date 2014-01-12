@@ -77,7 +77,7 @@ public class ItemSuicide extends Item
 
 		public ChatMessageComponent getDeathMessage(EntityLivingBase par1EntityLivingBase)
 		{
-			int sel = RANDOM.nextInt(2 + 1) + 1;
+			int sel = RANDOM.nextInt(9) + 1;
 			return ChatMessageComponent.createFromText(p.username + " " + StatCollector.translateToLocal("death.message" + sel));
 		}
 	}

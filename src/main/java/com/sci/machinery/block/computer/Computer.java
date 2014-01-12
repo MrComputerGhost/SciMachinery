@@ -68,16 +68,16 @@ public class Computer
 		if(this.isDecomissioned)
 			return;
 		CompLib.releaseID(this.id);
-		
+
 		fileSystem.close();
-		
+
 		Utils.delete(this.fileSystem.getRoot());
 		isDecomissioned = true;
 	}
 
 	public void writeToNBT(NBTTagCompound root)
 	{
-
+		root.setInteger("computer-id", this.id);
 	}
 
 	public void readFromNBT(NBTTagCompound root)

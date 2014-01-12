@@ -1,8 +1,6 @@
 package com.sci.machinery.block.tube;
 
 import net.minecraft.tileentity.TileEntity;
-import com.sci.machinery.network.PacketTypeHandler;
-import cpw.mods.fml.common.network.PacketDispatcher;
 
 /**
  * SciMachinery
@@ -33,7 +31,7 @@ public class TubeVoid extends TubeBase
 	}
 
 	@Override
-	public void tick() //TODO this may need to change, we'll see
+	public void tick() // TODO this may need to change, we'll see
 	{
 		if(!items.isEmpty())
 		{

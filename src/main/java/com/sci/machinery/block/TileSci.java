@@ -6,29 +6,14 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import net.minecraft.tileentity.TileEntity;
+import com.sci.machinery.api.IPacketHandler;
 import com.sci.machinery.network.PacketByteArray;
 import com.sci.machinery.network.PacketTypeHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.relauncher.Side;
 
-public abstract class TileSci extends TileEntity
+public abstract class TileSci extends TileEntity implements IPacketHandler
 {
-	/**
-	 * Read a packet sent from side
-	 * 
-	 * @param din
-	 * @param side
-	 */
-	public abstract void readPacket(DataInputStream din, Side side) throws IOException;
-
-	/**
-	 * Write a packet going to side from the opposite of side
-	 * 
-	 * @param din
-	 * @param side
-	 */
-	public abstract void writePacket(DataOutputStream din, Side side) throws IOException;
-
 	public final void sendPacketUpdate(Side side)
 	{
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();

@@ -9,22 +9,20 @@ public class Process
 	public Process(File proc) throws FileSystemException
 	{
 		this.proc = proc;
-		
+
 		if(this.proc.exists())
 		{
-			if(this.proc.isFile())
-			{
-				throw new FileSystemException("Process is file!");
-			}
+			if(this.proc.isFile()) { throw new FileSystemException("Process is file!"); }
 		}
 		else
 		{
 			this.proc.mkdir();
 		}
 	}
-	
+
 	public File getProcessFile(String path)
 	{
-		return new File(proc, path); //TODO make sure they dont go outside of proc with ..
+		return new File(proc, path); // TODO make sure they dont go outside of
+										// proc with ..
 	}
 }

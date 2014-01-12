@@ -10,7 +10,7 @@ public interface TubeModifier
 			tube.setSpeed(Speed.FAST);
 		}
 	};
-	
+
 	public static final TubeModifier SPEED_NORMAL = new TubeModifier()
 	{
 		@Override
@@ -19,7 +19,7 @@ public interface TubeModifier
 			tube.setSpeed(Speed.MEDIUM);
 		}
 	};
-	
+
 	public static final TubeModifier SPEED_DOWN = new TubeModifier()
 	{
 		@Override

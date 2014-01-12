@@ -201,12 +201,12 @@ public class TileTube extends TileSci implements ITubeConnectable
 	@Override
 	public void readPacket(DataInputStream din, Side side)
 	{
-		
+
 	}
 
 	@Override
 	public void writePacket(DataOutputStream din, Side side)
 	{
-		
+
 	}
 }

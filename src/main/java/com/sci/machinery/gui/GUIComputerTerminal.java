@@ -5,6 +5,9 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 import com.sci.machinery.block.computer.TileEntityComputer;
 import com.sci.machinery.lib.Reference;
+import com.sci.machinery.network.PacketKeyPress;
+import com.sci.machinery.network.PacketTypeHandler;
+import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class GUIComputerTerminal extends GuiScreen
 {
@@ -48,15 +51,15 @@ public class GUIComputerTerminal extends GuiScreen
 		this.drawTexturedModalRect(k, l, 0, 0, this.xSize, this.ySize);
 
 		this.drawCenteredString(this.fontRenderer, "Computer", this.width / 2, (l - 10), 16777215);
-
 		super.drawScreen(par1, par2, par3);
 	}
 
 	@Override
-	protected void keyTyped(char par1, int par2)
+	protected void keyTyped(char c, int i)
 	{
-		super.keyTyped(par1, par2);
+		super.keyTyped(c, i);
 
+		PacketDispatcher.sendPacketToServer(PacketTypeHandler.populatePacket(new PacketKeyPress(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord, c, i)));
 	}
 
 	@Override

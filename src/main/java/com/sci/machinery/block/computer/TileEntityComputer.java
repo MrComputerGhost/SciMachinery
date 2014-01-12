@@ -26,7 +26,7 @@ public class TileEntityComputer extends TileSci
 		if(FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
 		{
 			if(this.computer == null)
-				this.computer = new Computer(this.worldObj);
+				this.computer = new Computer(this.worldObj, this);
 
 			this.computer.boot();
 		}
@@ -48,7 +48,7 @@ public class TileEntityComputer extends TileSci
 
 		if(FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
 		{
-			this.computer = Computer.fromNBT(this.worldObj, par1NBTTagCompound);
+			this.computer = Computer.fromNBT(this.worldObj, par1NBTTagCompound, this);
 		}
 	}
 
@@ -71,12 +71,17 @@ public class TileEntityComputer extends TileSci
 	@Override
 	public void readPacket(DataInputStream din, Side side)
 	{
-		
+		this.computer.readPacket(din, side);
 	}
 
 	@Override
-	public void writePacket(DataOutputStream din, Side side)
+	public void writePacket(DataOutputStream dout, Side side)
 	{
-		
+		this.computer.writePacket(dout, side);
+	}
+
+	public Computer getComputer()
+	{
+		return this.computer;
 	}
 }

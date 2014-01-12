@@ -10,8 +10,10 @@ public class GUIComputerTerminal extends GuiScreen
 {
 	private static final ResourceLocation TEXTURE = new ResourceLocation(Reference.MOD_ID.toLowerCase(), "textures/guis/computer_terminal.png");
 
-	private int xSize = 250;
-	private int ySize = 180;
+	private static final int FONT_WIDTH = 7;
+
+	private final int xSize = 250;
+	private final int ySize = 180;
 	private TileEntityComputer tileEntity;
 
 	public GUIComputerTerminal(TileEntityComputer tileEntity)
@@ -54,6 +56,7 @@ public class GUIComputerTerminal extends GuiScreen
 	protected void keyTyped(char par1, int par2)
 	{
 		super.keyTyped(par1, par2);
+
 	}
 
 	@Override

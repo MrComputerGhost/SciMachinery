@@ -5,7 +5,6 @@ import java.util.List;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
-import com.sci.machinery.block.TileTube;
 import com.sci.machinery.block.tube.network.TubeNetwork;
 import com.sci.machinery.core.BlockCoord;
 import com.sci.machinery.core.Utils;

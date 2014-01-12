@@ -3,7 +3,7 @@ package com.sci.machinery.core;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
 import com.sci.machinery.SciMachinery;
-import com.sci.machinery.block.TileTube;
+import com.sci.machinery.block.tube.TileTube;
 import com.sci.machinery.render.RenderTube;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.event.FMLInitializationEvent;

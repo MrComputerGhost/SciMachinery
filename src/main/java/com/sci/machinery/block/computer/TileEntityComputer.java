@@ -1,7 +1,9 @@
 package com.sci.machinery.block.computer;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
+import com.sci.machinery.block.TileSci;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 
@@ -12,7 +14,7 @@ import cpw.mods.fml.relauncher.Side;
  * @license Lesser GNU Public License v3 (http://www.gnu.org/licenses/lgpl.html)
  */
 
-public class TileEntityComputer extends TileEntity
+public class TileEntityComputer extends TileSci
 {
 	private Computer computer;
 
@@ -34,7 +36,7 @@ public class TileEntityComputer extends TileEntity
 	public void updateEntity()
 	{
 		super.updateEntity();
-		
+
 		if(this.computer != null)
 			this.computer.tick();
 	}
@@ -64,5 +66,17 @@ public class TileEntityComputer extends TileEntity
 	public void breakBlock()
 	{
 		this.computer.decomission();
+	}
+
+	@Override
+	public void readPacket(DataInputStream din, Side side)
+	{
+		
+	}
+
+	@Override
+	public void writePacket(DataOutputStream din, Side side)
+	{
+		
 	}
 }

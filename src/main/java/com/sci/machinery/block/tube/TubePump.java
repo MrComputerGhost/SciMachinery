@@ -5,7 +5,6 @@ import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
-import com.sci.machinery.block.TileTube;
 import com.sci.machinery.core.BlockCoord;
 import com.sci.machinery.core.Utils;
 

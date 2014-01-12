@@ -1,7 +1,6 @@
 package com.sci.machinery.block.tube;
 
 import net.minecraft.tileentity.TileEntity;
-import com.sci.machinery.block.TileTube;
 
 public class TubeCobble extends TubeTransport
 {

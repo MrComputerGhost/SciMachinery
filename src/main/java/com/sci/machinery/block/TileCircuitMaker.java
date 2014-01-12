@@ -1,17 +1,20 @@
 package com.sci.machinery.block;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.tileentity.TileEntity;
 import com.sci.machinery.SciMachinery;
 import com.sci.machinery.api.IRecipeRegistry;
 import com.sci.machinery.core.CircuitMakerRecipe;
+import cpw.mods.fml.relauncher.Side;
 
-public class TileCircuitMaker extends TileEntity implements IInventory
+public class TileCircuitMaker extends TileSci implements IInventory
 {
 	private boolean crafting;
 	private ItemStack[] inventory;
@@ -343,5 +346,15 @@ public class TileCircuitMaker extends TileEntity implements IInventory
 					worldObj.spawnEntityInWorld(new EntityItem(worldObj, xCoord, yCoord, zCoord, inventory[i]));
 			}
 		}
+	}
+
+	@Override
+	public void readPacket(DataInputStream din, Side side) throws IOException
+	{
+	}
+
+	@Override
+	public void writePacket(DataOutputStream dout, Side side) throws IOException
+	{
 	}
 }

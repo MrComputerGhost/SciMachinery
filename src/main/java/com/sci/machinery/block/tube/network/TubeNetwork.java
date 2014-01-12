@@ -10,7 +10,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
-import com.sci.machinery.block.TileTube;
+import com.sci.machinery.block.tube.TileTube;
 import com.sci.machinery.core.BlockCoord;
 import com.sci.machinery.core.Utils;
 

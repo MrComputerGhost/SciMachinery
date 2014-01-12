@@ -17,11 +17,11 @@ import net.minecraftforge.event.ForgeSubscribe;
 import com.sci.machinery.api.IProxy;
 import com.sci.machinery.api.IRecipeRegistry;
 import com.sci.machinery.block.BlockCircuitMaker;
-import com.sci.machinery.block.BlockTube;
 import com.sci.machinery.block.TileCircuitMaker;
-import com.sci.machinery.block.TileTube;
 import com.sci.machinery.block.computer.BlockComputer;
 import com.sci.machinery.block.computer.TileEntityComputer;
+import com.sci.machinery.block.tube.BlockTube;
+import com.sci.machinery.block.tube.TileTube;
 import com.sci.machinery.block.tube.TubeBase;
 import com.sci.machinery.block.tube.TubeModifier;
 import com.sci.machinery.core.CircuitMakerRecipe;
@@ -31,6 +31,7 @@ import com.sci.machinery.gui.ContainerCircuitMaker;
 import com.sci.machinery.gui.GUICircuitMaker;
 import com.sci.machinery.item.ItemCircuit;
 import com.sci.machinery.item.ItemEasterEgg;
+import com.sci.machinery.item.ItemSuicide;
 import com.sci.machinery.lib.Reference;
 import com.sci.machinery.network.PacketHandler;
 import cpw.mods.fml.client.FMLClientHandler;
@@ -102,6 +103,9 @@ public class SciMachinery implements IGuiHandler
 	public BlockComputer computer;
 	public int computerId;
 
+	public ItemSuicide suicide;
+	public int suicideId;
+
 	public IRecipeRegistry circuitMakerRegistry;
 
 	@EventHandler
@@ -158,10 +162,12 @@ public class SciMachinery implements IGuiHandler
 		circuitMaker = new BlockCircuitMaker(circuitMakerId);
 		circuitMaker.setUnlocalizedName("circuitMaker");
 		GameRegistry.registerBlock(circuitMaker, "SciMachinery_TileCircuitMaker");
-		
+
 		computer = new BlockComputer(computerId);
 		computer.setUnlocalizedName("computer");
 		GameRegistry.registerBlock(computer, "SciMachinery_TileComputer");
+
+		suicide = new ItemSuicide(suicideId);
 
 		GameRegistry.addRecipe(new ItemStack(stoneTube, 16), new Object[]
 		{ "sss", "gpg", "sss", 's', Block.stone, 'g', Block.glass, 'p', Block.pistonBase });
@@ -176,6 +182,9 @@ public class SciMachinery implements IGuiHandler
 
 		GameRegistry.addRecipe(new ItemStack(circuitMaker), new Object[]
 		{ "ici", "ipi", "iri", 'i', Item.ingotIron, 'c', Item.comparator, 'p', Block.pistonBase, 'r', Item.redstone });
+
+		GameRegistry.addRecipe(new ItemStack(suicide), new Object[]
+		{ "cfc", "cfc", "csc", 'c', Block.cobblestone, 'f', Item.flint, 's', Item.stick });
 
 		GameRegistry.addShapelessRecipe(new ItemStack(fastStoneTube), new Object[]
 		{ new ItemStack(Item.ingotGold, 1), new ItemStack(fastStoneTube, 1) });
@@ -340,6 +349,8 @@ public class SciMachinery implements IGuiHandler
 			circuitId = cfg.getItem("circuit", 429).getInt();
 
 			computerId = cfg.getBlock("computer", 430).getInt();
+
+			suicideId = cfg.getItem("suicide", 431).getInt();
 		}
 		finally
 		{

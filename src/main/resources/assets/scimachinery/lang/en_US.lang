@@ -16,3 +16,8 @@ item.timingCircuit.name=Timing Circuit
 item.aluCircuit.name=Arithmetic Logic Unit
 item.controlCircuit.name=Control Unit
 item.cpuCircuit.name=Central Processing Unit
+item.suicide.name=Suicide
+
+death.message1=derped out
+death.message2=defied the laws of YOLO
+death.message3=killed himself trying to YOLO

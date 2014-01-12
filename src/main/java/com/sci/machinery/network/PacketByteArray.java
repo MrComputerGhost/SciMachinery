@@ -6,46 +6,35 @@ import java.io.IOException;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.tileentity.TileEntity;
-import com.sci.machinery.block.tube.ITubeConnectable;
+import com.sci.machinery.block.TileSci;
 import cpw.mods.fml.common.network.Player;
 
-/**
- * SciMachinery
- * 
- * @author sci4me
- * @license Lesser GNU Public License v3 (http://www.gnu.org/licenses/lgpl.html)
- */
-
-public class PacketRemoveItem extends PacketSci
+public class PacketByteArray extends PacketSci
 {
-	private int index;
 	private int x, y, z;
+	private byte[] data;
 
-	public PacketRemoveItem()
+	public PacketByteArray()
 	{
-
 	}
 
-	public PacketRemoveItem(int x, int y, int z, int index)
+	public PacketByteArray(int xCoord, int yCoord, int zCoord, byte[] data)
 	{
-		super(PacketTypeHandler.REMOVE_ITEM);
-		this.x = x;
-		this.y = y;
-		this.z = z;
-		this.index = index;
+		super(PacketTypeHandler.BYTE_ARRAY);
+		this.x = xCoord;
+		this.y = yCoord;
+		this.z = zCoord;
+		this.data = data;
 	}
 
 	@Override
 	public void execute(INetworkManager manager, Player player)
 	{
 		EntityPlayer thePlayer = (EntityPlayer) player;
-		if(thePlayer.worldObj.isRemote)
+		TileEntity t = thePlayer.worldObj.getBlockTileEntity(x, y, z);
+		if(t != null && t instanceof TileSci)
 		{
-			TileEntity t = thePlayer.worldObj.getBlockTileEntity(x, y, z);
-			if(t != null && t instanceof ITubeConnectable)
-			{
-				((ITubeConnectable) t).removeItem(index);
-			}
+			((TileSci) t).handlePacket(this);
 		}
 	}
 
@@ -55,7 +44,12 @@ public class PacketRemoveItem extends PacketSci
 		this.x = data.readInt();
 		this.y = data.readInt();
 		this.z = data.readInt();
-		this.index = data.readInt();
+		int len = data.readInt();
+		this.data = new byte[len];
+		for(int i = 0; i < len; i++)
+		{
+			this.data[i] = data.readByte();
+		}
 	}
 
 	@Override
@@ -64,6 +58,15 @@ public class PacketRemoveItem extends PacketSci
 		data.writeInt(this.x);
 		data.writeInt(this.y);
 		data.writeInt(this.z);
-		data.writeInt(this.index);
+		data.writeInt(this.data.length);
+		for(int i = 0; i < this.data.length; i++)
+		{
+			data.writeByte(this.data[i]);
+		}
+	}
+
+	public byte[] getData()
+	{
+		return this.data;
 	}
 }

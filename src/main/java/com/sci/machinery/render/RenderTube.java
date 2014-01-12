@@ -11,7 +11,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.IItemRenderer;
 import org.lwjgl.opengl.GL11;
 import com.sci.machinery.SciMachinery;
-import com.sci.machinery.block.TileTube;
+import com.sci.machinery.block.tube.TileTube;
 import com.sci.machinery.block.tube.TravellingItem;
 import com.sci.machinery.block.tube.TubeBase;
 import com.sci.machinery.block.tube.TubeCobble;

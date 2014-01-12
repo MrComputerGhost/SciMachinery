@@ -6,13 +6,9 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import com.sci.machinery.block.TileTube;
 import com.sci.machinery.block.tube.network.TubeNetwork;
 import com.sci.machinery.core.Utils;
-import com.sci.machinery.network.PacketAddItem;
-import com.sci.machinery.network.PacketTypeHandler;
 import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.relauncher.Side;
 
 /**
@@ -51,10 +47,6 @@ public abstract class TubeBase implements ITubeConnectable
 	@Override
 	public void addItem(TravellingItem item, TileEntity sender)
 	{
-		if(!getTile().worldObj.isRemote)
-		{
-			PacketDispatcher.sendPacketToAllPlayers(PacketTypeHandler.populatePacket(new PacketAddItem(getTile().xCoord, getTile().yCoord, getTile().zCoord, item.getStack().itemID, item.getStack().stackSize)));
-		}
 		items.add(item);
 	}
 

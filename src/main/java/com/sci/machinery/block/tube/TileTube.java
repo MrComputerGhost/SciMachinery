@@ -1,21 +1,16 @@
-package com.sci.machinery.block;
+package com.sci.machinery.block.tube;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.util.List;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
-import com.sci.machinery.block.tube.ITubeConnectable;
-import com.sci.machinery.block.tube.TravellingItem;
-import com.sci.machinery.block.tube.TubeBase;
-import com.sci.machinery.block.tube.TubeCobble;
-import com.sci.machinery.block.tube.TubeDetector;
-import com.sci.machinery.block.tube.TubePump;
-import com.sci.machinery.block.tube.TubeStone;
-import com.sci.machinery.block.tube.TubeValve;
-import com.sci.machinery.block.tube.TubeVoid;
+import com.sci.machinery.block.TileSci;
 import com.sci.machinery.core.BlockCoord;
 import com.sci.machinery.core.Utils;
+import cpw.mods.fml.relauncher.Side;
 
 /**
  * SciMachinery
@@ -24,7 +19,7 @@ import com.sci.machinery.core.Utils;
  * @license Lesser GNU Public License v3 (http://www.gnu.org/licenses/lgpl.html)
  */
 
-public class TileTube extends TileEntity implements ITubeConnectable
+public class TileTube extends TileSci implements ITubeConnectable
 {
 	private TubeBase tube;
 
@@ -201,5 +196,17 @@ public class TileTube extends TileEntity implements ITubeConnectable
 	public boolean isPowered()
 	{
 		return worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
+	}
+
+	@Override
+	public void readPacket(DataInputStream din, Side side)
+	{
+		
+	}
+
+	@Override
+	public void writePacket(DataOutputStream din, Side side)
+	{
+		
 	}
 }

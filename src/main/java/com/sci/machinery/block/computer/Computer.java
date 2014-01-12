@@ -8,8 +8,6 @@ import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
-import sun.org.mozilla.javascript.Context;
-import sun.org.mozilla.javascript.Scriptable;
 import com.sci.machinery.core.Utils;
 
 /**
@@ -37,8 +35,6 @@ public class Computer
 	private OS os;
 
 	private ScriptEngine engine;
-	private Context jsContext;
-	private Scriptable jsScope;
 
 	public Computer(World world)
 	{
@@ -70,8 +66,6 @@ public class Computer
 	public void init()
 	{
 		this.engine = manager.getEngineByName(JAVASCRIPT);
-		this.jsContext = Context.enter();
-		this.jsScope = this.jsContext.initStandardObjects();
 
 		this.engine.put("os", os);
 		this.engine.put("term", terminal);

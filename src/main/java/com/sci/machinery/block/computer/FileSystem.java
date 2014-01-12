@@ -28,6 +28,7 @@ public class FileSystem
 		initFS.add(getFile("/tmp"));
 		initFS.add(getFile("/usr"));
 		initFS.add(getFile("/var"));
+		initFS.add(getFile("/mnt"));
 		initFS.add(getFile("/home"));
 
 		for(File f : initFS)

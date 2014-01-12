@@ -1,0 +1,62 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        maven {
+            name = "forge"
+            url = "http://files.minecraftforge.net/maven"
+        }
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:1.0-SNAPSHOT'
+    }
+}
+
+apply plugin: 'forge'
+
+ext.configFile = file "build.properties"
+
+configFile.withReader {
+    def prop = new Properties()
+    prop.load(it)
+    ext.config = new ConfigSlurper().parse prop
+}
+
+group = "com.sci.machinery"
+version = config.mod_version + "." + config.build_number
+archiveBaseName = "SciMachinery"
+jar.baseName = "SciMachinery"
+
+minecraft {
+    version = config.minecraft_version + "-" + config.forge_version
+}
+
+processResources {
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+        include 'version.properties'
+
+        expand 'version': project.config.mod_version, 'buildnumber': project.config.build_number
+    }
+
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info'
+        exclude 'version.properties'
+    }
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    archiveName = "SciMachinery-" + config.mod_version + "." + config.build_number + "-sources.jar"
+    from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    archiveName = "SciMachinery-" + config.mod_version + "." + config.build_number + "-javadoc.jar"
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives sourcesJar
+    archives javadocJar
+}

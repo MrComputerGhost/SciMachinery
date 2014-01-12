@@ -37,35 +37,51 @@ public class Computer implements IPacketHandler
 	{
 		this.world = world;
 		this.id = id;
-		if(claim)
-			CompLib.assignID(this.id);
 
-		File root = null;
-		try
+		if(FMLCommonHandler.instance().getEffectiveSide().isServer())
 		{
-			root = new File(CompLib.getSMCFolder(this.world), String.valueOf(this.id));
-			if(!root.exists())
-				root.mkdirs();
-		}
-		catch(IOException e)
-		{
-			e.printStackTrace();
+			if(claim)
+				CompLib.assignID(this.id);
+			
+			if(FMLCommonHandler.instance().getEffectiveSide().isServer())
+			{
+				try
+				{
+					File root = new File(CompLib.getSMCFolder(this.world), String.valueOf(this.id));
+					if(!root.exists())
+						root.mkdirs();
+					this.fileSystem = new FileSystem(root);
+				}
+				catch(IOException e)
+				{
+					e.printStackTrace();
+				}
+			}
 		}
 
 		this.tile = tile;
-
-		this.fileSystem = new FileSystem(root);
-		this.shell = new Shell();
+		
+		try
+		{
+			this.shell = new Shell(this);
+		}
+		catch(FileSystemException e)
+		{
+		}
 	}
 
 	public void boot()
 	{
+		shell.println("Starting FileSystem...");
 		fileSystem.initFS();
 	}
 
 	public void tick()
 	{
-
+		if(this.shell.isDirty())
+		{
+			this.sendPacketUpdate(Side.CLIENT);
+		}
 	}
 
 	public boolean isDecomissioned()
@@ -77,11 +93,14 @@ public class Computer implements IPacketHandler
 	{
 		if(this.isDecomissioned)
 			return;
-		CompLib.releaseID(this.id);
 
-		fileSystem.close();
+		if(FMLCommonHandler.instance().getEffectiveSide().isServer())
+		{
+			CompLib.releaseID(this.id);
+			fileSystem.close();
+			Utils.delete(this.fileSystem.getRoot());
+		}
 
-		Utils.delete(this.fileSystem.getRoot());
 		isDecomissioned = true;
 	}
 
@@ -110,23 +129,51 @@ public class Computer implements IPacketHandler
 	}
 
 	@Override
-	public void readPacket(DataInputStream din, Side side)
+	public void readPacket(DataInputStream din, Side side) throws IOException
 	{
-
+		if(side == Side.CLIENT)
+		{
+			int packetType = din.readInt();
+			switch (packetType)
+			{
+			case PACKET_SHELL_RENDER_UPDATE:
+				String[] screen = new String[Shell.HEIGHT];
+				this.shell.setCursorX(din.readInt());
+				this.shell.setCursorY(din.readInt());
+				for(int i = 0; i < screen.length; i++)
+					screen[i] = din.readUTF();
+				this.shell.setLines(screen);
+				break;
+			default:
+				System.out.println("Received unknown packet!");
+				break;
+			}
+		}
 	}
 
 	@Override
-	public void writePacket(DataOutputStream dout, Side side)
+	public void writePacket(DataOutputStream dout, Side side) throws IOException
 	{
+		if(side == Side.CLIENT) // sending to client
+		{
+			if(this.shell.isDirty())
+			{
+				String[] screen = this.shell.getLines();
+				dout.writeInt(PACKET_SHELL_RENDER_UPDATE);
+				dout.writeInt(this.shell.getCursorX());
+				dout.writeInt(this.shell.getCursorY());
 
+				for(int i = 0; i < screen.length; i++)
+					dout.writeUTF(screen[i]);
+
+				this.shell.setClean();
+			}
+		}
 	}
 
 	public void keyPressed(char c, int i)
 	{
-		if(FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
-		{
-			System.out.println(c + " " + i);
-		}
+		this.shell.keyPressed(c, true);
 	}
 
 	@Override
@@ -144,4 +191,6 @@ public class Computer implements IPacketHandler
 	{
 		return this.shell;
 	}
+
+	public static final int PACKET_SHELL_RENDER_UPDATE = 0;
 }

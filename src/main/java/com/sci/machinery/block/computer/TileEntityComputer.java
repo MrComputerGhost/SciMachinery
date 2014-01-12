@@ -2,6 +2,7 @@ package com.sci.machinery.block.computer;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import net.minecraft.nbt.NBTTagCompound;
 import com.sci.machinery.block.TileSci;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -23,11 +24,11 @@ public class TileEntityComputer extends TileSci
 	{
 		super.validate();
 
+		if(this.computer == null)
+			this.computer = new Computer(this.worldObj, this);
+		
 		if(FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
 		{
-			if(this.computer == null)
-				this.computer = new Computer(this.worldObj, this);
-
 			this.computer.boot();
 		}
 	}
@@ -37,7 +38,8 @@ public class TileEntityComputer extends TileSci
 	{
 		super.updateEntity();
 
-		if(this.computer != null)
+		
+		if(this.computer != null && FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
 			this.computer.tick();
 	}
 
@@ -69,13 +71,13 @@ public class TileEntityComputer extends TileSci
 	}
 
 	@Override
-	public void readPacket(DataInputStream din, Side side)
+	public void readPacket(DataInputStream din, Side side) throws IOException
 	{
 		this.computer.readPacket(din, side);
 	}
 
 	@Override
-	public void writePacket(DataOutputStream dout, Side side)
+	public void writePacket(DataOutputStream dout, Side side) throws IOException
 	{
 		this.computer.writePacket(dout, side);
 	}

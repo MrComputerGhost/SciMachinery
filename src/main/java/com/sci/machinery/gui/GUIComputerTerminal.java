@@ -3,6 +3,7 @@ package com.sci.machinery.gui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
+import com.sci.machinery.block.computer.Shell;
 import com.sci.machinery.block.computer.TileEntityComputer;
 import com.sci.machinery.lib.Reference;
 import com.sci.machinery.network.PacketKeyPress;
@@ -13,11 +14,12 @@ public class GUIComputerTerminal extends GuiScreen
 {
 	private static final ResourceLocation TEXTURE = new ResourceLocation(Reference.MOD_ID.toLowerCase(), "textures/guis/computer_terminal.png");
 
-	private static final int FONT_WIDTH = 7;
-
 	private final int xSize = 250;
 	private final int ySize = 180;
 	private TileEntityComputer tileEntity;
+
+	private int timer;
+	private boolean cursorState;
 
 	public GUIComputerTerminal(TileEntityComputer tileEntity)
 	{
@@ -32,6 +34,12 @@ public class GUIComputerTerminal extends GuiScreen
 	@Override
 	public void updateScreen()
 	{
+		timer++;
+		if(timer == 10)
+		{
+			timer = 0;
+			cursorState = !cursorState;
+		}
 	}
 
 	@Override
@@ -49,6 +57,21 @@ public class GUIComputerTerminal extends GuiScreen
 		int k = (this.width - this.xSize) / 2;
 		int l = (this.height - this.ySize) / 2;
 		this.drawTexturedModalRect(k, l, 0, 0, this.xSize, this.ySize);
+
+		if(this.tileEntity.getComputer().getShell() != null)
+		{
+			for(int y = 0; y < Shell.HEIGHT; y++)
+			{
+				String line = this.tileEntity.getComputer().getShell().getLines()[Shell.HEIGHT - 1 - y] + (cursorState && y == Shell.HEIGHT - 1 ? "|" : "");
+
+				if(line.length() > Shell.WIDTH)
+				{
+					line = line.substring(line.length() - Shell.WIDTH);
+				}
+
+				this.drawString(fontRenderer, line, k + 7, 7 + l + y * fontRenderer.FONT_HEIGHT, 0x00CC00);
+			}
+		}
 
 		this.drawCenteredString(this.fontRenderer, "Computer", this.width / 2, (l - 10), 16777215);
 		super.drawScreen(par1, par2, par3);

@@ -10,6 +10,9 @@ import java.util.Iterator;
 import java.util.Map;
 import org.luaj.vm2.Globals;
 import org.luaj.vm2.LuaTable;
+import org.luaj.vm2.Varargs;
+import org.luaj.vm2.lib.VarArgFunction;
+import com.sci.machinery.block.computer.LuaJValues;
 
 /**
  * SciMachinery
@@ -60,9 +63,28 @@ public class OSAPI
 			String api = apis.next();
 			Map<String, Method> apiMethods = OSAPI.apiList.get(api);
 			LuaTable table = new LuaTable();
-			
-			// TODO make the table :P
-			
+
+			Iterator<String> methods = apiMethods.keySet().iterator();
+			while(methods.hasNext())
+			{
+				String methodName = methods.next();
+				Method method = apiMethods.get(methodName);
+				table.set(methodName, new VarArgFunction()
+				{
+					public Varargs invoke(Varargs args)
+					{
+						Object[] arguments = LuaJValues.toObjects(args, 1);
+
+						System.out.println("println");
+
+						for(Object o : arguments)
+							System.out.println(o);
+
+						return null;
+					}
+				});
+			}
+
 			g.set(api, table);
 		}
 	}

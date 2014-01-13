@@ -77,6 +77,9 @@ public class Computer implements IPacketHandler
 
 	private void initLUA()
 	{
+		if(FMLCommonHandler.instance().getEffectiveSide().isClient())
+			return;
+
 		this.globals = JsePlatform.debugGlobals();
 
 		this.globals.set("collectgarbage", LuaValue.NIL);
@@ -102,7 +105,7 @@ public class Computer implements IPacketHandler
 		this.coroutineYield = coroutine.get("yield");
 
 		OSAPI.install(this.globals);
-		
+
 		try
 		{
 			Class.forName("org.apache.bcel.util.Repository");
@@ -115,7 +118,7 @@ public class Computer implements IPacketHandler
 		}
 	}
 
-	public void boot() 
+	public void boot()
 	{
 		if(this.mainRoutine != null) { return; }
 		try
@@ -142,7 +145,8 @@ public class Computer implements IPacketHandler
 				throw new LuaError("Could not read file");
 			}
 			LuaValue program = this.assert_.call(this.loadString.call(LuaValue.valueOf(bios), LuaValue.valueOf("bios")));
-			this.mainRoutine = this.coroutineCreate.call(program); //boot the bios
+			this.mainRoutine = this.coroutineCreate.call(program); // boot the
+																	// bios
 		}
 		catch(LuaError e)
 		{

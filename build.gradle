@@ -6,7 +6,7 @@ buildscript {
             url "http://files.minecraftforge.net/maven"
         }
 	maven {
-            name = "luaj"
+            name = "luaj-jse"
             url = "https://oss.sonatype.org/content/repositories/releases/org/luaj/luaj-jse/3.0-beta2/"
 	}
     }

@@ -1,7 +1,6 @@
 package com.sci.machinery;
 
 import java.io.File;
-
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -15,15 +14,12 @@ import net.minecraftforge.client.event.sound.SoundLoadEvent;
 import net.minecraftforge.common.ChestGenHooks;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.event.ForgeSubscribe;
-
 import com.sci.machinery.api.IProxy;
 import com.sci.machinery.api.IRecipeRegistry;
 import com.sci.machinery.block.BlockCircuitMaker;
 import com.sci.machinery.block.TileCircuitMaker;
 import com.sci.machinery.block.computer.BlockComputer;
 import com.sci.machinery.block.computer.TileEntityComputer;
-import com.sci.machinery.block.computer.api.OSAPI;
-import com.sci.machinery.block.computer.api.TerminalAPI;
 import com.sci.machinery.block.tube.BlockTube;
 import com.sci.machinery.block.tube.TileTube;
 import com.sci.machinery.block.tube.TubeBase;
@@ -39,7 +35,6 @@ import com.sci.machinery.item.ItemEasterEgg;
 import com.sci.machinery.item.ItemSuicide;
 import com.sci.machinery.lib.Reference;
 import com.sci.machinery.network.PacketHandler;
-
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -322,10 +317,6 @@ public class SciMachinery implements IGuiHandler
 	public void postInit(FMLPostInitializationEvent e)
 	{
 		proxy.postInit(e);
-		
-		//Temporary Test Methods cuz Poop
-		OSAPI.registerMethods(TerminalAPI.class);
-		System.out.println(OSAPI.apiList.toString());
 	}
 
 	@EventHandler

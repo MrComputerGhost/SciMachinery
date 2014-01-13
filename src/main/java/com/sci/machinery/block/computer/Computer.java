@@ -14,6 +14,7 @@ import org.luaj.vm2.LuaValue;
 import org.luaj.vm2.lib.jse.JsePlatform;
 import org.luaj.vm2.luajc.LuaJC;
 import com.sci.machinery.api.IPacketHandler;
+import com.sci.machinery.block.computer.api.OSAPI;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 
@@ -100,6 +101,8 @@ public class Computer implements IPacketHandler
 		this.coroutineResume = coroutine.get("resume");
 		this.coroutineYield = coroutine.get("yield");
 
+		OSAPI.install(this.globals);
+		
 		try
 		{
 			Class.forName("org.apache.bcel.util.Repository");

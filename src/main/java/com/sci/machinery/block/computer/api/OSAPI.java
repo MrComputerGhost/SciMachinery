@@ -6,7 +6,10 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import org.luaj.vm2.Globals;
+import org.luaj.vm2.LuaTable;
 
 /**
  * SciMachinery
@@ -16,7 +19,7 @@ import java.util.Map;
  */
 public class OSAPI
 {
-	public static final Map<String, Map<String, Method>> apiList = new HashMap<String, Map<String, Method>>();
+	private static final Map<String, Map<String, Method>> apiList = new HashMap<String, Map<String, Method>>();
 
 	public static void registerMethods(Class<?>... clazzes) throws IllegalArgumentException
 	{
@@ -48,10 +51,20 @@ public class OSAPI
 			}
 		}
 	}
-	
-	public static String runMethod(String name)
+
+	public static void install(Globals g)
 	{
-		return "";
+		Iterator<String> apis = OSAPI.apiList.keySet().iterator();
+		while(apis.hasNext())
+		{
+			String api = apis.next();
+			Map<String, Method> apiMethods = OSAPI.apiList.get(api);
+			LuaTable table = new LuaTable();
+			
+			// TODO make the table :P
+			
+			g.set(api, table);
+		}
 	}
 
 	@Target(ElementType.METHOD)

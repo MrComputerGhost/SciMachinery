@@ -82,6 +82,9 @@ public class Computer implements IPacketHandler
 
 		this.globals = JsePlatform.debugGlobals();
 
+		this.assert_ = this.globals.get("assert");
+		this.loadString = this.globals.get("load");
+		
 		this.globals.set("collectgarbage", LuaValue.NIL);
 		this.globals.set("dofile", LuaValue.NIL);
 		this.globals.set("load", LuaValue.NIL);
@@ -96,26 +99,21 @@ public class Computer implements IPacketHandler
 		this.globals.set("debug", LuaValue.NIL);
 		this.globals.set("newproxy", LuaValue.NIL);
 
-		this.assert_ = this.globals.get("assert");
-		this.loadString = this.globals.get("load");
-
 		LuaValue coroutine = this.globals.get("coroutine");
 		this.coroutineCreate = coroutine.get("create");
 		this.coroutineResume = coroutine.get("resume");
 		this.coroutineYield = coroutine.get("yield");
 
-		OSAPI.install(this.globals);
-
 		try
 		{
 			Class.forName("org.apache.bcel.util.Repository");
-
-			// bcel is installed, may as well use this
 			LuaJC.install(this.globals);
 		}
 		catch(ClassNotFoundException e)
 		{
 		}
+		
+		OSAPI.install(this.globals);
 	}
 
 	public void boot()

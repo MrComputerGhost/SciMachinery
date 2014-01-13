@@ -74,13 +74,7 @@ public class OSAPI
 				{
 					public Varargs invoke(Varargs args)
 					{
-						Object[] arguments = LuaJValues.toObjects(args, 1);
-
 						System.out.println("println");
-
-						for(Object o : arguments)
-							System.out.println(o);
-
 						return LuaValue.varargsOf(new LuaValue[]
 						{ LuaValue.NIL });
 					}

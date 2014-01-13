@@ -10,6 +10,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import org.luaj.vm2.Globals;
 import org.luaj.vm2.LuaError;
+import org.luaj.vm2.LuaTable;
 import org.luaj.vm2.LuaValue;
 import org.luaj.vm2.lib.jse.JsePlatform;
 import org.luaj.vm2.luajc.LuaJC;
@@ -144,6 +145,7 @@ public class Computer implements IPacketHandler
 			{
 				throw new LuaError("Could not read file");
 			}
+
 			LuaValue program = this.assert_.call(this.loadString.call(LuaValue.valueOf(bios), LuaValue.valueOf("bios")));
 			this.mainRoutine = this.coroutineCreate.call(program); // boot the
 																	// bios
@@ -154,7 +156,12 @@ public class Computer implements IPacketHandler
 			{
 				this.mainRoutine = null;
 			}
-			return;
+
+			LuaTable test = (LuaTable) this.globals.get("test");
+			System.out.println(test);
+			System.out.println(test.get("println"));
+			
+			System.out.println(e);
 		}
 	}
 

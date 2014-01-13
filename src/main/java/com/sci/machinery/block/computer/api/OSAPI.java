@@ -10,6 +10,7 @@ import java.util.Iterator;
 import java.util.Map;
 import org.luaj.vm2.Globals;
 import org.luaj.vm2.LuaTable;
+import org.luaj.vm2.LuaValue;
 import org.luaj.vm2.Varargs;
 import org.luaj.vm2.lib.VarArgFunction;
 import com.sci.machinery.block.computer.LuaJValues;
@@ -80,7 +81,8 @@ public class OSAPI
 						for(Object o : arguments)
 							System.out.println(o);
 
-						return null;
+						return LuaValue.varargsOf(new LuaValue[]
+						{ LuaValue.NIL });
 					}
 				});
 			}

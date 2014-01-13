@@ -62,14 +62,6 @@ public class GUIComputerTerminal extends GuiScreen
 		{
 			for(int y = 0; y < Shell.HEIGHT; y++)
 			{
-				String line = this.tileEntity.getComputer().getShell().getLines()[Shell.HEIGHT - 1 - y] + (cursorState && y == Shell.HEIGHT - 1 ? "|" : "");
-
-				if(line.length() > Shell.WIDTH)
-				{
-					line = line.substring(line.length() - Shell.WIDTH);
-				}
-
-				this.drawString(fontRenderer, line, k + 7, 7 + l + y * fontRenderer.FONT_HEIGHT, 0x00CC00);
 			}
 		}
 

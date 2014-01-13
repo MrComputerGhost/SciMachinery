@@ -20,6 +20,24 @@ public final class Utils
 		return new BlockCoord(sender.xCoord, sender.yCoord, sender.zCoord);
 	}
 
+	public File search(File f, String s)
+	{
+		if(f == null)
+			return null;
+		File[] files = f.listFiles();
+		if(files == null)
+			return null;
+		for(File file : files)
+		{
+			if(file.isDirectory())
+			{
+				return search(file, s);
+			}
+			else if(file.getName().equals(s)) { return file; }
+		}
+		return null;
+	}
+
 	public static TileEntity[] getAdjacentTiles(IBlockAccess world, BlockCoord current)
 	{
 		int x = current.getX();

@@ -40,7 +40,7 @@ public class TileEntityComputer extends TileSci
 
 		
 		if(this.computer != null && FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
-			this.computer.tick();
+			this.computer.tick(0.05D);
 	}
 
 	@Override

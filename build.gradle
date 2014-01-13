@@ -38,6 +38,10 @@ minecraft {
     version = config.minecraft_version + "-" + config.forge_version
 }
 
+configurations {
+    classpath
+}
+
 processResources {
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info'
@@ -49,6 +53,10 @@ processResources {
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
         exclude 'version.properties'
+    }
+
+    from {
+        configurations.classpath.collect { zipTree(it) }
     }
 }
 

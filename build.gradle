@@ -1,7 +1,4 @@
 buildscript {
-    configurations {
-        luaj
-    }
     repositories {
         mavenCentral()
         maven {
@@ -24,6 +21,10 @@ buildscript {
 			[group: 'bcel', name: 'bcel', version: '5.1']	
 		)
     }
+}
+
+configurations {
+    luaj
 }
 
 apply plugin: 'forge'

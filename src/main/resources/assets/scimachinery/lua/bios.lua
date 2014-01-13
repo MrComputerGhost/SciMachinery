@@ -1,1 +1,1 @@
-test.println("test?")
+println("test?")

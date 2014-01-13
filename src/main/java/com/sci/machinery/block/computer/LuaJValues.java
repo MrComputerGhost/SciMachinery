@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 import org.luaj.vm2.LuaTable;
 import org.luaj.vm2.LuaValue;
 import org.luaj.vm2.Varargs;
@@ -14,10 +15,11 @@ public final class LuaJValues
 	{
 	}
 
-	private static HashMap<Map, LuaValue> processingValue;
-	private static HashMap processing;
-	private static ArrayList tree;
+	private static HashMap<Map<Object, Object>, LuaValue> processingValue;
+	private static HashMap<Object, Object> processing;
+	private static ArrayList<LuaValue> tree;
 
+	@SuppressWarnings("unchecked")
 	public LuaValue toValue(Object object)
 	{
 		if(object == null) { return LuaValue.NIL; }
@@ -41,17 +43,17 @@ public final class LuaJValues
 			boolean clearProcessing = false;
 			if(processingValue == null)
 			{
-				processingValue = new HashMap();
+				processingValue = new HashMap<Map<Object, Object>, LuaValue>();
 				clearProcessing = true;
 			}
 			if(processingValue.containsKey(object)) { return (LuaValue) processingValue.get(object); }
 			LuaValue table = new LuaTable();
-			processingValue.put((Map) object, table);
+			processingValue.put((Map<Object, Object>) object, table);
 
-			Iterator it = ((Map) object).entrySet().iterator();
+			Iterator<Entry<Object, Object>> it = ((Map<Object, Object>) object).entrySet().iterator();
 			while(it.hasNext())
 			{
-				Map.Entry pair = (Map.Entry) it.next();
+				Entry<Object, Object> pair = (Entry<Object, Object>) it.next();
 				table.set(toValue(pair.getKey()), toValue(pair.getValue()));
 			}
 			if(clearProcessing)
@@ -100,19 +102,19 @@ public final class LuaJValues
 			boolean clearProcessing = false;
 			if(processing == null)
 			{
-				processing = new HashMap();
+				processing = new HashMap<Object, Object>();
 				clearProcessing = true;
 			}
 			if((tree != null) && (tree.contains(value))) { return null; }
 			if(processing.containsKey(value)) { return processing.get(value); }
-			HashMap ret = new HashMap();
+			HashMap<Object, Object> ret = new HashMap<Object, Object>();
 
 			processing.put((LuaTable) value, ret);
 
 			boolean clearTree = false;
 			if(tree == null)
 			{
-				tree = new ArrayList();
+				tree = new ArrayList<LuaValue>();
 				clearTree = true;
 			}
 			tree.add(value);

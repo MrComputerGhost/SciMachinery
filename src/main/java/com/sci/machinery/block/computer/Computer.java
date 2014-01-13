@@ -10,7 +10,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import org.luaj.vm2.Globals;
 import org.luaj.vm2.LuaError;
-import org.luaj.vm2.LuaTable;
 import org.luaj.vm2.LuaValue;
 import org.luaj.vm2.lib.jse.JsePlatform;
 import org.luaj.vm2.luajc.LuaJC;
@@ -156,12 +155,6 @@ public class Computer implements IPacketHandler
 			{
 				this.mainRoutine = null;
 			}
-
-			LuaTable test = (LuaTable) this.globals.get("test");
-			System.out.println(test);
-			System.out.println(test.get("println"));
-			
-			System.out.println(e);
 		}
 	}
 

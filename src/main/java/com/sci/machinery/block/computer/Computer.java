@@ -104,7 +104,7 @@ public class Computer implements IPacketHandler
 		{
 			Class.forName("org.apache.bcel.util.Repository");
 
-			// bcel is installed
+			// bcel is installed, may as well use this
 			LuaJC.install(this.globals);
 		}
 		catch(ClassNotFoundException e)
@@ -112,7 +112,7 @@ public class Computer implements IPacketHandler
 		}
 	}
 
-	public void boot()
+	public void boot() 
 	{
 		if(this.mainRoutine != null) { return; }
 		try
@@ -139,7 +139,7 @@ public class Computer implements IPacketHandler
 				throw new LuaError("Could not read file");
 			}
 			LuaValue program = this.assert_.call(this.loadString.call(LuaValue.valueOf(bios), LuaValue.valueOf("bios")));
-			this.mainRoutine = this.coroutineCreate.call(program);
+			this.mainRoutine = this.coroutineCreate.call(program); //boot the bios
 		}
 		catch(LuaError e)
 		{
@@ -151,7 +151,7 @@ public class Computer implements IPacketHandler
 		}
 	}
 
-	public void tick(double dt)
+	public void tick()
 	{
 
 	}

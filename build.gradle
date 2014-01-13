@@ -2,8 +2,13 @@ buildscript {
     repositories {
         mavenCentral()
         maven {
-        	url "http://files.minecraftforge.net/maven", "https://oss.sonatype.org/content/repositories/releases/org/luaj/luaj-jse/3.0-beta2/"
+            name = "forge"
+            url "http://files.minecraftforge.net/maven"
         }
+	maven {
+            name = "luaj"
+            url = "https://oss.sonatype.org/content/repositories/releases/org/luaj/luaj-jse/3.0-beta2/"
+	}
     }
     dependencies {
 	classpath(

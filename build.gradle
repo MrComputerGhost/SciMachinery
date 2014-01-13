@@ -1,4 +1,7 @@
 buildscript {
+    configurations {
+        luaj
+    }
     repositories {
         mavenCentral()
         maven {
@@ -11,11 +14,15 @@ buildscript {
 	}
     }
     dependencies {
-	classpath(
-		[group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '1.0-SNAPSHOT'],
-		[group: 'org.luaj', name: 'luaj-jse', version: '3.0-beta2'],
-		[group: 'bcel', name: 'bcel', version: '5.1']		
-	)
+		classpath(
+			[group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '1.0-SNAPSHOT'],
+			[group: 'org.luaj', name: 'luaj-jse', version: '3.0-beta2'],
+			[group: 'bcel', name: 'bcel', version: '5.1']		
+		)
+        luaj(
+			[group: 'org.luaj', name: 'luaj-jse', version: '3.0-beta2'],
+			[group: 'bcel', name: 'bcel', version: '5.1']	
+		)
     }
 }
 
@@ -50,6 +57,14 @@ processResources {
         exclude 'mcmod.info'
         exclude 'version.properties'
     }
+
+	from {
+		configurations.luaj.asFileTree.each {
+ 			from( zipTree(it) )
+		}
+
+		null
+	}
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {

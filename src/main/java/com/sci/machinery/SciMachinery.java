@@ -322,6 +322,7 @@ public class SciMachinery implements IGuiHandler
 	public void postInit(FMLPostInitializationEvent e)
 	{
 		proxy.postInit(e);
+		
 		//Temporary Test Methods cuz Poop
 		OSAPI.registerMethods(TerminalAPI.class);
 		System.out.println(OSAPI.apiList.toString());

@@ -16,12 +16,7 @@ import java.util.Map;
  */
 public class OSAPI
 {
-	public static String runMethod(String name)
-	{
-		return "";
-	}
-
-	public static Map<String, Map<String, Method>> apiList = new HashMap<String, Map<String, Method>>();
+	public static final Map<String, Map<String, Method>> apiList = new HashMap<String, Map<String, Method>>();
 
 	public static void registerMethods(Class<?>... clazzes) throws IllegalArgumentException
 	{
@@ -52,6 +47,11 @@ public class OSAPI
 				}
 			}
 		}
+	}
+	
+	public static String runMethod(String name)
+	{
+		return "";
 	}
 
 	@Target(ElementType.METHOD)

@@ -10,11 +10,13 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import org.luaj.vm2.Globals;
 import org.luaj.vm2.LuaError;
+import org.luaj.vm2.LuaTable;
 import org.luaj.vm2.LuaValue;
+import org.luaj.vm2.Varargs;
+import org.luaj.vm2.lib.VarArgFunction;
 import org.luaj.vm2.lib.jse.JsePlatform;
 import org.luaj.vm2.luajc.LuaJC;
 import com.sci.machinery.api.IPacketHandler;
-import com.sci.machinery.block.computer.api.OSAPI;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 
@@ -84,7 +86,7 @@ public class Computer implements IPacketHandler
 
 		this.assert_ = this.globals.get("assert");
 		this.loadString = this.globals.get("load");
-		
+
 		this.globals.set("collectgarbage", LuaValue.NIL);
 		this.globals.set("dofile", LuaValue.NIL);
 		this.globals.set("load", LuaValue.NIL);
@@ -112,8 +114,8 @@ public class Computer implements IPacketHandler
 		catch(ClassNotFoundException e)
 		{
 		}
-		
-		OSAPI.install(this.globals);
+
+		// OSAPI.install(this.globals);
 	}
 
 	public void boot()
@@ -143,9 +145,13 @@ public class Computer implements IPacketHandler
 				throw new LuaError("Could not read file");
 			}
 
-			LuaValue program = this.assert_.call(this.loadString.call(LuaValue.valueOf(bios), LuaValue.valueOf("bios")));
-			this.mainRoutine = this.coroutineCreate.call(program); // boot the
-																	// bios
+			LuaValue p = this.loadString.call(LuaValue.valueOf(bios), LuaValue.valueOf("bios"));
+			System.out.println(p);
+
+			// LuaValue program =
+			// this.assert_.call(this.loadString.call(LuaValue.valueOf(bios),
+			// LuaValue.valueOf("bios")));
+			// this.mainRoutine = this.coroutineCreate.call(program);
 		}
 		catch(LuaError e)
 		{
@@ -155,7 +161,7 @@ public class Computer implements IPacketHandler
 			}
 		}
 	}
-
+	
 	public void tick()
 	{
 

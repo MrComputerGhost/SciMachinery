@@ -58,6 +58,18 @@ public class OSAPI
 
 	public static void install(Globals g)
 	{
+		LuaTable t = new LuaTable();
+		t.set("test", new VarArgFunction()
+		{
+			public Varargs invoke(Varargs args)
+			{
+				System.out.println(args.arg1());
+				return LuaValue.varargsOf(new LuaValue[]
+				{ LuaValue.NIL });
+			}
+		});
+		g.set("testAPI", t);
+		
 		Iterator<String> apis = OSAPI.apiList.keySet().iterator();
 		while(apis.hasNext())
 		{

@@ -1,11 +1,18 @@
 package com.sci.machinery.block.computer;
 
+import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+import org.luaj.vm2.Globals;
+import org.luaj.vm2.LuaError;
+import org.luaj.vm2.LuaValue;
+import org.luaj.vm2.lib.jse.JsePlatform;
+import org.luaj.vm2.luajc.LuaJC;
 import com.sci.machinery.api.IPacketHandler;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
@@ -23,6 +30,14 @@ public class Computer implements IPacketHandler
 	private World world;
 	private TileEntityComputer tile;
 	private boolean isDecomissioned;
+
+	private Globals globals;
+	private LuaValue assert_;
+	private LuaValue loadString;
+	private LuaValue coroutineCreate;
+	private LuaValue coroutineResume;
+	private LuaValue coroutineYield;
+	private LuaValue mainRoutine;
 
 	public Computer(World world, TileEntityComputer tile)
 	{
@@ -55,11 +70,85 @@ public class Computer implements IPacketHandler
 		}
 
 		this.tile = tile;
+
+		initLUA();
+	}
+
+	private void initLUA()
+	{
+		this.globals = JsePlatform.debugGlobals();
+
+		this.globals.set("collectgarbage", LuaValue.NIL);
+		this.globals.set("dofile", LuaValue.NIL);
+		this.globals.set("load", LuaValue.NIL);
+		this.globals.set("loadfile", LuaValue.NIL);
+		this.globals.set("module", LuaValue.NIL);
+		this.globals.set("require", LuaValue.NIL);
+		this.globals.set("package", LuaValue.NIL);
+		this.globals.set("io", LuaValue.NIL);
+		this.globals.set("os", LuaValue.NIL);
+		this.globals.set("print", LuaValue.NIL);
+		this.globals.set("luajava", LuaValue.NIL);
+		this.globals.set("debug", LuaValue.NIL);
+		this.globals.set("newproxy", LuaValue.NIL);
+
+		this.assert_ = this.globals.get("assert");
+		this.loadString = this.globals.get("load");
+
+		LuaValue coroutine = this.globals.get("coroutine");
+		this.coroutineCreate = coroutine.get("create");
+		this.coroutineResume = coroutine.get("resume");
+		this.coroutineYield = coroutine.get("yield");
+
+		try
+		{
+			Class.forName("org.apache.bcel.util.Repository");
+
+			// bcel is installed
+			LuaJC.install(this.globals);
+		}
+		catch(ClassNotFoundException e)
+		{
+		}
 	}
 
 	public void boot()
 	{
-
+		if(this.mainRoutine != null) { return; }
+		try
+		{
+			String bios = null;
+			try
+			{
+				BufferedReader reader = new BufferedReader(new InputStreamReader(Computer.class.getResourceAsStream("/assets/scimachinery/lua/bios.lua")));
+				StringBuilder fileText = new StringBuilder("");
+				String line = reader.readLine();
+				while(line != null)
+				{
+					fileText.append(line);
+					line = reader.readLine();
+					if(line != null)
+					{
+						fileText.append("\n");
+					}
+				}
+				bios = fileText.toString();
+			}
+			catch(IOException e)
+			{
+				throw new LuaError("Could not read file");
+			}
+			LuaValue program = this.assert_.call(this.loadString.call(LuaValue.valueOf(bios), LuaValue.valueOf("bios")));
+			this.mainRoutine = this.coroutineCreate.call(program);
+		}
+		catch(LuaError e)
+		{
+			if(this.mainRoutine != null)
+			{
+				this.mainRoutine = null;
+			}
+			return;
+		}
 	}
 
 	public void tick(double dt)

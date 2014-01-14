@@ -127,7 +127,7 @@ public class Computer implements IPacketHandler
 
 		this.apis.add(new OSAPI());
 
-		for(ILuaAPI api : apis)
+		for(final ILuaAPI api : apis)
 		{
 			LuaTable apiTable = new LuaTable();
 			for(final Method method : api.getClass().getMethods())
@@ -143,7 +143,7 @@ public class Computer implements IPacketHandler
 							Object ret = null;
 							try
 							{
-								ret = method.invoke(null, rParams);
+								ret = method.invoke(api, rParams);
 							}
 							catch(IllegalAccessException e)
 							{

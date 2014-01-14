@@ -8,15 +8,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
-import org.luaj.vm2.Globals;
 import org.luaj.vm2.LuaError;
-import org.luaj.vm2.LuaTable;
+import org.luaj.vm2.LuaThread;
 import org.luaj.vm2.LuaValue;
-import org.luaj.vm2.Varargs;
-import org.luaj.vm2.lib.VarArgFunction;
 import org.luaj.vm2.lib.jse.JsePlatform;
 import org.luaj.vm2.luajc.LuaJC;
 import com.sci.machinery.api.IPacketHandler;
+import com.sci.machinery.block.computer.api.OSAPI;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 
@@ -34,13 +32,13 @@ public class Computer implements IPacketHandler
 	private TileEntityComputer tile;
 	private boolean isDecomissioned;
 
-	private Globals globals;
+	private LuaValue globals;
 	private LuaValue assert_;
 	private LuaValue loadString;
 	private LuaValue coroutineCreate;
 	private LuaValue coroutineResume;
 	private LuaValue coroutineYield;
-	private LuaValue mainRoutine;
+	private LuaThread mainRoutine;
 
 	public Computer(World world, TileEntityComputer tile)
 	{
@@ -109,18 +107,19 @@ public class Computer implements IPacketHandler
 		try
 		{
 			Class.forName("org.apache.bcel.util.Repository");
-			LuaJC.install(this.globals);
+			LuaJC.install();
 		}
 		catch(ClassNotFoundException e)
 		{
 		}
 
-		// OSAPI.install(this.globals);
+		OSAPI.install(this.globals);
 	}
 
 	public void boot()
 	{
 		if(this.mainRoutine != null) { return; }
+
 		try
 		{
 			String bios = null;
@@ -145,13 +144,8 @@ public class Computer implements IPacketHandler
 				throw new LuaError("Could not read file");
 			}
 
-			LuaValue p = this.loadString.call(LuaValue.valueOf(bios), LuaValue.valueOf("bios"));
-			System.out.println(p);
-
-			// LuaValue program =
-			// this.assert_.call(this.loadString.call(LuaValue.valueOf(bios),
-			// LuaValue.valueOf("bios")));
-			// this.mainRoutine = this.coroutineCreate.call(program);
+			LuaValue program = this.assert_.call(this.loadString.call(LuaValue.valueOf(bios), LuaValue.valueOf("bios")));
+			this.mainRoutine = (LuaThread) this.coroutineCreate.call(program);
 		}
 		catch(LuaError e)
 		{
@@ -161,7 +155,7 @@ public class Computer implements IPacketHandler
 			}
 		}
 	}
-	
+
 	public void tick()
 	{
 

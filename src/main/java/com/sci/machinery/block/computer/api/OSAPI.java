@@ -8,12 +8,10 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import org.luaj.vm2.Globals;
 import org.luaj.vm2.LuaTable;
 import org.luaj.vm2.LuaValue;
 import org.luaj.vm2.Varargs;
 import org.luaj.vm2.lib.VarArgFunction;
-import com.sci.machinery.block.computer.LuaJValues;
 
 /**
  * SciMachinery
@@ -56,20 +54,8 @@ public class OSAPI
 		}
 	}
 
-	public static void install(Globals g)
+	public static void install(LuaValue g)
 	{
-		LuaTable t = new LuaTable();
-		t.set("test", new VarArgFunction()
-		{
-			public Varargs invoke(Varargs args)
-			{
-				System.out.println(args.arg1());
-				return LuaValue.varargsOf(new LuaValue[]
-				{ LuaValue.NIL });
-			}
-		});
-		g.set("testAPI", t);
-		
 		Iterator<String> apis = OSAPI.apiList.keySet().iterator();
 		while(apis.hasNext())
 		{

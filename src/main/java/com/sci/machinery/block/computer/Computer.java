@@ -23,6 +23,7 @@ import org.luaj.vm2.luajc.LuaJC;
 import com.sci.machinery.api.ILuaAPI;
 import com.sci.machinery.api.ILuaAPI.APIMethod;
 import com.sci.machinery.api.IPacketHandler;
+import com.sci.machinery.block.computer.api.OSAPI;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 
@@ -309,42 +310,5 @@ public class Computer implements IPacketHandler
 	public void sendPacketUpdate(Side side)
 	{
 		this.tile.sendPacketUpdate(side);
-	}
-
-	private class OSAPI implements ILuaAPI
-	{
-		@Override
-		public void onStartup()
-		{
-
-		}
-
-		@Override
-		public void onShutdown()
-		{
-
-		}
-
-		@Override
-		public void tick()
-		{
-
-		}
-
-		@Override
-		public String getName()
-		{
-			return "os";
-		}
-
-		@APIMethod
-		public void reboot()
-		{
-		}
-
-		@APIMethod
-		public void shutdown()
-		{
-		}
 	}
 }

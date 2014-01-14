@@ -4,11 +4,9 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
-import javax.script.ScriptException;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+import org.jruby.embed.ScriptingContainer;
 import com.sci.machinery.api.IPacketHandler;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
@@ -65,7 +63,8 @@ public class Computer implements IPacketHandler
 		if(FMLCommonHandler.instance().getEffectiveSide().isClient())
 			return;
 
-		
+		ScriptingContainer container = new ScriptingContainer();
+        container.runScriptlet("puts 'Hello World!'");
 	}
 
 	public void tick()

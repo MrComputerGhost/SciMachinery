@@ -2,13 +2,12 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import org.luaj.vm2.LuaError;
-import org.luaj.vm2.LuaThread;
 import org.luaj.vm2.LuaValue;
 import org.luaj.vm2.lib.jse.JsePlatform;
 import org.luaj.vm2.luajc.LuaJC;
 import com.sci.machinery.block.computer.Computer;
 import com.sci.machinery.block.computer.api.OSAPI;
-import com.sci.machinery.block.computer.api.TestAPI;
+import com.sci.machinery.block.computer.api.OSAPI.OSAPIMethod;
 
 public class Test
 {
@@ -47,9 +46,9 @@ public class Test
 		{
 		}
 
-		OSAPI.registerMethods(TestAPI.class);
+		OSAPI.registerMethods(Test.class);
 		OSAPI.install(globals);
-	
+
 		String bios = null;
 		try
 		{
@@ -74,5 +73,11 @@ public class Test
 
 		LuaValue program = assert_.call(loadString.call(LuaValue.valueOf(bios), LuaValue.valueOf("bios")));
 		program.call();
+	}
+
+	@OSAPIMethod(apiMain = "test")
+	public static void println(String str)
+	{
+		System.out.println(str);
 	}
 }

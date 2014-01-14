@@ -4,6 +4,7 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -12,6 +13,7 @@ import org.luaj.vm2.LuaTable;
 import org.luaj.vm2.LuaValue;
 import org.luaj.vm2.Varargs;
 import org.luaj.vm2.lib.VarArgFunction;
+import com.sci.machinery.block.computer.LuaJValues;
 
 /**
  * SciMachinery
@@ -27,14 +29,11 @@ public class OSAPI
 	{
 		for(Class<?> clazz : clazzes)
 		{
-			System.out.println("Regestering " + clazz.getName());
 			for(Method method : clazz.getMethods())
 			{
-				System.out.println("Looking at " + method.getName());
 				if(method.isAnnotationPresent(OSAPIMethod.class))
 				{
 					String main = method.getAnnotation(OSAPIMethod.class).apiMain();
-					System.out.println("Accepted " + method.getName() + " with main='" + main + "'");
 					if(!main.isEmpty())
 					{
 						Map<String, Method> methodList = apiList.get(main);
@@ -66,15 +65,34 @@ public class OSAPI
 			Iterator<String> methods = apiMethods.keySet().iterator();
 			while(methods.hasNext())
 			{
-				String methodName = methods.next();
-				Method method = apiMethods.get(methodName);
+				final String methodName = methods.next();
+				final Method method = apiMethods.get(methodName);
 				table.set(methodName, new VarArgFunction()
 				{
 					public Varargs invoke(Varargs args)
 					{
-						System.out.println("println");
+						Object[] rParams = LuaJValues.toObjects(args, 1);
+
+						Object ret = null;
+						try
+						{
+							ret = method.invoke(null, rParams);
+						}
+						catch(IllegalAccessException e)
+						{
+							e.printStackTrace();
+						}
+						catch(IllegalArgumentException e)
+						{
+							e.printStackTrace();
+						}
+						catch(InvocationTargetException e)
+						{
+							e.printStackTrace();
+						}
+
 						return LuaValue.varargsOf(new LuaValue[]
-						{ LuaValue.NIL });
+						{ LuaJValues.toValue(ret) });
 					}
 				});
 			}

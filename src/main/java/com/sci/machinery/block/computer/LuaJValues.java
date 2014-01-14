@@ -20,7 +20,7 @@ public final class LuaJValues
 	private static ArrayList<LuaValue> tree;
 
 	@SuppressWarnings("unchecked")
-	public LuaValue toValue(Object object)
+	public static LuaValue toValue(Object object)
 	{
 		if(object == null) { return LuaValue.NIL; }
 		if((object instanceof Number))
@@ -65,7 +65,7 @@ public final class LuaJValues
 		return LuaValue.NIL;
 	}
 
-	public LuaValue[] toValues(Object[] objects, int leaveEmpty)
+	public static LuaValue[] toValues(Object[] objects, int leaveEmpty)
 	{
 		if((objects == null) || (objects.length == 0)) { return new LuaValue[leaveEmpty]; }
 		LuaValue[] values = new LuaValue[objects.length + leaveEmpty];

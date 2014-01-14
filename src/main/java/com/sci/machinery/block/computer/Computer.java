@@ -64,7 +64,7 @@ public class Computer implements IPacketHandler
 			return;
 
 		ScriptingContainer container = new ScriptingContainer();
-        container.runScriptlet("puts 'Hello World!'");
+		container.runScriptlet(Computer.class.getResourceAsStream("/assets/scimachinery/ruby/bios.rb"), "bios.rb");
 	}
 
 	public void tick()

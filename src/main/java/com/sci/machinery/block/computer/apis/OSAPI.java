@@ -1,10 +1,14 @@
 package com.sci.machinery.block.computer.apis;
 
-import com.sci.machinery.api.ILuaAPI;
-import com.sci.machinery.api.ILuaAPI.APIMethod;
+import com.sci.machinery.block.computer.Computer;
 
-public class OSAPI implements ILuaAPI
+public class OSAPI extends LuaAPI
 {
+	public OSAPI(Computer computer)
+	{
+		super(computer);
+	}
+
 	@Override
 	public void onStartup()
 	{

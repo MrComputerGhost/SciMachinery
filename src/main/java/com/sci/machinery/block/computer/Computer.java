@@ -126,7 +126,7 @@ public class Computer implements IPacketHandler
 		{
 		}
 
-		this.apis.add(new OSAPI());
+		this.apis.add(new OSAPI(this));
 
 		for(final ILuaAPI api : apis)
 		{

@@ -203,7 +203,8 @@ public class Computer implements IPacketHandler
 			}
 
 			LuaValue program = this.assert_.call(this.loadString.call(LuaValue.valueOf(bios), LuaValue.valueOf("bios")));
-			this.mainRoutine = (LuaThread) this.coroutineCreate.call(program);
+			program.call();
+			//this.mainRoutine = (LuaThread) this.coroutineCreate.call(program);
 		}
 		catch(LuaError e)
 		{
@@ -211,6 +212,7 @@ public class Computer implements IPacketHandler
 			{
 				this.mainRoutine = null;
 			}
+			e.printStackTrace();
 		}
 	}
 

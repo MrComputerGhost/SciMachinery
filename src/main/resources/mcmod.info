@@ -4,7 +4,7 @@
     "name":"SciMachinery",
     "description":"Some small, useful pieces of machinery. \"Just another tech mod.\"",
     "version":"${version}.${buildnumber}",
-    "authors":[ "sci4me", "YSPilot" ],
+    "authors":[ "sci4me", "YSPilot", "hawks008" ],
     "credits":"Coded by sci4me, some textures by YSPilot",
     "requiredMods":[ "Forge" ]
 }

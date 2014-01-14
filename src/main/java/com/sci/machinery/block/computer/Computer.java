@@ -6,15 +6,23 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import org.luaj.vm2.LuaError;
+import org.luaj.vm2.LuaTable;
 import org.luaj.vm2.LuaThread;
 import org.luaj.vm2.LuaValue;
+import org.luaj.vm2.Varargs;
+import org.luaj.vm2.lib.VarArgFunction;
 import org.luaj.vm2.lib.jse.JsePlatform;
 import org.luaj.vm2.luajc.LuaJC;
+import com.sci.machinery.api.ILuaAPI;
+import com.sci.machinery.api.ILuaAPI.APIMethod;
 import com.sci.machinery.api.IPacketHandler;
-import com.sci.machinery.block.computer.api.OSAPI;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 
@@ -40,6 +48,8 @@ public class Computer implements IPacketHandler
 	private LuaValue coroutineYield;
 	private LuaThread mainRoutine;
 
+	private List<ILuaAPI> apis;
+
 	public Computer(World world, TileEntityComputer tile)
 	{
 		this(world, CompLib.assignID(), false, tile);
@@ -49,6 +59,8 @@ public class Computer implements IPacketHandler
 	{
 		this.world = world;
 		this.id = id;
+
+		this.apis = new ArrayList<ILuaAPI>();
 
 		if(FMLCommonHandler.instance().getEffectiveSide().isServer())
 		{
@@ -113,7 +125,47 @@ public class Computer implements IPacketHandler
 		{
 		}
 
-		OSAPI.install(this.globals);
+		this.apis.add(new OSAPI());
+
+		for(ILuaAPI api : apis)
+		{
+			LuaTable apiTable = new LuaTable();
+			for(final Method method : api.getClass().getMethods())
+			{
+				if(method.isAnnotationPresent(APIMethod.class))
+				{
+					apiTable.set(method.getName(), new VarArgFunction()
+					{
+						public Varargs invoke(Varargs args)
+						{
+							Object[] rParams = LuaJValues.toObjects(args, 1);
+
+							Object ret = null;
+							try
+							{
+								ret = method.invoke(null, rParams);
+							}
+							catch(IllegalAccessException e)
+							{
+								e.printStackTrace();
+							}
+							catch(IllegalArgumentException e)
+							{
+								e.printStackTrace();
+							}
+							catch(InvocationTargetException e)
+							{
+								e.printStackTrace();
+							}
+
+							return LuaValue.varargsOf(new LuaValue[]
+							{ LuaJValues.toValue(ret) });
+						}
+					});
+				}
+			}
+			this.globals.set(api.getName(), apiTable);
+		}
 	}
 
 	public void boot()
@@ -144,6 +196,11 @@ public class Computer implements IPacketHandler
 				throw new LuaError("Could not read file");
 			}
 
+			for(ILuaAPI api : apis)
+			{
+				api.onStartup();
+			}
+
 			LuaValue program = this.assert_.call(this.loadString.call(LuaValue.valueOf(bios), LuaValue.valueOf("bios")));
 			this.mainRoutine = (LuaThread) this.coroutineCreate.call(program);
 		}
@@ -158,7 +215,10 @@ public class Computer implements IPacketHandler
 
 	public void tick()
 	{
-
+		for(ILuaAPI api : apis)
+		{
+			api.tick();
+		}
 	}
 
 	public boolean isDecomissioned()
@@ -249,5 +309,42 @@ public class Computer implements IPacketHandler
 	public void sendPacketUpdate(Side side)
 	{
 		this.tile.sendPacketUpdate(side);
+	}
+
+	private class OSAPI implements ILuaAPI
+	{
+		@Override
+		public void onStartup()
+		{
+
+		}
+
+		@Override
+		public void onShutdown()
+		{
+
+		}
+
+		@Override
+		public void tick()
+		{
+
+		}
+
+		@Override
+		public String getName()
+		{
+			return "os";
+		}
+
+		@APIMethod
+		public void reboot()
+		{
+		}
+
+		@APIMethod
+		public void shutdown()
+		{
+		}
 	}
 }

@@ -1,1 +1,1 @@
-test.println("test")
+os.shutdown()

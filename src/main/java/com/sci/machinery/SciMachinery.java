@@ -20,8 +20,6 @@ import com.sci.machinery.block.BlockCircuitMaker;
 import com.sci.machinery.block.TileCircuitMaker;
 import com.sci.machinery.block.computer.BlockComputer;
 import com.sci.machinery.block.computer.TileEntityComputer;
-import com.sci.machinery.block.computer.api.OSAPI;
-import com.sci.machinery.block.computer.api.TestAPI;
 import com.sci.machinery.block.tube.BlockTube;
 import com.sci.machinery.block.tube.TileTube;
 import com.sci.machinery.block.tube.TubeBase;
@@ -319,8 +317,6 @@ public class SciMachinery implements IGuiHandler
 	public void postInit(FMLPostInitializationEvent e)
 	{
 		proxy.postInit(e);
-		
-		OSAPI.registerMethods(TestAPI.class);
 	}
 
 	@EventHandler

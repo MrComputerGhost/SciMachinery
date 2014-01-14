@@ -26,7 +26,7 @@ public class TileEntityComputer extends TileSci
 
 		if(this.computer == null)
 			this.computer = new Computer(this.worldObj, this);
-		
+
 		if(FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
 		{
 			this.computer.boot();
@@ -38,7 +38,6 @@ public class TileEntityComputer extends TileSci
 	{
 		super.updateEntity();
 
-		
 		if(this.computer != null && FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
 			this.computer.tick();
 	}

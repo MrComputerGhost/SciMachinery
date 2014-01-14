@@ -1,1 +1,1 @@
-testAPI.test('test')
+test.println('test')

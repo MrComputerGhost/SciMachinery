@@ -5,17 +5,11 @@ buildscript {
             name = "forge"
             url "http://files.minecraftforge.net/maven"
         }
-	maven {
-            name = "luaj-jse"
-            url = "https://oss.sonatype.org/content/repositories/releases/org/luaj/luaj-jse/3.0-beta2/"
-	}
     }
     dependencies {
-		classpath(
-			[group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '1.0-SNAPSHOT'],
-			[group: 'org.luaj', name: 'luaj-jse', version: '3.0-beta2'],
-			[group: 'bcel', name: 'bcel', version: '5.1']		
-		)
+        classpath(
+                [group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '1.0-SNAPSHOT'],          
+        )
     }
 }
 

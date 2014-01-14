@@ -1,4 +1,4 @@
-package com.sci.machinery.block.computer.api;
+package com.sci.machinery.block.computer.apis;
 
 import com.sci.machinery.api.ILuaAPI;
 import com.sci.machinery.api.ILuaAPI.APIMethod;

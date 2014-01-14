@@ -23,7 +23,7 @@ import org.luaj.vm2.luajc.LuaJC;
 import com.sci.machinery.api.ILuaAPI;
 import com.sci.machinery.api.ILuaAPI.APIMethod;
 import com.sci.machinery.api.IPacketHandler;
-import com.sci.machinery.block.computer.api.OSAPI;
+import com.sci.machinery.block.computer.apis.OSAPI;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 
@@ -194,7 +194,7 @@ public class Computer implements IPacketHandler
 			}
 			catch(IOException e)
 			{
-				throw new LuaError("Could not read file");
+				e.printStackTrace();
 			}
 
 			for(ILuaAPI api : apis)

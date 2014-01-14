@@ -83,8 +83,8 @@ public class Computer implements IPacketHandler
 		this.globals = JsePlatform.debugGlobals();
 
 		this.assert_ = this.globals.get("assert");
-		this.loadString = this.globals.get("load");
-
+		this.loadString = this.globals.get("loadstring");
+		
 		this.globals.set("collectgarbage", LuaValue.NIL);
 		this.globals.set("dofile", LuaValue.NIL);
 		this.globals.set("load", LuaValue.NIL);

@@ -84,14 +84,14 @@ public class Computer implements IPacketHandler
 		}
 
 		this.tile = tile;
-
-		initLUA();
 	}
 
-	private void initLUA()
+	public void boot()
 	{
 		if(FMLCommonHandler.instance().getEffectiveSide().isClient())
 			return;
+		
+		if(this.mainRoutine != null) { return; }
 
 		this.globals = JsePlatform.debugGlobals();
 
@@ -167,12 +167,7 @@ public class Computer implements IPacketHandler
 			}
 			this.globals.set(api.getName(), apiTable);
 		}
-	}
-
-	public void boot()
-	{
-		if(this.mainRoutine != null) { return; }
-
+		
 		try
 		{
 			String bios = null;

@@ -2,9 +2,9 @@ package com.sci.machinery.block.computer.apis;
 
 import com.sci.machinery.block.computer.Computer;
 
-public class OSAPI extends LuaAPI
+public class TermAPI extends LuaAPI
 {
-	public OSAPI(Computer computer)
+	public TermAPI(Computer computer)
 	{
 		super(computer);
 	}
@@ -30,18 +30,12 @@ public class OSAPI extends LuaAPI
 	@Override
 	public String getName()
 	{
-		return "os";
+		return "term";
 	}
 
 	@APIMethod
-	public void reboot()
+	public void writeLine(String str)
 	{
-		computer.reboot();
-	}
-
-	@APIMethod
-	public void shutdown()
-	{
-		computer.shutdown();
+		System.out.println(str);
 	}
 }

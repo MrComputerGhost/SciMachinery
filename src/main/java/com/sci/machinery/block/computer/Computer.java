@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+import org.luaj.vm2.Globals;
 import org.luaj.vm2.LuaError;
 import org.luaj.vm2.LuaTable;
 import org.luaj.vm2.LuaThread;
@@ -23,6 +24,7 @@ import com.sci.machinery.api.ILuaAPI;
 import com.sci.machinery.api.ILuaAPI.APIMethod;
 import com.sci.machinery.api.IPacketHandler;
 import com.sci.machinery.block.computer.apis.OSAPI;
+import com.sci.machinery.block.computer.apis.TermAPI;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 
@@ -40,7 +42,7 @@ public class Computer implements IPacketHandler
 	private TileEntityComputer tile;
 	private boolean isDecomissioned;
 
-	private LuaValue globals;
+	private Globals globals;
 	private LuaValue assert_;
 	private LuaValue loadString;
 	private LuaValue coroutineCreate;
@@ -49,6 +51,8 @@ public class Computer implements IPacketHandler
 	private LuaThread mainRoutine;
 
 	private List<ILuaAPI> apis;
+
+	private State state;
 
 	public Computer(World world, TileEntityComputer tile)
 	{
@@ -82,6 +86,7 @@ public class Computer implements IPacketHandler
 			}
 		}
 
+		this.state = State.OFF;
 		this.tile = tile;
 	}
 
@@ -89,6 +94,8 @@ public class Computer implements IPacketHandler
 	{
 		if(FMLCommonHandler.instance().getEffectiveSide().isClient())
 			return;
+
+		state = State.STARTING;
 
 		this.globals = JsePlatform.debugGlobals();
 
@@ -115,6 +122,7 @@ public class Computer implements IPacketHandler
 		this.coroutineYield = coroutine.get("yield");
 
 		this.apis.add(new OSAPI(this));
+		this.apis.add(new TermAPI(this));
 
 		for(final ILuaAPI api : apis)
 		{
@@ -185,8 +193,13 @@ public class Computer implements IPacketHandler
 				api.onStartup();
 			}
 
+			state = State.RUNNING;
+
 			LuaValue program = this.assert_.call(this.loadString.call(LuaValue.valueOf(kernel), LuaValue.valueOf("kernel")));
-			this.mainRoutine = (LuaThread) this.coroutineCreate.call(program);
+			program.call();
+
+			// this.mainRoutine = (LuaThread)
+			// this.coroutineCreate.call(program);
 		}
 		catch(LuaError e)
 		{
@@ -215,6 +228,7 @@ public class Computer implements IPacketHandler
 
 		if(FMLCommonHandler.instance().getEffectiveSide().isServer())
 		{
+			shutdown();
 			CompLib.releaseID(this.id);
 		}
 
@@ -291,5 +305,23 @@ public class Computer implements IPacketHandler
 	public void sendPacketUpdate(Side side)
 	{
 		this.tile.sendPacketUpdate(side);
+	}
+
+	public void shutdown()
+	{
+		state = State.STOPPING;
+
+		state = State.OFF;
+	}
+
+	public void reboot()
+	{
+		shutdown();
+		boot();
+	}
+
+	public enum State
+	{
+		RUNNING, STARTING, STOPPING, OFF;
 	}
 }

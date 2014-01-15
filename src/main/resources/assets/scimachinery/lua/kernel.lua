@@ -23,8 +23,10 @@ end
 
 ---------------------------------------------------------------------------------------------------------
 
-while true do
-	term.writeLine("Things")
-	sleep(1)
-end
+term.writeLine("Booting computer ID " .. os.getComputerID())
+
+file = fs.open("test", "w")
+file.writeLine("hello canadia?")
+file.close()
+
 os.shutdown()

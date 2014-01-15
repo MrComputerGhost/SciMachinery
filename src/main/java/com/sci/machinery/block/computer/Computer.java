@@ -29,6 +29,7 @@ import com.sci.machinery.api.ILuaAPI;
 import com.sci.machinery.api.ILuaAPI.APIMethod;
 import com.sci.machinery.api.ILuaContext;
 import com.sci.machinery.api.IPacketHandler;
+import com.sci.machinery.block.computer.apis.FSAPI;
 import com.sci.machinery.block.computer.apis.OSAPI;
 import com.sci.machinery.block.computer.apis.TermAPI;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -59,6 +60,8 @@ public class Computer implements IPacketHandler, ILuaContext
 
 	private List<ILuaAPI> apis;
 
+	private File root;
+
 	private State state;
 	private Queue<Runnable> tasks;
 
@@ -84,7 +87,7 @@ public class Computer implements IPacketHandler, ILuaContext
 			{
 				try
 				{
-					File root = new File(CompLib.getSMCFolder(this.world), String.valueOf(this.id));
+					root = new File(CompLib.getSMCFolder(this.world), String.valueOf(this.id));
 					if(!root.exists())
 						root.mkdirs();
 				}
@@ -162,6 +165,7 @@ public class Computer implements IPacketHandler, ILuaContext
 
 		this.apis.add(new OSAPI(this));
 		this.apis.add(new TermAPI(this));
+		this.apis.add(new FSAPI(this));
 
 		for(final ILuaAPI api : apis)
 		{
@@ -213,6 +217,8 @@ public class Computer implements IPacketHandler, ILuaContext
 									Object[] o = (Object[]) ret;
 									return LuaValue.varargsOf(LuaJValues.toValues(o, 0));
 								}
+								else if(ret instanceof LuaValue) { return LuaValue.varargsOf(new LuaValue[]
+								{ (LuaValue) ret }); }
 							}
 
 							return LuaValue.varargsOf(new LuaValue[]
@@ -464,6 +470,11 @@ public class Computer implements IPacketHandler, ILuaContext
 		{
 			throw new InterruptedException();
 		}
+	}
+
+	public File getRoot()
+	{
+		return root;
 	}
 
 	public enum State

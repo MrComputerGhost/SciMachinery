@@ -1,7 +1,14 @@
-os.queueEvent("test", "test parameter")
-event, param1 = os.pullEvent("test")
+function sleep(time)
+	local timer = os.startTimer(time)
+	repeat
+		local evt, param = os.pullEvent("timer")
+	until param == timer
+end
 
-term.writeLine(event .. " " .. param1)
+while true do
+	term.writeLine("Things")
+	sleep(1)
+end
 
 term.writeLine("Computer ID: " .. os.getComputerID() .. " shutting down!")
 os.shutdown()

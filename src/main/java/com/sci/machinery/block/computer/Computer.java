@@ -208,7 +208,7 @@ public class Computer implements IPacketHandler, ILuaContext
 
 							if(ret != null)
 							{
-								if(ret.getClass().isAssignableFrom(Object[].class)) 
+								if(ret.getClass().isAssignableFrom(Object[].class))
 								{
 									Object[] o = (Object[]) ret;
 									return LuaValue.varargsOf(LuaJValues.toValues(o, 0));
@@ -277,6 +277,9 @@ public class Computer implements IPacketHandler, ILuaContext
 		{
 			this.tasks.poll().run();
 		}
+
+		for(ILuaAPI api : apis)
+			api.tick();
 	}
 
 	private void handleEvent(String name, Object[] args)
@@ -455,7 +458,7 @@ public class Computer implements IPacketHandler, ILuaContext
 		{
 			LuaValue[] vArgs = LuaJValues.toValues(args, 0);
 			Varargs res = Computer.this.coroutineYield.invoke(LuaValue.varargsOf(vArgs));
-			return LuaJValues.toObjects(res, 2);
+			return LuaJValues.toObjects(res, 1);
 		}
 		catch(OrphanedThread e)
 		{

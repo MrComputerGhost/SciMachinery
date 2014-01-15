@@ -1,13 +1,22 @@
 package com.sci.machinery.block.computer.apis;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import com.sci.machinery.api.ILuaContext;
 import com.sci.machinery.block.computer.Computer;
 
 public class OSAPI extends LuaAPI
 {
+	private List<Timer> timers;
+	private int nextTimerToken;
+
 	public OSAPI(Computer computer)
 	{
 		super(computer);
+
+		this.timers = new ArrayList<Timer>();
+		this.nextTimerToken = 0;
 	}
 
 	@Override
@@ -25,7 +34,18 @@ public class OSAPI extends LuaAPI
 	@Override
 	public void tick()
 	{
-
+		Iterator<Timer> it = this.timers.iterator();
+		while(it.hasNext())
+		{
+			Timer t = (Timer) it.next();
+			t.timeLeft -= 0.05D;
+			if(t.timeLeft <= 0.0D)
+			{
+				computer.queueEvent("timer", new Object[]
+				{ Integer.valueOf(t.token) });
+				it.remove();
+			}
+		}
 	}
 
 	@Override
@@ -90,5 +110,26 @@ public class OSAPI extends LuaAPI
 	public int getComputerID(ILuaContext context, Object[] args)
 	{
 		return computer.getID();
+	}
+
+	@APIMethod
+	public int startTimer(ILuaContext context, Object[] args)
+	{
+		if(args.length != 1)
+			throw new IllegalArgumentException("Expected one argument (number)");
+		this.timers.add(new Timer(Double.valueOf(String.valueOf(args[0])), nextTimerToken));
+		return nextTimerToken++;
+	}
+
+	class Timer
+	{
+		public double timeLeft;
+		public int token;
+
+		public Timer(double timeLeft, int token)
+		{
+			this.timeLeft = timeLeft;
+			this.token = token;
+		}
 	}
 }

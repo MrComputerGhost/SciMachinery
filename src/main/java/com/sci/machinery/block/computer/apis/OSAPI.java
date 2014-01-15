@@ -10,7 +10,8 @@ public class OSAPI extends LuaAPI
 {
 	private List<Timer> timers;
 	private int nextTimerToken;
-
+	private double clock;
+	
 	public OSAPI(Computer computer)
 	{
 		super(computer);
@@ -34,6 +35,8 @@ public class OSAPI extends LuaAPI
 	@Override
 	public void tick()
 	{
+		this.clock += 0.05D;
+		
 		Iterator<Timer> it = this.timers.iterator();
 		while(it.hasNext())
 		{
@@ -54,6 +57,12 @@ public class OSAPI extends LuaAPI
 		return "os";
 	}
 
+	@APIMethod
+	public double clock(ILuaContext context, Object[] args)
+	{
+		return clock;
+	}
+	
 	@APIMethod
 	public void queueEvent(ILuaContext context, Object[] args)
 	{

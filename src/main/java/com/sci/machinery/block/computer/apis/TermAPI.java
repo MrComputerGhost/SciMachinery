@@ -1,5 +1,6 @@
 package com.sci.machinery.block.computer.apis;
 
+import com.sci.machinery.api.ILuaContext;
 import com.sci.machinery.block.computer.Computer;
 
 public class TermAPI extends LuaAPI
@@ -34,8 +35,10 @@ public class TermAPI extends LuaAPI
 	}
 
 	@APIMethod
-	public void writeLine(String str)
+	public void writeLine(ILuaContext context, Object[] args)
 	{
-		System.out.println(str);
+		if(args.length != 1)
+			throw new IllegalArgumentException("Invalid number of arguments!");
+		System.out.println(args[0]);
 	}
 }

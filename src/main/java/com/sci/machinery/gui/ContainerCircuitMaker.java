@@ -60,6 +60,7 @@ public class ContainerCircuitMaker extends Container
 		addSlotToContainer(new SlotOutput(tile, 15, 138 + 4, 17 + 4));
 	}
 
+	@Override
 	public void addCraftingToCrafters(ICrafting par1ICrafting)
 	{
 		super.addCraftingToCrafters(par1ICrafting);
@@ -68,6 +69,7 @@ public class ContainerCircuitMaker extends Container
 		par1ICrafting.sendProgressBarUpdate(this, 2, this.tile.canCraft());
 	}
 
+	@Override
 	public void detectAndSendChanges()
 	{
 		super.detectAndSendChanges();
@@ -97,6 +99,7 @@ public class ContainerCircuitMaker extends Container
 		this.timer = this.tile.getTimeLeft();
 	}
 
+	@Override
 	@SideOnly(Side.CLIENT)
 	public void updateProgressBar(int par1, int par2)
 	{

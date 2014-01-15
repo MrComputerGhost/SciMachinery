@@ -46,14 +46,14 @@ public final class LuaJValues
 				processingValue = new HashMap<Map<Object, Object>, LuaValue>();
 				clearProcessing = true;
 			}
-			if(processingValue.containsKey(object)) { return (LuaValue) processingValue.get(object); }
+			if(processingValue.containsKey(object)) { return processingValue.get(object); }
 			LuaValue table = new LuaTable();
 			processingValue.put((Map<Object, Object>) object, table);
 
 			Iterator<Entry<Object, Object>> it = ((Map<Object, Object>) object).entrySet().iterator();
 			while(it.hasNext())
 			{
-				Entry<Object, Object> pair = (Entry<Object, Object>) it.next();
+				Entry<Object, Object> pair = it.next();
 				table.set(toValue(pair.getKey()), toValue(pair.getValue()));
 			}
 			if(clearProcessing)
@@ -109,7 +109,7 @@ public final class LuaJValues
 			if(processing.containsKey(value)) { return processing.get(value); }
 			HashMap<Object, Object> ret = new HashMap<Object, Object>();
 
-			processing.put((LuaTable) value, ret);
+			processing.put(value, ret);
 
 			boolean clearTree = false;
 			if(tree == null)

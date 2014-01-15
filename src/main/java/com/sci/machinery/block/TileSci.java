@@ -14,6 +14,7 @@ import cpw.mods.fml.relauncher.Side;
 
 public abstract class TileSci extends TileEntity implements IPacketHandler
 {
+	@Override
 	public final void sendPacketUpdate(Side side)
 	{
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();

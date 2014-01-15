@@ -25,12 +25,14 @@ public class ItemSuicide extends Item
 		this.setUnlocalizedName("suicide");
 	}
 
+	@Override
 	public ItemStack onItemRightClick(ItemStack s, World w, EntityPlayer p)
 	{
 		suicide(w, p);
 		return s;
 	}
 
+	@Override
 	public boolean onItemUse(ItemStack par1ItemStack, EntityPlayer p, World par3World, int par4, int par5, int par6, int par7, float par8, float par9, float par10)
 	{
 		suicide(par3World, p);
@@ -75,6 +77,7 @@ public class ItemSuicide extends Item
 			this.p = p;
 		}
 
+		@Override
 		public ChatMessageComponent getDeathMessage(EntityLivingBase par1EntityLivingBase)
 		{
 			int sel = RANDOM.nextInt(9) + 1;

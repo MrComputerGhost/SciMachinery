@@ -9,7 +9,9 @@ import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import org.luaj.vm2.Globals;
@@ -17,6 +19,7 @@ import org.luaj.vm2.LuaError;
 import org.luaj.vm2.LuaTable;
 import org.luaj.vm2.LuaThread;
 import org.luaj.vm2.LuaValue;
+import org.luaj.vm2.OrphanedThread;
 import org.luaj.vm2.Varargs;
 import org.luaj.vm2.lib.OneArgFunction;
 import org.luaj.vm2.lib.VarArgFunction;
@@ -24,6 +27,7 @@ import org.luaj.vm2.lib.ZeroArgFunction;
 import org.luaj.vm2.lib.jse.JsePlatform;
 import com.sci.machinery.api.ILuaAPI;
 import com.sci.machinery.api.ILuaAPI.APIMethod;
+import com.sci.machinery.api.ILuaContext;
 import com.sci.machinery.api.IPacketHandler;
 import com.sci.machinery.block.computer.apis.OSAPI;
 import com.sci.machinery.block.computer.apis.TermAPI;
@@ -37,7 +41,7 @@ import cpw.mods.fml.relauncher.Side;
  * @license Lesser GNU Public License v3 (http://www.gnu.org/licenses/lgpl.html)
  */
 
-public class Computer implements IPacketHandler
+public class Computer implements IPacketHandler, ILuaContext
 {
 	private final int id;
 	private World world;
@@ -50,11 +54,13 @@ public class Computer implements IPacketHandler
 	private LuaValue coroutineCreate;
 	private LuaValue coroutineResume;
 	private LuaValue coroutineYield;
+	private String eventFilter;
 	private LuaThread mainRoutine;
 
 	private List<ILuaAPI> apis;
 
 	private State state;
+	private Queue<Runnable> tasks;
 
 	public Computer(World world, TileEntityComputer tile)
 	{
@@ -67,6 +73,7 @@ public class Computer implements IPacketHandler
 		this.id = id;
 
 		this.apis = new ArrayList<ILuaAPI>();
+		this.tasks = new LinkedList<Runnable>();
 
 		if(FMLCommonHandler.instance().getEffectiveSide().isServer())
 		{
@@ -163,16 +170,28 @@ public class Computer implements IPacketHandler
 			{
 				if(method.isAnnotationPresent(APIMethod.class))
 				{
+					Class<?>[] params = method.getParameterTypes();
+					if(params.length != 2)
+						throw new IllegalArgumentException("Expected parameters ILuaContext, Object[]");
+					if(!params[0].isAssignableFrom(ILuaContext.class))
+						throw new IllegalArgumentException("First parameter of method must be ILuaContext");
+					if(!params[1].isAssignableFrom(Object[].class))
+						throw new IllegalArgumentException("Second parameter of method must be Object[]");
+
 					apiTable.set(method.getName(), new VarArgFunction()
 					{
+						@Override
 						public Varargs invoke(Varargs args)
 						{
-							Object[] rParams = LuaJValues.toObjects(args, 1);
+							Object[] rrParams = new Object[2];
+
+							rrParams[0] = Computer.this;
+							rrParams[1] = LuaJValues.toObjects(args, 1);
 
 							Object ret = null;
 							try
 							{
-								ret = method.invoke(api, rParams);
+								ret = method.invoke(api, rrParams);
 							}
 							catch(IllegalAccessException e)
 							{
@@ -185,6 +204,15 @@ public class Computer implements IPacketHandler
 							catch(InvocationTargetException e)
 							{
 								e.printStackTrace();
+							}
+
+							if(ret != null)
+							{
+								if(ret.getClass().isAssignableFrom(Object[].class)) 
+								{
+									Object[] o = (Object[]) ret;
+									return LuaValue.varargsOf(LuaJValues.toValues(o, 0));
+								}
 							}
 
 							return LuaValue.varargsOf(new LuaValue[]
@@ -230,10 +258,6 @@ public class Computer implements IPacketHandler
 
 			LuaValue program = this.assert_.call(this.loadString.call(LuaValue.valueOf(kernel), LuaValue.valueOf("kernel")));
 			this.mainRoutine = (LuaThread) this.coroutineCreate.call(program);
-
-			this.mainRoutine.state.lua_resume(this.mainRoutine, LuaValue.varargsOf(new LuaValue[]
-			{ LuaValue.NIL })); // actually "start" the coroutine (resume it
-								// technically, it starts suspended)
 		}
 		catch(LuaError e)
 		{
@@ -243,11 +267,47 @@ public class Computer implements IPacketHandler
 			}
 			e.printStackTrace();
 		}
+
+		handleEvent(null, null);
 	}
 
 	public void tick()
 	{
+		if(!this.tasks.isEmpty())
+		{
+			this.tasks.poll().run();
+		}
+	}
 
+	private void handleEvent(String name, Object[] args)
+	{
+		if(this.mainRoutine == null)
+			return;
+
+		if((this.eventFilter != null) && (name != null) && (!name.equals(this.eventFilter)) && (!name.equals("terminate")))
+			return;
+
+		LuaValue[] rArgs;
+		if(name != null)
+		{
+			rArgs = LuaJValues.toValues(args, 2);
+			rArgs[0] = this.mainRoutine;
+			rArgs[1] = LuaValue.valueOf(name);
+		}
+		else
+		{
+			rArgs = new LuaValue[1];
+			rArgs[0] = this.mainRoutine;
+		}
+		Varargs res = this.coroutineResume.invoke(LuaValue.varargsOf(rArgs));
+		if(!res.arg1().checkboolean()) { throw new LuaError(res.arg(2).checkstring().toString()); }
+		LuaValue filter = res.arg(2);
+		if(filter.isstring())
+			this.eventFilter = filter.toString();
+		else
+			this.eventFilter = null;
+		if(this.mainRoutine.getStatus().equals("dead"))
+			this.mainRoutine = null;
 	}
 
 	public boolean isDecomissioned()
@@ -357,6 +417,50 @@ public class Computer implements IPacketHandler
 	public int getID()
 	{
 		return this.id;
+	}
+
+	public void queueEvent(final String event, final Object[] args)
+	{
+		Runnable task = new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				Computer.this.handleEvent(event, args);
+			}
+		};
+		this.tasks.add(task);
+	}
+
+	@Override
+	public Object[] pullEvent(String filter) throws Exception, InterruptedException
+	{
+		Object[] res = pullEventRaw(filter);
+		if((res.length >= 1) && (res[0].equals("terminate")))
+			throw new Exception("Terminated");
+		return res;
+	}
+
+	@Override
+	public Object[] pullEventRaw(String filter) throws InterruptedException
+	{
+		return yield(new Object[]
+		{ filter });
+	}
+
+	@Override
+	public Object[] yield(Object[] args) throws InterruptedException
+	{
+		try
+		{
+			LuaValue[] vArgs = LuaJValues.toValues(args, 0);
+			Varargs res = Computer.this.coroutineYield.invoke(LuaValue.varargsOf(vArgs));
+			return LuaJValues.toObjects(res, 2);
+		}
+		catch(OrphanedThread e)
+		{
+			throw new InterruptedException();
+		}
 	}
 
 	public enum State

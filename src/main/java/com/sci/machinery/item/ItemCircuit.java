@@ -42,6 +42,7 @@ public class ItemCircuit extends Item
 		return unlocalizedName.toString();
 	}
 
+	@Override
 	@SideOnly(Side.CLIENT)
 	public Icon getIconFromDamage(int par1)
 	{
@@ -49,6 +50,7 @@ public class ItemCircuit extends Item
 		return this.icons[i];
 	}
 
+	@Override
 	@SideOnly(Side.CLIENT)
 	@SuppressWarnings(
 	{ "rawtypes", "unchecked" })

@@ -39,6 +39,8 @@ public class BlockComputer extends BlockSci
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int metadata, float what, float these, float are)
 	{
 		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
+		if(tileEntity != null && tileEntity instanceof TileEntityComputer)
+			((TileEntityComputer) tileEntity).boot();
 		if(tileEntity == null || player.isSneaking()) { return false; }
 		player.openGui(SciMachinery.instance, 1, world, x, y, z);
 		return true;

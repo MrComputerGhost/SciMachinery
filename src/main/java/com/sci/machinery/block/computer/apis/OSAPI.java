@@ -44,4 +44,10 @@ public class OSAPI extends LuaAPI
 	{
 		computer.shutdown();
 	}
+	
+	@APIMethod
+	public int getComputerID()
+	{
+		return computer.getID();
+	}
 }

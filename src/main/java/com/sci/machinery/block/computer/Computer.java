@@ -95,6 +95,9 @@ public class Computer implements IPacketHandler
 		if(FMLCommonHandler.instance().getEffectiveSide().isClient())
 			return;
 
+		if(state != State.OFF)
+			return;
+
 		state = State.STARTING;
 
 		this.globals = JsePlatform.debugGlobals();
@@ -318,6 +321,11 @@ public class Computer implements IPacketHandler
 	{
 		shutdown();
 		boot();
+	}
+
+	public int getID()
+	{
+		return this.id;
 	}
 
 	public enum State

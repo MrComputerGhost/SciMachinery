@@ -183,6 +183,7 @@ public class Computer implements IPacketHandler
 					{
 						fileText.append("\n");
 					}
+
 				}
 				kernel = fileText.toString();
 			}
@@ -199,10 +200,11 @@ public class Computer implements IPacketHandler
 			state = State.RUNNING;
 
 			LuaValue program = this.assert_.call(this.loadString.call(LuaValue.valueOf(kernel), LuaValue.valueOf("kernel")));
-			program.call();
+			this.mainRoutine = (LuaThread) this.coroutineCreate.call(program);
 
-			// this.mainRoutine = (LuaThread)
-			// this.coroutineCreate.call(program);
+			this.mainRoutine.state.lua_resume(this.mainRoutine, LuaValue.varargsOf(new LuaValue[]
+			{ LuaValue.NIL })); // actually "start" the coroutine (resume it
+								// technically, it starts suspended)
 		}
 		catch(LuaError e)
 		{

@@ -18,7 +18,9 @@ import org.luaj.vm2.LuaTable;
 import org.luaj.vm2.LuaThread;
 import org.luaj.vm2.LuaValue;
 import org.luaj.vm2.Varargs;
+import org.luaj.vm2.lib.OneArgFunction;
 import org.luaj.vm2.lib.VarArgFunction;
+import org.luaj.vm2.lib.ZeroArgFunction;
 import org.luaj.vm2.lib.jse.JsePlatform;
 import com.sci.machinery.api.ILuaAPI;
 import com.sci.machinery.api.ILuaAPI.APIMethod;
@@ -105,6 +107,34 @@ public class Computer implements IPacketHandler
 		this.assert_ = this.globals.get("assert");
 		this.loadString = this.globals.get("load");
 
+		LuaValue coroutine = this.globals.get("coroutine");
+		final LuaValue nativeCoroutineCreate = coroutine.get("create");
+
+		LuaValue debug = this.globals.get("debug");
+		final LuaValue setHook = debug.get("sethook");
+
+		coroutine.set("create", new OneArgFunction()
+		{
+			@Override
+			public LuaValue call(LuaValue value)
+			{
+				final LuaThread thread = nativeCoroutineCreate.call(value).checkthread();
+				setHook.invoke(new LuaValue[]
+				{ thread, new ZeroArgFunction()
+				{
+					@Override
+					public LuaValue call()
+					{
+						System.out.println("Too long without yielding!");
+						mainRoutine.state.lua_yield(LuaValue.varargsOf(new LuaValue[]
+						{ LuaValue.NIL }));
+						return LuaValue.NIL;
+					}
+				}, LuaValue.NIL, LuaValue.valueOf(1000000) });
+				return thread;
+			}
+		});
+
 		this.globals.set("collectgarbage", LuaValue.NIL);
 		this.globals.set("dofile", LuaValue.NIL);
 		this.globals.set("load", LuaValue.NIL);
@@ -119,7 +149,6 @@ public class Computer implements IPacketHandler
 		this.globals.set("debug", LuaValue.NIL);
 		this.globals.set("newproxy", LuaValue.NIL);
 
-		LuaValue coroutine = this.globals.get("coroutine");
 		this.coroutineCreate = coroutine.get("create");
 		this.coroutineResume = coroutine.get("resume");
 		this.coroutineYield = coroutine.get("yield");

@@ -48,11 +48,6 @@ public class FSAPI extends LuaAPI
 		return "fs";
 	}
 
-	private enum FileMode
-	{
-		R, W, A, RB, WB, AB
-	}
-
 	@APIMethod
 	public LuaTable open(ILuaContext context, Object[] args)
 	{
@@ -61,35 +56,16 @@ public class FSAPI extends LuaAPI
 		try
 		{
 			String path = computer.getRoot().getCanonicalPath() + "/" + args[0];
-			FileMode mode = null;
-			try
-			{
-				mode = FileMode.valueOf(((String) args[1]).toUpperCase());
-			}
-			catch(Exception e)
-			{
-				throw new Exception("Unsupported mode");
-			}
+			String mode = (String) args[1];
 			File file = new File(path);
 
-			switch (mode)
-			{
-			case R:
-				return wrapBufferedReader(new BufferedReader(new FileReader(file)));
-			case W:
-				return wrapBufferedWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file, false))));
-			case A:
-				return wrapBufferedWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file, true))));
-			case RB:
-				return wrapInputStream(new FileInputStream(file));
-			case WB:
-				return wrapOutputStream(new FileOutputStream(file, false));
-			case AB:
-				return wrapOutputStream(new FileOutputStream(file, true));
-			default:
-				throw new Exception("Unsupported mode");
-			}
-
+			if(mode.equals("r")) { return wrapBufferedReader(new BufferedReader(new FileReader(file))); }
+			if(mode.equals("w")) { return wrapBufferedWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file, false)))); }
+			if(mode.equals("a")) { return wrapBufferedWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file, true)))); }
+			if(mode.equals("rb")) { return wrapInputStream(new FileInputStream(file)); }
+			if(mode.equals("wb")) { return wrapOutputStream(new FileOutputStream(file, false)); }
+			if(mode.equals("ab")) { return wrapOutputStream(new FileOutputStream(file, true)); }
+			throw new Exception("Unsupported mode");
 		}
 		catch(Exception e)
 		{

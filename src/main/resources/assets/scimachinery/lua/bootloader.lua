@@ -17,7 +17,7 @@ end
 local function clear()
 	for i=0, 39 do
 		for j = 0, 28 do
-			term.setCharacter(i-1, j-1, ' ')
+			term.setCharacter(i, j, ' ')
 		end
 	end
 end	

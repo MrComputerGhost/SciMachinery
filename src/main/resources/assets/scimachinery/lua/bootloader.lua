@@ -7,22 +7,6 @@ function sleep(time)
         until param == timer
 end
 
-local nativeShutdown = os.shutdown
-function os.shutdown()
-        nativeShutdown()
-        while true do
-                coroutine.yield()
-        end
-end
-
-local nativeReboot = os.reboot
-function os.reboot()
-        nativeReboot()
-        while true do
-                coroutine.yield()
-        end
-end
-
 local function write(x, y, string)
 	for i = 1, #string do
 		local c = string:sub(i, i)

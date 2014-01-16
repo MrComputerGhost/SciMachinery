@@ -12,10 +12,10 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import org.luaj.vm2.LuaTable;
 import org.luaj.vm2.LuaValue;
-import org.luaj.vm2.lib.OneArgFunction;
-import org.luaj.vm2.lib.ZeroArgFunction;
 import com.sci.machinery.api.ILuaContext;
+import com.sci.machinery.api.ILuaObject;
 import com.sci.machinery.block.computer.Computer;
+import com.sci.machinery.block.computer.LUALib;
 
 public class FSAPI extends LuaAPI
 {
@@ -75,17 +75,17 @@ public class FSAPI extends LuaAPI
 			switch (mode)
 			{
 			case R:
-				return wrapBufferedReader(new BufferedReader(new FileReader(file)));
+				return wrapBufferedReader(computer, new BufferedReader(new FileReader(file)));
 			case W:
-				return wrapBufferedWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file, false))));
+				return wrapBufferedWriter(computer, new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file, false))));
 			case A:
-				return wrapBufferedWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file, true))));
+				return wrapBufferedWriter(computer, new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file, true))));
 			case RB:
-				return wrapInputStream(new FileInputStream(file));
+				return wrapInputStream(computer, new FileInputStream(file));
 			case WB:
-				return wrapOutputStream(new FileOutputStream(file, false));
+				return wrapOutputStream(computer, new FileOutputStream(file, false));
 			case AB:
-				return wrapOutputStream(new FileOutputStream(file, true));
+				return wrapOutputStream(computer, new FileOutputStream(file, true));
 			default:
 				throw new Exception("Unsupported mode");
 			}
@@ -97,15 +97,15 @@ public class FSAPI extends LuaAPI
 		return null;
 	}
 
-	private static LuaTable wrapBufferedReader(final BufferedReader reader)
+	private static LuaTable wrapBufferedReader(final Computer computer, final BufferedReader reader)
 	{
-		LuaTable table = new LuaTable();
-
-		table.set("readLine", new ZeroArgFunction()
+		return LUALib.toLuaObject(computer, new ILuaObject()
 		{
-			@Override
-			public LuaValue call()
+			@APIMethod
+			public LuaValue readLine(ILuaContext context, Object[] args)
 			{
+				if(args.length != 0)
+					throw new IllegalArgumentException("Too many arguments!");
 				try
 				{
 					return LuaValue.valueOf(reader.readLine());
@@ -115,12 +115,12 @@ public class FSAPI extends LuaAPI
 				}
 				return LuaValue.NIL;
 			}
-		});
-		table.set("readAll", new ZeroArgFunction()
-		{
-			@Override
-			public LuaValue call()
+
+			@APIMethod
+			public LuaValue readAll(ILuaContext context, Object[] args)
 			{
+				if(args.length != 0)
+					throw new IllegalArgumentException("Too many arguments!");
 				try
 				{
 					StringBuilder sb = new StringBuilder();
@@ -139,12 +139,12 @@ public class FSAPI extends LuaAPI
 				}
 				return LuaValue.NIL;
 			}
-		});
-		table.set("close", new ZeroArgFunction()
-		{
-			@Override
-			public LuaValue call()
+
+			@APIMethod
+			public LuaValue close(ILuaContext context, Object[] args)
 			{
+				if(args.length != 0)
+					throw new IllegalArgumentException("Too many arguments!");
 				try
 				{
 					reader.close();
@@ -155,20 +155,18 @@ public class FSAPI extends LuaAPI
 				return LuaValue.NIL;
 			}
 		});
-
-		return table;
 	}
 
-	private static LuaTable wrapBufferedWriter(final BufferedWriter writer)
+	private static LuaTable wrapBufferedWriter(final Computer computer, final BufferedWriter writer)
 	{
-		LuaTable table = new LuaTable();
-
-		table.set("write", new OneArgFunction()
+		return LUALib.toLuaObject(computer, new ILuaObject()
 		{
-			@Override
-			public LuaValue call(LuaValue arg)
+			@APIMethod
+			public LuaValue write(ILuaContext context, Object[] args)
 			{
-				String text = arg.toString();
+				if(args.length != 1)
+					throw new IllegalArgumentException("Exptected arguments: string");
+				String text = args[0].toString();
 				try
 				{
 					writer.write(text, 0, text.length());
@@ -178,14 +176,13 @@ public class FSAPI extends LuaAPI
 				}
 				return LuaValue.NIL;
 			}
-		});
 
-		table.set("writeLine", new OneArgFunction()
-		{
-			@Override
-			public LuaValue call(LuaValue arg)
+			@APIMethod
+			public LuaValue writeLine(ILuaContext context, Object[] args)
 			{
-				String text = arg.toString();
+				if(args.length != 1)
+					throw new IllegalArgumentException("Exptected arguments: string");
+				String text = args[0].toString();
 				try
 				{
 					writer.write(text, 0, text.length());
@@ -196,13 +193,12 @@ public class FSAPI extends LuaAPI
 				}
 				return LuaValue.NIL;
 			}
-		});
 
-		table.set("flush", new ZeroArgFunction()
-		{
-			@Override
-			public LuaValue call()
+			@APIMethod
+			public LuaValue flush(ILuaContext context, Object[] args)
 			{
+				if(args.length != 0)
+					throw new IllegalArgumentException("Too many arguments!");
 				try
 				{
 					writer.flush();
@@ -212,13 +208,12 @@ public class FSAPI extends LuaAPI
 				}
 				return LuaValue.NIL;
 			}
-		});
 
-		table.set("close", new ZeroArgFunction()
-		{
-			@Override
-			public LuaValue call()
+			@APIMethod
+			public LuaValue close(ILuaContext context, Object[] args)
 			{
+				if(args.length != 0)
+					throw new IllegalArgumentException("Too many arguments!");
 				try
 				{
 					writer.close();
@@ -229,19 +224,17 @@ public class FSAPI extends LuaAPI
 				return LuaValue.NIL;
 			}
 		});
-
-		return table;
 	}
 
-	private static LuaTable wrapInputStream(final InputStream in)
+	private static LuaTable wrapInputStream(final Computer computer, final InputStream in)
 	{
-		LuaTable table = new LuaTable();
-
-		table.set("read", new ZeroArgFunction()
+		return LUALib.toLuaObject(computer, new ILuaObject()
 		{
-			@Override
-			public LuaValue call()
+			@APIMethod
+			public LuaValue read(ILuaContext context, Object[] args)
 			{
+				if(args.length != 0)
+					throw new IllegalArgumentException("Too many arguments!");
 				int b;
 				try
 				{
@@ -254,13 +247,12 @@ public class FSAPI extends LuaAPI
 				}
 				return LuaValue.NIL;
 			}
-		});
 
-		table.set("close", new ZeroArgFunction()
-		{
-			@Override
-			public LuaValue call()
+			@APIMethod
+			public LuaValue close(ILuaContext context, Object[] args)
 			{
+				if(args.length != 0)
+					throw new IllegalArgumentException("Too many arguments!");
 				try
 				{
 					in.close();
@@ -271,35 +263,33 @@ public class FSAPI extends LuaAPI
 				return LuaValue.NIL;
 			}
 		});
-
-		return table;
 	}
 
-	private static LuaTable wrapOutputStream(final OutputStream out)
+	private static LuaTable wrapOutputStream(final Computer computer, final OutputStream out)
 	{
-		LuaTable table = new LuaTable();
-
-		table.set("write", new OneArgFunction()
+		return LUALib.toLuaObject(computer, new ILuaObject()
 		{
-			@Override
-			public LuaValue call(LuaValue arg)
+			@APIMethod
+			public LuaValue write(ILuaContext context, Object[] args)
 			{
+				if(args.length != 1)
+					throw new IllegalArgumentException("Expected argument: int");
+
 				try
 				{
-					out.write(arg.checkint());
+					out.write(Integer.valueOf(String.valueOf(args[0])));
 				}
 				catch(IOException e)
 				{
 				}
 				return LuaValue.NIL;
 			}
-		});
 
-		table.set("flush", new ZeroArgFunction()
-		{
-			@Override
-			public LuaValue call()
+			@APIMethod
+			public LuaValue flush(ILuaContext context, Object[] args)
 			{
+				if(args.length != 0)
+					throw new IllegalArgumentException("Too many arguments!");
 				try
 				{
 					out.flush();
@@ -310,23 +300,5 @@ public class FSAPI extends LuaAPI
 				return LuaValue.NIL;
 			}
 		});
-
-		table.set("close", new ZeroArgFunction()
-		{
-			@Override
-			public LuaValue call()
-			{
-				try
-				{
-					out.close();
-				}
-				catch(IOException e)
-				{
-				}
-				return LuaValue.NIL;
-			}
-		});
-
-		return table;
 	}
 }

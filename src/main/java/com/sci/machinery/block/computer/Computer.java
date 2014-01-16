@@ -6,8 +6,6 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -16,17 +14,14 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import org.luaj.vm2.Globals;
 import org.luaj.vm2.LuaError;
-import org.luaj.vm2.LuaTable;
 import org.luaj.vm2.LuaThread;
 import org.luaj.vm2.LuaValue;
 import org.luaj.vm2.OrphanedThread;
 import org.luaj.vm2.Varargs;
 import org.luaj.vm2.lib.OneArgFunction;
-import org.luaj.vm2.lib.VarArgFunction;
 import org.luaj.vm2.lib.ZeroArgFunction;
 import org.luaj.vm2.lib.jse.JsePlatform;
 import com.sci.machinery.api.ILuaAPI;
-import com.sci.machinery.api.ILuaAPI.APIMethod;
 import com.sci.machinery.api.ILuaContext;
 import com.sci.machinery.api.IPacketHandler;
 import com.sci.machinery.block.computer.apis.FSAPI;
@@ -110,7 +105,7 @@ public class Computer implements IPacketHandler, ILuaContext
 		if(state != State.OFF)
 			return;
 
-		state = State.STARTING;
+		this.state = State.STARTING;
 
 		this.globals = JsePlatform.debugGlobals();
 
@@ -164,70 +159,12 @@ public class Computer implements IPacketHandler, ILuaContext
 		this.coroutineYield = coroutine.get("yield");
 
 		this.apis.add(new OSAPI(this));
-		this.apis.add(new TermAPI(this));
 		this.apis.add(new FSAPI(this));
+		this.apis.add(new TermAPI(this));
 
 		for(final ILuaAPI api : apis)
 		{
-			LuaTable apiTable = new LuaTable();
-			for(final Method method : api.getClass().getMethods())
-			{
-				if(method.isAnnotationPresent(APIMethod.class))
-				{
-					Class<?>[] params = method.getParameterTypes();
-					if(params.length != 2)
-						throw new IllegalArgumentException("Expected parameters ILuaContext, Object[]");
-					if(!params[0].isAssignableFrom(ILuaContext.class))
-						throw new IllegalArgumentException("First parameter of method must be ILuaContext");
-					if(!params[1].isAssignableFrom(Object[].class))
-						throw new IllegalArgumentException("Second parameter of method must be Object[]");
-
-					apiTable.set(method.getName(), new VarArgFunction()
-					{
-						@Override
-						public Varargs invoke(Varargs args)
-						{
-							Object[] rrParams = new Object[2];
-
-							rrParams[0] = Computer.this;
-							rrParams[1] = LuaJValues.toObjects(args, 1);
-
-							Object ret = null;
-							try
-							{
-								ret = method.invoke(api, rrParams);
-							}
-							catch(IllegalAccessException e)
-							{
-								e.printStackTrace();
-							}
-							catch(IllegalArgumentException e)
-							{
-								e.printStackTrace();
-							}
-							catch(InvocationTargetException e)
-							{
-								e.printStackTrace();
-							}
-
-							if(ret != null)
-							{
-								if(ret.getClass().isAssignableFrom(Object[].class))
-								{
-									Object[] o = (Object[]) ret;
-									return LuaValue.varargsOf(LuaJValues.toValues(o, 0));
-								}
-								else if(ret instanceof LuaValue) { return LuaValue.varargsOf(new LuaValue[]
-								{ (LuaValue) ret }); }
-							}
-
-							return LuaValue.varargsOf(new LuaValue[]
-							{ LuaJValues.toValue(ret) });
-						}
-					});
-				}
-			}
-			this.globals.set(api.getName(), apiTable);
+			this.globals.set(api.getName(), LUALib.toLuaObject(this, api));
 		}
 
 		try
@@ -260,7 +197,7 @@ public class Computer implements IPacketHandler, ILuaContext
 				api.onStartup();
 			}
 
-			state = State.RUNNING;
+			this.state = State.RUNNING;
 
 			LuaValue program = this.assert_.call(this.loadString.call(LuaValue.valueOf(kernel), LuaValue.valueOf("kernel")));
 			this.mainRoutine = (LuaThread) this.coroutineCreate.call(program);
@@ -280,9 +217,7 @@ public class Computer implements IPacketHandler, ILuaContext
 	public void tick()
 	{
 		if(!this.tasks.isEmpty())
-		{
 			this.tasks.poll().run();
-		}
 
 		for(ILuaAPI api : apis)
 			api.tick();
@@ -412,9 +347,9 @@ public class Computer implements IPacketHandler, ILuaContext
 
 	public void shutdown()
 	{
-		state = State.STOPPING;
+		this.state = State.STOPPING;
 
-		state = State.OFF;
+		this.state = State.OFF;
 	}
 
 	public void reboot()
@@ -474,7 +409,7 @@ public class Computer implements IPacketHandler, ILuaContext
 
 	public File getRoot()
 	{
-		return root;
+		return this.root;
 	}
 
 	public enum State

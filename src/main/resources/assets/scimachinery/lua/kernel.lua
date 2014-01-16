@@ -23,10 +23,10 @@ end
 
 ---------------------------------------------------------------------------------------------------------
 
-term.writeLine("Booting computer ID " .. os.getComputerID())
+term.writeLine("OWN DAT PUSSEH " .. os.getComputerID())
 
-file = fs.open("test", "w")
-file.writeLine("hello canadia?")
+file = fs.open("test.derp", "w")
+file.writeLine("harro muthafuckah!")
 file.close()
 
 os.shutdown()

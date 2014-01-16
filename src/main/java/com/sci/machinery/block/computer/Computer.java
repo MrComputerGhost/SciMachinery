@@ -11,6 +11,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ChatAllowedCharacters;
 import net.minecraft.world.World;
 import org.luaj.vm2.Globals;
 import org.luaj.vm2.LuaError;
@@ -369,6 +370,12 @@ public class Computer implements IPacketHandler, ILuaContext
 
 	public void keyPressed(char c, int i)
 	{
+		if(i >= 0)
+			handleEvent("key", new Object[]
+			{ i });
+		if(ChatAllowedCharacters.allowedCharacters.indexOf(c) >= 0)
+			handleEvent("char", new Object[]
+			{ c });
 	}
 
 	@Override

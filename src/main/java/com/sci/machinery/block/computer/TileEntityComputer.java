@@ -19,10 +19,18 @@ public class TileEntityComputer extends TileSci
 {
 	private Computer computer;
 
+	private char[][] clientTerm;
+
 	@Override
 	public void validate()
 	{
 		super.validate();
+
+		this.clientTerm = new char[40][29];
+		for(int x = 0; x < 40; x++)
+		{
+			// Arrays.fill(this.clientTerm[x], ' ');
+		}
 
 		if(this.computer == null)
 			this.computer = new Computer(this.worldObj, this);
@@ -85,5 +93,15 @@ public class TileEntityComputer extends TileSci
 	public Computer getComputer()
 	{
 		return this.computer;
+	}
+
+	public void setTermCharacter(int x, int y, char readChar)
+	{
+		clientTerm[x][y] = readChar;
+	}
+
+	public char getTermCharacter(int x, int y)
+	{
+		return clientTerm[x][y];
 	}
 }

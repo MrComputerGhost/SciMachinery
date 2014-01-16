@@ -55,13 +55,19 @@ public class GUIComputerTerminal extends GuiScreen
 		int l = (this.height - this.ySize) / 2;
 		this.drawTexturedModalRect(k, l, 0, 0, this.xSize, this.ySize);
 
-		// 60x29
+		// 40x29
 
 		final float SCALE = 0.65f;
 		GL11.glPushMatrix();
 		GL11.glTranslated(k + 7, l + 6, 0);
 		GL11.glScaled(SCALE, SCALE, SCALE);
-		
+		for(int x = 0; x < 40; x++)
+		{
+			for(int y = 0; y < 29; y++)
+			{
+				fontRenderer.drawString(String.valueOf(this.tileEntity.getTermCharacter(x, y)), x * (fontRenderer.getCharWidth(this.tileEntity.getTermCharacter(x, y))), y * fontRenderer.FONT_HEIGHT, 0x00CC00);
+			}
+		}
 		GL11.glPopMatrix();
 
 		this.drawCenteredString(this.fontRenderer, "Computer", this.width / 2, (l - 10), 16777215);

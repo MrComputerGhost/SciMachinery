@@ -60,8 +60,6 @@ public class Computer implements IPacketHandler, ILuaContext
 	private State state;
 	private Queue<Runnable> tasks;
 
-	private List<Pair<Side, Integer>> packetsToSend;
-
 	public Computer(World world, TileEntityComputer tile)
 	{
 		this(world, CompLib.assignID(), false, tile);
@@ -94,8 +92,6 @@ public class Computer implements IPacketHandler, ILuaContext
 				}
 			}
 		}
-
-		this.packetsToSend = new ArrayList<Pair<Side, Integer>>();
 
 		this.state = State.OFF;
 		this.tile = tile;
@@ -202,7 +198,7 @@ public class Computer implements IPacketHandler, ILuaContext
 			}
 
 			this.state = State.RUNNING;
-			this.sendPacket(Side.CLIENT, 0);
+			this.sendPacketUpdate(Side.CLIENT);
 
 			LuaValue program = this.assert_.call(this.loadString.call(LuaValue.valueOf(bootloader), LuaValue.valueOf("bootloader")));
 			this.mainRoutine = (LuaThread) this.coroutineCreate.call(program);
@@ -234,7 +230,7 @@ public class Computer implements IPacketHandler, ILuaContext
 		{
 			if(term.isDirty())
 			{
-				this.sendPacket(Side.CLIENT, 1);
+				this.sendPacketUpdate(Side.CLIENT);
 			}
 		}
 
@@ -324,36 +320,18 @@ public class Computer implements IPacketHandler, ILuaContext
 	{
 		if(side == Side.CLIENT)
 		{
-			int packetType = din.readInt();
-			switch (packetType)
+			this.state = State.valueOf(din.readUTF());
+			this.world.markBlockForRenderUpdate(this.tile.xCoord, this.tile.yCoord, this.tile.zCoord);
+			for(int x = 0; x < 40; x++)
 			{
-			case 0:
-				this.state = State.valueOf(din.readUTF());
-				this.world.markBlockForRenderUpdate(this.tile.xCoord, this.tile.yCoord, this.tile.zCoord);
-				break;
-			case 1:
-				for(int x = 0; x < 40; x++)
+				for(int y = 0; y < 29; y++)
 				{
-					for(int y = 0; y < 29; y++)
-					{
-						this.tile.setTermCharacter(x, y, din.readChar());
-					}
+					this.tile.setTermCharacter(x, y, din.readChar());
 				}
-				break;
-			default:
-				System.out.println("Received unknown packet!");
-				break;
 			}
 		}
 		else
 		{
-			int packetType = din.readInt();
-			switch (packetType)
-			{
-			default:
-				System.out.println("Received unknown packet!");
-				break;
-			}
 		}
 	}
 
@@ -362,35 +340,26 @@ public class Computer implements IPacketHandler, ILuaContext
 	{
 		if(side == Side.CLIENT) // sending to client
 		{
-			int type = this.packetsToSend.get(0).getV();
-			dout.write(type);
-			switch (type)
+			dout.writeUTF(this.state.name());
+			TermAPI term = null;
+			for(ILuaAPI api : apis)
 			{
-			case 0:
-				dout.writeUTF(this.state.name());
-			case 1:
-				TermAPI term = null;
-				for(ILuaAPI api : apis)
+				if(api instanceof TermAPI)
 				{
-					if(api instanceof TermAPI)
-					{
-						term = (TermAPI) api;
-						break;
-					}
+					term = (TermAPI) api;
+					break;
 				}
-				if(term != null)
-				{
-					for(int x = 0; x < 40; x++)
-					{
-						for(int y = 0; y < 29; y++)
-						{
-							dout.writeChar(term.getCharacter(x, y));
-						}
-					}
-				}
-				break;
 			}
-			this.packetsToSend.remove(0);
+			if(term != null)
+			{
+				for(int x = 0; x < 40; x++)
+				{
+					for(int y = 0; y < 29; y++)
+					{
+						dout.writeChar(term.getCharacter(x, y));
+					}
+				}
+			}
 		}
 		else
 		{
@@ -400,11 +369,6 @@ public class Computer implements IPacketHandler, ILuaContext
 
 	public void keyPressed(char c, int i)
 	{
-	}
-
-	public void sendPacket(Side side, int type)
-	{
-		packetsToSend.add(new Pair<Side, Integer>(side, type));
 	}
 
 	@Override
@@ -418,7 +382,7 @@ public class Computer implements IPacketHandler, ILuaContext
 		this.state = State.STOPPING;
 
 		this.state = State.OFF;
-		this.sendPacket(Side.CLIENT, 0);
+		this.sendPacketUpdate(Side.CLIENT);
 	}
 
 	public void reboot()

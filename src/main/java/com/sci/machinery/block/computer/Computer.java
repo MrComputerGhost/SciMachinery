@@ -169,7 +169,7 @@ public class Computer implements IPacketHandler, ILuaContext
 
 		try
 		{
-			String kernel = null;
+			String bootloader = null;
 			try
 			{
 				BufferedReader reader = new BufferedReader(new InputStreamReader(Computer.class.getResourceAsStream("/assets/scimachinery/lua/bootloader.lua")));
@@ -185,7 +185,7 @@ public class Computer implements IPacketHandler, ILuaContext
 					}
 
 				}
-				kernel = fileText.toString();
+				bootloader = fileText.toString();
 			}
 			catch(IOException e)
 			{
@@ -199,7 +199,7 @@ public class Computer implements IPacketHandler, ILuaContext
 
 			this.state = State.RUNNING;
 
-			LuaValue program = this.assert_.call(this.loadString.call(LuaValue.valueOf(kernel), LuaValue.valueOf("bootloader")));
+			LuaValue program = this.assert_.call(this.loadString.call(LuaValue.valueOf(bootloader), LuaValue.valueOf("bootloader")));
 			this.mainRoutine = (LuaThread) this.coroutineCreate.call(program);
 		}
 		catch(LuaError e)

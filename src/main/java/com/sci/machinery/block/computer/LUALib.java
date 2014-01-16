@@ -21,6 +21,7 @@ public final class LUALib
 		LuaTable table = new LuaTable();
 		for(final Method method : obj.getClass().getMethods())
 		{
+			method.setAccessible(true);
 			if(method.isAnnotationPresent(APIMethod.class))
 			{
 				Class<?>[] params = method.getParameterTypes();

@@ -4,8 +4,11 @@ import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -86,6 +89,17 @@ public class Computer implements IPacketHandler, ILuaContext
 					root = new File(CompLib.getSMCFolder(this.world), String.valueOf(this.id));
 					if(!root.exists())
 						root.mkdirs();
+
+					InputStream in = Computer.class.getResourceAsStream("/assets/scimachinery/lua/os/kernel.lua");
+					OutputStream out = new FileOutputStream(new File(root, "kernel.lua"));
+					int readBytes = 0;
+					byte[] buffer = new byte[4096];
+					while((readBytes = in.read(buffer)) > 0)
+					{
+						out.write(buffer, 0, readBytes);
+					}
+					in.close();
+					out.close();
 				}
 				catch(IOException e)
 				{
@@ -143,7 +157,6 @@ public class Computer implements IPacketHandler, ILuaContext
 
 		this.globals.set("collectgarbage", LuaValue.NIL);
 		this.globals.set("dofile", LuaValue.NIL);
-		this.globals.set("load", LuaValue.NIL);
 		this.globals.set("loadfile", LuaValue.NIL);
 		this.globals.set("module", LuaValue.NIL);
 		this.globals.set("require", LuaValue.NIL);

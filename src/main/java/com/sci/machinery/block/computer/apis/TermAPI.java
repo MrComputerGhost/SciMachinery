@@ -44,6 +44,12 @@ public class TermAPI extends LuaAPI
 	}
 
 	@APIMethod
+	public void debug(ILuaContext context, Object[] args)
+	{
+		System.out.println(args[0]);
+	}
+
+	@APIMethod
 	public void setCharacter(ILuaContext context, Object[] args)
 	{
 		if(args.length != 3)

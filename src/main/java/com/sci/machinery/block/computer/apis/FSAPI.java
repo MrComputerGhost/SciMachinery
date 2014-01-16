@@ -70,12 +70,16 @@ public class FSAPI extends LuaAPI
 			switch (mode)
 			{
 			case R:
+				if(!file.exists())
+					return null;
 				return wrapBufferedReader(computer, new BufferedReader(new FileReader(file)));
 			case W:
 				return wrapBufferedWriter(computer, new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file, false))));
 			case A:
 				return wrapBufferedWriter(computer, new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file, true))));
 			case RB:
+				if(!file.exists())
+					return null;
 				return wrapInputStream(computer, new FileInputStream(file));
 			case WB:
 				return wrapOutputStream(computer, new FileOutputStream(file, false));
@@ -87,11 +91,12 @@ public class FSAPI extends LuaAPI
 		}
 		catch(Exception e)
 		{
+			e.printStackTrace();
 		}
 		return null;
 	}
 
-	private static LuaTable wrapBufferedReader(final ILuaContext context, final BufferedReader reader)
+	private LuaTable wrapBufferedReader(final ILuaContext context, final BufferedReader reader)
 	{
 		return LUALib.toLuaObject(context, new ILuaObject()
 		{
@@ -151,7 +156,7 @@ public class FSAPI extends LuaAPI
 		});
 	}
 
-	private static LuaTable wrapBufferedWriter(final ILuaContext context, final BufferedWriter writer)
+	private LuaTable wrapBufferedWriter(final ILuaContext context, final BufferedWriter writer)
 	{
 		return LUALib.toLuaObject(context, new ILuaObject()
 		{
@@ -220,7 +225,7 @@ public class FSAPI extends LuaAPI
 		});
 	}
 
-	private static LuaTable wrapInputStream(final ILuaContext context, final InputStream in)
+	private LuaTable wrapInputStream(final ILuaContext context, final InputStream in)
 	{
 		return LUALib.toLuaObject(context, new ILuaObject()
 		{
@@ -259,7 +264,7 @@ public class FSAPI extends LuaAPI
 		});
 	}
 
-	private static LuaTable wrapOutputStream(final ILuaContext context, final OutputStream out)
+	private LuaTable wrapOutputStream(final ILuaContext context, final OutputStream out)
 	{
 		return LUALib.toLuaObject(context, new ILuaObject()
 		{

@@ -3,6 +3,7 @@ package com.sci.machinery.block.computer;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
 import net.minecraft.nbt.NBTTagCompound;
 import com.sci.machinery.block.TileSci;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -29,7 +30,7 @@ public class TileEntityComputer extends TileSci
 		this.clientTerm = new char[40][29];
 		for(int x = 0; x < 40; x++)
 		{
-			// Arrays.fill(this.clientTerm[x], ' ');
+			Arrays.fill(this.clientTerm[x], ' ');
 		}
 
 		if(this.computer == null)

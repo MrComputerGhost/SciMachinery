@@ -1,17 +1,41 @@
+--bootloader essential functions
+
+function sleep(time)
+        local timer = os.startTimer(time)
+        repeat
+                local evt, param = os.pullEvent("timer")
+        until param == timer
+end
+
+local nativeShutdown = os.shutdown
+function os.shutdown()
+        nativeShutdown()
+        while true do
+                coroutine.yield()
+        end
+end
+
+local nativeReboot = os.reboot
+function os.reboot()
+        nativeReboot()
+        while true do
+                coroutine.yield()
+        end
+end
+
 local function write(x, y, string)
 	for i = 1, #string do
-		local c = string:sub(i,i)
-		term.setCharacter(x+i, y, c)
+		local c = string:sub(i, i)
+		term.setCharacter(x + i, y, c)
 	end
 end
+
+---------------------------------------------------------------------------------------------------------
 
 write(0, 0, "Could not locate OS!")
 write(0, 1, "Shutting down in 10 seconds!")
 
-local timer = os.startTimer(10)
-repeat
-	local evt, param = os.pullEvent("timer")
-until param == timer
+sleep(10)
 
 os.shutdown()
 while true do

@@ -1,5 +1,6 @@
 package com.sci.machinery.block.computer.apis;
 
+import java.util.Arrays;
 import com.sci.machinery.api.ILuaContext;
 import com.sci.machinery.block.computer.Computer;
 
@@ -14,7 +15,7 @@ public class TermAPI extends LuaAPI
 		this.screen = new char[40][29];
 		for(int x = 0; x < 40; x++)
 		{
-			// Arrays.fill(this.screen[x], ' ');
+			Arrays.fill(this.screen[x], ' ');
 		}
 	}
 

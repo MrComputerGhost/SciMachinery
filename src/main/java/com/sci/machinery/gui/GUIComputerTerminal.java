@@ -24,9 +24,6 @@ public class GUIComputerTerminal extends GuiScreen
 	private final int ySize = 180;
 	private TileEntityComputer tileEntity;
 
-	private int timer;
-	private boolean cursor;
-
 	public GUIComputerTerminal(TileEntityComputer tileEntity)
 	{
 		this.tileEntity = tileEntity;
@@ -40,12 +37,6 @@ public class GUIComputerTerminal extends GuiScreen
 	@Override
 	public void updateScreen()
 	{
-		timer++;
-		if(timer == 10)
-		{
-			timer = 0;
-			cursor = !cursor;
-		}
 	}
 
 	@Override
@@ -64,11 +55,13 @@ public class GUIComputerTerminal extends GuiScreen
 		int l = (this.height - this.ySize) / 2;
 		this.drawTexturedModalRect(k, l, 0, 0, this.xSize, this.ySize);
 
+		// 60x29
+
 		final float SCALE = 0.65f;
 		GL11.glPushMatrix();
-		GL11.glTranslated(k + 7, l + 7, 0);
+		GL11.glTranslated(k + 7, l + 6, 0);
 		GL11.glScaled(SCALE, SCALE, SCALE);
-		fontRenderer.drawString("root@smc:~$" + (cursor ? " _" : ""), 0, 0, 0x00CC00);
+		
 		GL11.glPopMatrix();
 
 		this.drawCenteredString(this.fontRenderer, "Computer", this.width / 2, (l - 10), 16777215);

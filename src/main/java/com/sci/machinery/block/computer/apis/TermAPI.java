@@ -5,9 +5,12 @@ import com.sci.machinery.block.computer.Computer;
 
 public class TermAPI extends LuaAPI
 {
+	private char[][] screen;
+
 	public TermAPI(Computer computer)
 	{
 		super(computer);
+		this.screen = new char[60][29];
 	}
 
 	@Override
@@ -35,10 +38,13 @@ public class TermAPI extends LuaAPI
 	}
 
 	@APIMethod
-	public void writeLine(ILuaContext context, Object[] args)
+	public void setCharacter(ILuaContext context, Object[] args)
 	{
-		if(args.length != 1)
-			throw new IllegalArgumentException("Invalid number of arguments!");
-		System.out.println(args[0]);
+		if(args.length != 3)
+			throw new IllegalArgumentException("Expected arguments: x, y, character");
+		if(String.valueOf(args[2]).length() != 1)
+			throw new IllegalArgumentException("Got string expected character");
+
+		screen[Integer.valueOf(String.valueOf(args[0]))][Integer.valueOf(String.valueOf(args[1]))] = String.valueOf(args[2]).charAt(0);
 	}
 }

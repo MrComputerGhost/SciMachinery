@@ -23,10 +23,6 @@ end
 
 ---------------------------------------------------------------------------------------------------------
 
-term.writeLine("OWN DAT PUSSEH " .. os.getComputerID())
-
-file = fs.open("test.derp", "w")
-file.writeLine("harro muthafuckah!")
-file.close()
+sleep(10)
 
 os.shutdown()

@@ -198,6 +198,7 @@ public class Computer implements IPacketHandler, ILuaContext
 			}
 
 			this.state = State.RUNNING;
+			this.sendPacketUpdate(Side.CLIENT);
 
 			LuaValue program = this.assert_.call(this.loadString.call(LuaValue.valueOf(bootloader), LuaValue.valueOf("bootloader")));
 			this.mainRoutine = (LuaThread) this.coroutineCreate.call(program);
@@ -305,6 +306,10 @@ public class Computer implements IPacketHandler, ILuaContext
 			int packetType = din.readInt();
 			switch (packetType)
 			{
+			case 0:
+				this.state = State.valueOf(din.readUTF());
+				this.world.markBlockForRenderUpdate(this.tile.xCoord, this.tile.yCoord, this.tile.zCoord);
+				break;
 			default:
 				System.out.println("Received unknown packet!");
 				break;
@@ -327,7 +332,8 @@ public class Computer implements IPacketHandler, ILuaContext
 	{
 		if(side == Side.CLIENT) // sending to client
 		{
-
+			dout.writeInt(0);
+			dout.writeUTF(this.state.name());
 		}
 		else
 		{
@@ -350,6 +356,7 @@ public class Computer implements IPacketHandler, ILuaContext
 		this.state = State.STOPPING;
 
 		this.state = State.OFF;
+		this.sendPacketUpdate(Side.CLIENT);
 	}
 
 	public void reboot()

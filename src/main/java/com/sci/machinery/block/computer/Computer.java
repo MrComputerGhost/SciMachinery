@@ -412,6 +412,11 @@ public class Computer implements IPacketHandler, ILuaContext
 		return this.root;
 	}
 
+	public State getState()
+	{
+		return this.state;
+	}
+
 	public enum State
 	{
 		RUNNING, STARTING, STOPPING, OFF;

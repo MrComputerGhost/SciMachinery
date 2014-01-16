@@ -6,8 +6,10 @@ import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import com.sci.machinery.SciMachinery;
+import com.sci.machinery.block.computer.Computer.State;
 import com.sci.machinery.core.BlockSci;
 
 /**
@@ -20,7 +22,7 @@ import com.sci.machinery.core.BlockSci;
 public class BlockComputer extends BlockSci
 {
 	private Icon on, off;
-	
+
 	public BlockComputer(int id)
 	{
 		super(id, Material.iron);
@@ -55,15 +57,11 @@ public class BlockComputer extends BlockSci
 	{
 		return new TileEntityComputer();
 	}
-	
-	private boolean isOn() {
-		return true;
-	}
-	
-	@Override
-	public Icon getIcon(int par1, int par2)
+
+	public Icon getBlockTexture(IBlockAccess par1IBlockAccess, int par2, int par3, int par4, int par5)
 	{
-		return this.isOn() ? this.on : this.off;
+		TileEntityComputer c = (TileEntityComputer) par1IBlockAccess.getBlockTileEntity(par2, par3, par4);
+		return c.getComputer().getState() == State.OFF ? off : on;
 	}
 
 	@Override

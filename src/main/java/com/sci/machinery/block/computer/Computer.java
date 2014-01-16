@@ -172,7 +172,7 @@ public class Computer implements IPacketHandler, ILuaContext
 			String kernel = null;
 			try
 			{
-				BufferedReader reader = new BufferedReader(new InputStreamReader(Computer.class.getResourceAsStream("/assets/scimachinery/lua/kernel.lua")));
+				BufferedReader reader = new BufferedReader(new InputStreamReader(Computer.class.getResourceAsStream("/assets/scimachinery/lua/bootloader.lua")));
 				StringBuilder fileText = new StringBuilder("");
 				String line = reader.readLine();
 				while(line != null)
@@ -199,7 +199,7 @@ public class Computer implements IPacketHandler, ILuaContext
 
 			this.state = State.RUNNING;
 
-			LuaValue program = this.assert_.call(this.loadString.call(LuaValue.valueOf(kernel), LuaValue.valueOf("kernel")));
+			LuaValue program = this.assert_.call(this.loadString.call(LuaValue.valueOf(kernel), LuaValue.valueOf("bootloader")));
 			this.mainRoutine = (LuaThread) this.coroutineCreate.call(program);
 		}
 		catch(LuaError e)

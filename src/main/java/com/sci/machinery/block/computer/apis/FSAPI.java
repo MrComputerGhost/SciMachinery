@@ -48,11 +48,6 @@ public class FSAPI extends LuaAPI
 		return "fs";
 	}
 
-	private enum FileMode
-	{
-		R, W, A, RB, WB, AB
-	}
-
 	@APIMethod
 	public LuaTable open(ILuaContext context, Object[] args)
 	{
@@ -89,7 +84,6 @@ public class FSAPI extends LuaAPI
 			default:
 				throw new Exception("Unsupported mode");
 			}
-
 		}
 		catch(Exception e)
 		{
@@ -300,5 +294,10 @@ public class FSAPI extends LuaAPI
 				return LuaValue.NIL;
 			}
 		});
+	}
+
+	private enum FileMode
+	{
+		R, W, A, RB, WB, AB
 	}
 }

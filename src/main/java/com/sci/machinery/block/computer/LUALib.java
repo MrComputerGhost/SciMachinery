@@ -36,10 +36,8 @@ public final class LUALib
 					@Override
 					public Varargs invoke(Varargs args)
 					{
-						Object[] rrParams = new Object[2];
-
-						rrParams[0] = computer;
-						rrParams[1] = LuaJValues.toObjects(args, 1);
+						Object[] rrParams = new Object[]
+						{ computer, LuaJValues.toObjects(args, 1) };
 
 						Object ret = null;
 						try

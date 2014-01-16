@@ -91,9 +91,9 @@ public class FSAPI extends LuaAPI
 		return null;
 	}
 
-	private static LuaTable wrapBufferedReader(final Computer computer, final BufferedReader reader)
+	private static LuaTable wrapBufferedReader(final ILuaContext context, final BufferedReader reader)
 	{
-		return LUALib.toLuaObject(computer, new ILuaObject()
+		return LUALib.toLuaObject(context, new ILuaObject()
 		{
 			@APIMethod
 			public LuaValue readLine(ILuaContext context, Object[] args)
@@ -151,9 +151,9 @@ public class FSAPI extends LuaAPI
 		});
 	}
 
-	private static LuaTable wrapBufferedWriter(final Computer computer, final BufferedWriter writer)
+	private static LuaTable wrapBufferedWriter(final ILuaContext context, final BufferedWriter writer)
 	{
-		return LUALib.toLuaObject(computer, new ILuaObject()
+		return LUALib.toLuaObject(context, new ILuaObject()
 		{
 			@APIMethod
 			public LuaValue write(ILuaContext context, Object[] args)
@@ -220,9 +220,9 @@ public class FSAPI extends LuaAPI
 		});
 	}
 
-	private static LuaTable wrapInputStream(final Computer computer, final InputStream in)
+	private static LuaTable wrapInputStream(final ILuaContext context, final InputStream in)
 	{
-		return LUALib.toLuaObject(computer, new ILuaObject()
+		return LUALib.toLuaObject(context, new ILuaObject()
 		{
 			@APIMethod
 			public LuaValue read(ILuaContext context, Object[] args)
@@ -259,9 +259,9 @@ public class FSAPI extends LuaAPI
 		});
 	}
 
-	private static LuaTable wrapOutputStream(final Computer computer, final OutputStream out)
+	private static LuaTable wrapOutputStream(final ILuaContext context, final OutputStream out)
 	{
-		return LUALib.toLuaObject(computer, new ILuaObject()
+		return LUALib.toLuaObject(context, new ILuaObject()
 		{
 			@APIMethod
 			public LuaValue write(ILuaContext context, Object[] args)

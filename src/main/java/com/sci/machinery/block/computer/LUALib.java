@@ -16,7 +16,7 @@ public final class LUALib
 	{
 	}
 
-	public static LuaTable toLuaObject(final Computer computer, final ILuaObject obj)
+	public static LuaTable toLuaObject(final ILuaContext context, final ILuaObject obj)
 	{
 		LuaTable table = new LuaTable();
 		for(final Method method : obj.getClass().getMethods())
@@ -37,7 +37,7 @@ public final class LUALib
 					public Varargs invoke(Varargs args)
 					{
 						Object[] rrParams = new Object[]
-						{ computer, LuaJValues.toObjects(args, 1) };
+						{ context, LuaJValues.toObjects(args, 1) };
 
 						Object ret = null;
 						try

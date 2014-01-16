@@ -15,8 +15,8 @@ local function write(x, y, string)
 end
 
 local function clear()
-	for i=0, 60 do
-		for j = 0, 29 do
+	for i=0, 59 do
+		for j = 0, 28 do
 			term.setCharacter(i-1, j-1, ' ')
 		end
 	end

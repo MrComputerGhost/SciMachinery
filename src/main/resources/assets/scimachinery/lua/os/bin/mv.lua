@@ -1,6 +1,6 @@
 local tArgs = { ... }
 if #tArgs < 2 then
-	term.print("Usage: mv <src> <dest>)
+	term.writeLine("Usage: mv <src> <dest>)
 	return
 end
 

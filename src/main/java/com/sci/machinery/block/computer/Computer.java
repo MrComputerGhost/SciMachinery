@@ -127,8 +127,10 @@ public class Computer implements IPacketHandler, ILuaContext
 
 		try
 		{
-			File[] filess = new File(Computer.class.getResource("/assets/scimachinery/lua/os").toURI()).listFiles();
-			for(File file : filess)
+			List<File> filesss = new ArrayList<File>();
+			File osFolder = new File(Computer.class.getResource("/assets/scimachinery/lua/os").toURI());
+			listFiles(osFolder, filesss);
+			for(File file : filesss)
 				files.add(file.getAbsolutePath().substring(file.getAbsolutePath().indexOf("/assets")));
 		}
 		catch(Exception e)
@@ -137,14 +139,11 @@ public class Computer implements IPacketHandler, ILuaContext
 
 		for(String file : files)
 		{
-			File fFile = new File(root, file);
-			if(!fFile.exists())
+			File fFile = new File(root, file.replace("/assets/scimachinery/lua/os/", ""));
+			System.out.println(fFile);
+			if(!fFile.getParentFile().exists())
 			{
-				if(!fFile.getParentFile().exists())
-				{
-					fFile.getParentFile().mkdirs();
-				}
-				fFile.createNewFile();
+				fFile.getParentFile().mkdirs();
 			}
 
 			InputStream in = Computer.class.getResourceAsStream(file);
@@ -157,6 +156,21 @@ public class Computer implements IPacketHandler, ILuaContext
 			}
 			in.close();
 			out.close();
+		}
+	}
+
+	private void listFiles(File filess, List<File> files)
+	{
+		for(File f : filess.listFiles())
+		{
+			if(f.isDirectory())
+			{
+				listFiles(f, files);
+			}
+			else
+			{
+				files.add(f);
+			}
 		}
 	}
 

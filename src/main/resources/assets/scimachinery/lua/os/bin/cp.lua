@@ -1,6 +1,6 @@
 local tArgs = { ... }
 if #tArgs < 2 then
-	term.print("Usage: cp <src> <dest>)
+	term.writeLine("Usage: cp <src> <dest>)
 	return
 end
 

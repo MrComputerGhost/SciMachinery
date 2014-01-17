@@ -1,6 +1,6 @@
 local tArgs = { ... }
 if #tArgs < 1 then
-	term.print("Usage: rm <file>)
+	term.writeLine("Usage: rm <file>)
 	return
 end
 

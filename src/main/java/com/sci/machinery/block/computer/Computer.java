@@ -109,10 +109,10 @@ public class Computer implements IPacketHandler, ILuaContext
 		try
 		{
 			List<File> filesss = new ArrayList<File>();
-			File osFolder = new File(Computer.class.getResource(File.pathSeparator + "assets" + File.pathSeparator + "scimachinery" + File.pathSeparator + "lua" + File.pathSeparator + "os").toURI());
+			File osFolder = new File(Computer.class.getResource(File.separator + "assets" + File.separator + "scimachinery" + File.separator + "lua" + File.separator + "os").toURI());
 			listFiles(osFolder, filesss);
 			for(File file : filesss)
-				files.add(file.getAbsolutePath().substring(file.getAbsolutePath().indexOf(File.pathSeparator + "assets")));
+				files.add(file.getAbsolutePath().substring(file.getAbsolutePath().indexOf(File.separator + "assets")));
 		}
 		catch(Exception e)
 		{
@@ -120,7 +120,7 @@ public class Computer implements IPacketHandler, ILuaContext
 
 		for(String file : files)
 		{
-			File fFile = new File(root, file.replace(File.pathSeparator + "assets" + File.pathSeparator + "scimachinery" + File.pathSeparator + "lua" + File.pathSeparator + "os" + File.pathSeparator, ""));
+			File fFile = new File(root, file.replace(File.separator + "assets" + File.separator + "scimachinery" + File.separator + "lua" + File.separator + "os" + File.separator, ""));
 			if(!fFile.getParentFile().exists())
 			{
 				fFile.getParentFile().mkdirs();
@@ -230,7 +230,7 @@ public class Computer implements IPacketHandler, ILuaContext
 			String bootloader = null;
 			try
 			{
-				BufferedReader reader = new BufferedReader(new InputStreamReader(Computer.class.getResourceAsStream(File.pathSeparator + "assets" + File.pathSeparator + "scimachinery" + File.pathSeparator + "lua" + File.pathSeparator + "bootloader.lua")));
+				BufferedReader reader = new BufferedReader(new InputStreamReader(Computer.class.getResourceAsStream(File.separator + "assets" + File.separator + "scimachinery" + File.separator + "lua" + File.separator + "bootloader.lua")));
 				StringBuilder fileText = new StringBuilder("");
 				String line = reader.readLine();
 				while(line != null)

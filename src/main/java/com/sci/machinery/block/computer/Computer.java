@@ -140,7 +140,7 @@ public class Computer implements IPacketHandler, ILuaContext
 
 		if(state != State.OFF)
 			return;
-		
+
 		this.tasks.clear();
 		this.apis.clear();
 
@@ -407,12 +407,15 @@ public class Computer implements IPacketHandler, ILuaContext
 
 	public void keyPressed(char c, int i)
 	{
-		if(i >= 0)
-			handleEvent("key", new Object[]
-			{ i });
-		if(ChatAllowedCharacters.allowedCharacters.indexOf(c) >= 0)
-			handleEvent("char", new Object[]
-			{ c });
+		if(this.state == State.RUNNING)
+		{
+			if(i >= 0)
+				handleEvent("key", new Object[]
+				{ i });
+			if(ChatAllowedCharacters.allowedCharacters.indexOf(c) >= 0)
+				handleEvent("char", new Object[]
+				{ c });
+		}
 	}
 
 	@Override

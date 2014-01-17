@@ -169,7 +169,6 @@ public class Computer implements IPacketHandler, ILuaContext
 					@Override
 					public LuaValue call()
 					{
-						System.out.println("Too long without yielding!");
 						mainRoutine.state.lua_yield(LuaValue.varargsOf(new LuaValue[]
 						{ LuaValue.NIL }));
 						return LuaValue.NIL;

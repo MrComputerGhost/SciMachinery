@@ -109,10 +109,10 @@ public class Computer implements IPacketHandler, ILuaContext
 		try
 		{
 			List<File> filesss = new ArrayList<File>();
-			File osFolder = new File(Computer.class.getResource("/assets/scimachinery/lua/os").toURI());
+			File osFolder = new File(Computer.class.getResource(File.pathSeparator + "assets" + File.pathSeparator + "scimachinery" + File.pathSeparator + "lua" + File.pathSeparator + "os").toURI());
 			listFiles(osFolder, filesss);
 			for(File file : filesss)
-				files.add(file.getAbsolutePath().substring(file.getAbsolutePath().indexOf("/assets")));
+				files.add(file.getAbsolutePath().substring(file.getAbsolutePath().indexOf(File.pathSeparator + "assets")));
 		}
 		catch(Exception e)
 		{
@@ -120,7 +120,7 @@ public class Computer implements IPacketHandler, ILuaContext
 
 		for(String file : files)
 		{
-			File fFile = new File(root, file.replace("/assets/scimachinery/lua/os/", ""));
+			File fFile = new File(root, file.replace(File.pathSeparator + "assets" + File.pathSeparator + "scimachinery" + File.pathSeparator + "lua" + File.pathSeparator + "os" + File.pathSeparator, ""));
 			if(!fFile.getParentFile().exists())
 			{
 				fFile.getParentFile().mkdirs();
@@ -230,7 +230,7 @@ public class Computer implements IPacketHandler, ILuaContext
 			String bootloader = null;
 			try
 			{
-				BufferedReader reader = new BufferedReader(new InputStreamReader(Computer.class.getResourceAsStream("/assets/scimachinery/lua/bootloader.lua")));
+				BufferedReader reader = new BufferedReader(new InputStreamReader(Computer.class.getResourceAsStream(File.pathSeparator + "assets" + File.pathSeparator + "scimachinery" + File.pathSeparator + "lua" + File.pathSeparator + "bootloader.lua")));
 				StringBuilder fileText = new StringBuilder("");
 				String line = reader.readLine();
 				while(line != null)

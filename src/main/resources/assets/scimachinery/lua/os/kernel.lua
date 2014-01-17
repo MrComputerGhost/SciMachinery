@@ -62,13 +62,8 @@ end
 
 local state = false
 while true do
-	local timer = os.startTimer(0.5)
-	repeat
-		local sEvent, b = os.pullEvent("timer")
-	until b == timer
-	
+	os.sleep(0.5)
 	state = not state
-	
 	if state then
 		term.setCharacter(0, 0, '>')
 	else

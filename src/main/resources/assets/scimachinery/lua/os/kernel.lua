@@ -60,6 +60,4 @@ for n, file in ipairs(apis) do
 	end
 end
 
-
-
-os.shutdown()
+error

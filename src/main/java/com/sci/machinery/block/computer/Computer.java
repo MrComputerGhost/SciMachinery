@@ -140,6 +140,9 @@ public class Computer implements IPacketHandler, ILuaContext
 
 		if(state != State.OFF)
 			return;
+		
+		this.tasks.clear();
+		this.apis.clear();
 
 		this.state = State.STARTING;
 
@@ -421,9 +424,6 @@ public class Computer implements IPacketHandler, ILuaContext
 	public void shutdown()
 	{
 		this.state = State.STOPPING;
-
-		this.tasks.clear();
-		this.apis.clear();
 
 		this.state = State.OFF;
 		this.sendPacketUpdate(Side.CLIENT);

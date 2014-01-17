@@ -6,7 +6,7 @@ function os.shutdown()
 	end	
 end
 
-local nativeReboot os.reboot
+local nativeReboot = os.reboot
 function os.reboot()
 	nativeReboot()
 	while true do

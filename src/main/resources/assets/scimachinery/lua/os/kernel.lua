@@ -52,24 +52,3 @@ for n, file in ipairs(apis) do
 		end
 	end
 end
-
---for shits and giggles:
-
-local function write(x, y, string)
-	for i = 1, #string do
-		local c = string:sub(i, i)
-		term.setCharacter(x + i, y, c)
-	end
-end
-
-write(0, 0, "root@smc:~$")
-local state = false
-while true do
-	os.sleep(0.5)
-	state = not state
-	if state then
-		term.setCharacter(12, 0, '_')
-	else
-		term.setCharacter(12, 0, ' ')
-	end
-end

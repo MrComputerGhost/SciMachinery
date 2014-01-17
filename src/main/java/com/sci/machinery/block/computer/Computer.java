@@ -109,7 +109,7 @@ public class Computer implements IPacketHandler, ILuaContext
 		try
 		{
 			List<File> filesss = new ArrayList<File>();
-			File osFolder = new File(Computer.class.getResource(File.separator + "assets" + File.separator + "scimachinery" + File.separator + "lua" + File.separator + "os").toURI());
+			File osFolder = new File(Computer.class.getResource("/assets/scimachinery/lua/os").toURI());
 			listFiles(osFolder, filesss);
 			for(File file : filesss)
 				files.add(file.getAbsolutePath().substring(file.getAbsolutePath().indexOf(File.separator + "assets")));
@@ -230,7 +230,7 @@ public class Computer implements IPacketHandler, ILuaContext
 			String bootloader = null;
 			try
 			{
-				BufferedReader reader = new BufferedReader(new InputStreamReader(Computer.class.getResourceAsStream(File.separator + "assets" + File.separator + "scimachinery" + File.separator + "lua" + File.separator + "bootloader.lua")));
+				BufferedReader reader = new BufferedReader(new InputStreamReader(Computer.class.getResourceAsStream("/assets/scimachinery/lua/bootloader.lua")));
 				StringBuilder fileText = new StringBuilder("");
 				String line = reader.readLine();
 				while(line != null)

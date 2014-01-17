@@ -422,18 +422,8 @@ public class Computer implements IPacketHandler, ILuaContext
 	{
 		this.state = State.STOPPING;
 
-		this.mainRoutine = null;
-
 		this.tasks.clear();
 		this.apis.clear();
-		this.mainRoutine = null;
-		this.assert_ = null;
-		this.loadString = null;
-		this.coroutineCreate = null;
-		this.coroutineResume = null;
-		this.coroutineYield = null;
-		this.globals = null;
-		this.eventFilter = null;
 
 		this.state = State.OFF;
 		this.sendPacketUpdate(Side.CLIENT);

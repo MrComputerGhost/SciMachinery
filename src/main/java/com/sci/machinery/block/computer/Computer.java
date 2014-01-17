@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -28,8 +29,8 @@ import com.sci.machinery.api.ILuaAPI;
 import com.sci.machinery.api.ILuaContext;
 import com.sci.machinery.api.IPacketHandler;
 import com.sci.machinery.block.computer.apis.FSAPI;
+import com.sci.machinery.block.computer.apis.GPUAPI;
 import com.sci.machinery.block.computer.apis.OSAPI;
-import com.sci.machinery.block.computer.apis.TermAPI;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 
@@ -102,10 +103,37 @@ public class Computer implements IPacketHandler, ILuaContext
 		this.tile = tile;
 	}
 
+	private static File getLoadingJar(Class modClass)
+	{
+		String path = modClass.getProtectionDomain().getCodeSource().getLocation().getPath();
+		int bangIndex = path.indexOf("!");
+		if(bangIndex >= 0)
+		{
+			path = path.substring(0, bangIndex);
+		}
+		try
+		{
+			return new File(new URL(path).toURI());
+		}
+		catch(Exception e)
+		{
+		}
+		return null;
+	}
+
 	private void copyFS() throws IOException
 	{
-		String[] files = new String[]
-		{ "kernel.lua", "lib/os.lua" };
+		List<String> files = new ArrayList<String>();
+
+		try
+		{
+			File[] filess = new File(Computer.class.getResource("/assets/scimachinery/lua/os").toURI()).listFiles();
+			for(File file : filess)
+				files.add(file.getAbsolutePath().substring(file.getAbsolutePath().indexOf("/assets")));
+		}
+		catch(Exception e)
+		{
+		}
 
 		for(String file : files)
 		{
@@ -119,7 +147,7 @@ public class Computer implements IPacketHandler, ILuaContext
 				fFile.createNewFile();
 			}
 
-			InputStream in = Computer.class.getResourceAsStream("/assets/scimachinery/lua/os/" + file);
+			InputStream in = Computer.class.getResourceAsStream(file);
 			OutputStream out = new FileOutputStream(fFile);
 			int readBytes = 0;
 			byte[] buffer = new byte[4096];
@@ -176,7 +204,7 @@ public class Computer implements IPacketHandler, ILuaContext
 				return thread;
 			}
 		});
-		
+
 		this.globals.set("collectgarbage", LuaValue.NIL);
 		this.globals.set("dofile", LuaValue.NIL);
 		this.globals.set("loadfile", LuaValue.NIL);
@@ -196,7 +224,7 @@ public class Computer implements IPacketHandler, ILuaContext
 
 		this.apis.add(new OSAPI(this));
 		this.apis.add(new FSAPI(this));
-		this.apis.add(new TermAPI(this));
+		this.apis.add(new GPUAPI(this));
 
 		for(final ILuaAPI api : apis)
 		{
@@ -253,12 +281,12 @@ public class Computer implements IPacketHandler, ILuaContext
 
 	public void tick()
 	{
-		TermAPI term = null;
+		GPUAPI term = null;
 		for(ILuaAPI api : apis)
 		{
-			if(api instanceof TermAPI)
+			if(api instanceof GPUAPI)
 			{
-				term = (TermAPI) api;
+				term = (GPUAPI) api;
 				break;
 			}
 		}
@@ -377,12 +405,12 @@ public class Computer implements IPacketHandler, ILuaContext
 		if(side == Side.CLIENT) // sending to client
 		{
 			dout.writeUTF(this.state.name());
-			TermAPI term = null;
+			GPUAPI term = null;
 			for(ILuaAPI api : apis)
 			{
-				if(api instanceof TermAPI)
+				if(api instanceof GPUAPI)
 				{
-					term = (TermAPI) api;
+					term = (GPUAPI) api;
 					break;
 				}
 			}

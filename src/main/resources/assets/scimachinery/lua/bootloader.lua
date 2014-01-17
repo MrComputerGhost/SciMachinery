@@ -3,14 +3,14 @@
 local function write(x, y, string)
 	for i = 1, #string do
 		local c = string:sub(i, i)
-		term.setCharacter(x + i, y, c)
+		gpu.setCharacter(x + i, y, c)
 	end
 end
 
 local function clear()
 	for i=0, 39 do
 		for j=0, 28 do
-			term.setCharacter(i, j, ' ')
+			gpu.setCharacter(i, j, ' ')
 		end
 	end	
 end
@@ -30,7 +30,7 @@ end
 
 local success, err = pcall(loadKernel)
 if not success then	
-	term.debug(err)
+	gpu.debug(err)
 	write(0, 0, "Bootloader Error!")
 	write(0, 1, "An error occured while loading kernel")
 	write(0, 2, "Press any key to continue...")

@@ -67,7 +67,7 @@ public class FSAPI extends LuaAPI
 		{
 		}
 	}
-	
+
 	@APIMethod
 	public void move(ILuaContext context, Object[] args)
 	{
@@ -77,6 +77,42 @@ public class FSAPI extends LuaAPI
 		{
 			copy(context, args);
 			new File(computer.getRoot().getCanonicalPath() + "/" + (String) args[0]).delete();
+		}
+		catch(IOException e)
+		{
+		}
+	}
+
+	@APIMethod
+	public void mkdir(ILuaContext context, Object[] args)
+	{
+		if(args.length != 1)
+			throw new IllegalArgumentException("Expected argument path");
+		try
+		{
+			File path = new File(computer.getRoot().getCanonicalFile(), (String) args[0]);
+			if(!path.exists())
+			{
+				path.mkdirs();
+			}
+		}
+		catch(IOException e)
+		{
+		}
+	}
+	
+	@APIMethod
+	public void delete(ILuaContext context, Object[] args)
+	{
+		if(args.length != 1)
+			throw new IllegalArgumentException("Expected argument path");
+		try
+		{
+			File path = new File(computer.getRoot().getCanonicalFile(), (String) args[0]);
+			if(path.exists())
+			{
+				path.delete();
+			}
 		}
 		catch(IOException e)
 		{

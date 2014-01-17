@@ -4,12 +4,12 @@ import java.util.Arrays;
 import com.sci.machinery.api.ILuaContext;
 import com.sci.machinery.block.computer.Computer;
 
-public class TermAPI extends LuaAPI
+public class GPUAPI extends LuaAPI
 {
 	private char[][] screen;
 	private boolean dirty;
 
-	public TermAPI(Computer computer)
+	public GPUAPI(Computer computer)
 	{
 		super(computer);
 		this.screen = new char[40][29];
@@ -40,7 +40,7 @@ public class TermAPI extends LuaAPI
 	@Override
 	public String getName()
 	{
-		return "term";
+		return "gpu";
 	}
 
 	@APIMethod

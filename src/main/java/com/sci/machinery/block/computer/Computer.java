@@ -126,7 +126,7 @@ public class Computer implements IPacketHandler, ILuaContext
 				fFile.getParentFile().mkdirs();
 			}
 
-			InputStream in = Computer.class.getResourceAsStream(file);
+			InputStream in = Computer.class.getResourceAsStream(file.replace("\\",  "/"));
 			OutputStream out = new FileOutputStream(fFile);
 			int readBytes = 0;
 			byte[] buffer = new byte[4096];

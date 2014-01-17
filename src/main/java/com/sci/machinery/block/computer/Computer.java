@@ -103,24 +103,6 @@ public class Computer implements IPacketHandler, ILuaContext
 		this.tile = tile;
 	}
 
-	private static File getLoadingJar(Class modClass)
-	{
-		String path = modClass.getProtectionDomain().getCodeSource().getLocation().getPath();
-		int bangIndex = path.indexOf("!");
-		if(bangIndex >= 0)
-		{
-			path = path.substring(0, bangIndex);
-		}
-		try
-		{
-			return new File(new URL(path).toURI());
-		}
-		catch(Exception e)
-		{
-		}
-		return null;
-	}
-
 	private void copyFS() throws IOException
 	{
 		List<String> files = new ArrayList<String>();

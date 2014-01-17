@@ -49,6 +49,41 @@ public class FSAPI extends LuaAPI
 	}
 
 	@APIMethod
+	public void copy(ILuaContext context, Object[] args)
+	{
+		if(args.length != 2)
+			throw new IllegalArgumentException("Expected argument pathA, pathB");
+		try
+		{
+			File a = new File(computer.getRoot().getCanonicalPath() + "/" + (String) args[0]);
+			File b = new File(computer.getRoot().getCanonicalPath() + "/" + (String) args[1]);
+			FileInputStream aI = new FileInputStream(a);
+			FileOutputStream bO = new FileOutputStream(b);
+			bO.getChannel().transferFrom(aI.getChannel(), 0, aI.getChannel().size());
+			aI.close();
+			bO.close();
+		}
+		catch(IOException e)
+		{
+		}
+	}
+	
+	@APIMethod
+	public void move(ILuaContext context, Object[] args)
+	{
+		if(args.length != 2)
+			throw new IllegalArgumentException("Expected argument pathA, pathB");
+		try
+		{
+			copy(context, args);
+			new File(computer.getRoot().getCanonicalPath() + "/" + (String) args[0]).delete();
+		}
+		catch(IOException e)
+		{
+		}
+	}
+
+	@APIMethod
 	public String getName(ILuaContext context, Object[] args)
 	{
 		if(args.length != 1)

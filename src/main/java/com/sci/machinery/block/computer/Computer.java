@@ -48,13 +48,16 @@ public class Computer implements IPacketHandler, ILuaContext
 	private boolean isDecomissioned;
 
 	private LuaValue globals;
+	private LuaThread mainRoutine;
+
 	private LuaValue assert_;
 	private LuaValue loadString;
+
 	private LuaValue coroutineCreate;
 	private LuaValue coroutineResume;
 	private LuaValue coroutineYield;
+
 	private String eventFilter;
-	private LuaThread mainRoutine;
 
 	private List<ILuaAPI> apis;
 
@@ -260,6 +263,7 @@ public class Computer implements IPacketHandler, ILuaContext
 
 			LuaValue program = this.assert_.call(this.loadString.call(LuaValue.valueOf(bootloader), LuaValue.valueOf("bootloader")));
 			this.mainRoutine = (LuaThread) this.coroutineCreate.call(program);
+			this.coroutineResume.call(this.mainRoutine);
 		}
 		catch(LuaError e)
 		{
@@ -269,12 +273,13 @@ public class Computer implements IPacketHandler, ILuaContext
 			}
 			e.printStackTrace();
 		}
-
-		handleEvent(null, null);
 	}
 
 	public void tick()
 	{
+		if(state != State.RUNNING)
+			return;
+
 		GPUAPI term = null;
 		for(ILuaAPI api : apis)
 		{
@@ -301,7 +306,7 @@ public class Computer implements IPacketHandler, ILuaContext
 
 	private void handleEvent(String name, Object[] args)
 	{
-		if(this.mainRoutine == null)
+		if(this.mainRoutine == null || this.mainRoutine.getStatus() == null)
 			return;
 
 		if((this.eventFilter != null) && (name != null) && (!name.equals(this.eventFilter)) && (!name.equals("terminate")))
@@ -448,8 +453,6 @@ public class Computer implements IPacketHandler, ILuaContext
 	{
 		this.state = State.STOPPING;
 
-		((LuaThread)this.mainRoutine).abandon();
-		
 		this.state = State.OFF;
 		this.sendPacketUpdate(Side.CLIENT);
 	}
@@ -457,14 +460,7 @@ public class Computer implements IPacketHandler, ILuaContext
 	public void reboot()
 	{
 		shutdown();
-		this.tasks.add(new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				boot();
-			}
-		});
+		boot();
 	}
 
 	public int getID()

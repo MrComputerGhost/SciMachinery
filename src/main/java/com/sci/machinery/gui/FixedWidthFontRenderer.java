@@ -124,6 +124,7 @@ public class FixedWidthFontRenderer
 
 		GL11.glPushMatrix();
 		GL11.glTranslatef(x, y, 0.0F);
+		GL11.glColor3f(0, 204, 0);
 		this.buffer.clear();
 		for(int i = 0; i < s.length(); i++)
 		{

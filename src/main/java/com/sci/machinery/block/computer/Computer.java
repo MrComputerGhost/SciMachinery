@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -122,7 +121,6 @@ public class Computer implements IPacketHandler, ILuaContext
 		for(String file : files)
 		{
 			File fFile = new File(root, file.replace("/assets/scimachinery/lua/os/", ""));
-			System.out.println(fFile);
 			if(!fFile.getParentFile().exists())
 			{
 				fFile.getParentFile().mkdirs();

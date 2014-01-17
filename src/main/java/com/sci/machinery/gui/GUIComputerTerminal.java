@@ -59,13 +59,16 @@ public class GUIComputerTerminal extends GuiScreen
 
 		final float SCALE = 0.65f;
 		GL11.glPushMatrix();
-		GL11.glTranslated(k + 3, l + 6, 0);
+		GL11.glTranslated(k + 6, l + 6, 0);
 		GL11.glScaled(SCALE, SCALE, SCALE);
-		for(int x = 0; x < 40; x++)
+		int xx = 0;
+		for(int y = 0; y < 29; y++)
 		{
-			for(int y = 0; y < 29; y++)
+			xx = 0;
+			for(int x = 0; x < 40; x++)
 			{
-				fontRenderer.drawString(String.valueOf(this.tileEntity.getTermCharacter(x, y)), x * 6, y * fontRenderer.FONT_HEIGHT, 0x00CC00);
+				fontRenderer.drawString(String.valueOf(this.tileEntity.getTermCharacter(x, y)), xx, y * fontRenderer.FONT_HEIGHT, 0x00CC00);
+				xx += fontRenderer.getCharWidth(this.tileEntity.getTermCharacter(x, y));
 			}
 		}
 		GL11.glPopMatrix();

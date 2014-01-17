@@ -60,4 +60,18 @@ for n, file in ipairs(apis) do
 	end
 end
 
-error
+local state = false
+while true do
+	local timer = os.startTimer(0.5)
+	repeat
+		local sEvent, b = os.pullEvent("timer")
+	until b == timer
+	
+	state = not state
+	
+	if state then
+		term.setCharacter(0, 0, '>')
+	else
+		term.setCharacter(0, 0, ' ')
+	end
+end

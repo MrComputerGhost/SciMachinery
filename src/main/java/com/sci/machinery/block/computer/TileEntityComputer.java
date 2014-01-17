@@ -98,11 +98,11 @@ public class TileEntityComputer extends TileSci
 
 	public void setTermCharacter(int x, int y, char readChar)
 	{
-		clientTerm[x][y] = readChar;
+		this.clientTerm[x][y] = readChar;
 	}
 
 	public char getTermCharacter(int x, int y)
 	{
-		return clientTerm[x][y];
+		return this.clientTerm[x][y];
 	}
 }

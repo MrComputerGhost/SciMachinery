@@ -49,6 +49,63 @@ public class FSAPI extends LuaAPI
 	}
 
 	@APIMethod
+	public String getName(ILuaContext context, Object[] args)
+	{
+		if(args.length != 1)
+			throw new IllegalArgumentException("Expected argument path");
+		try
+		{
+			return new File(computer.getRoot().getCanonicalPath() + "/" + args[0]).getName();
+		}
+		catch(IOException e)
+		{
+		}
+		return null;
+	}
+
+	@APIMethod
+	public boolean isDirectory(ILuaContext context, Object[] args)
+	{
+		if(args.length != 1)
+			throw new IllegalArgumentException("Expected argument path");
+		try
+		{
+			return new File(computer.getRoot().getCanonicalPath() + "/" + args[0]).isDirectory();
+		}
+		catch(IOException e)
+		{
+		}
+		return false;
+	}
+
+	@APIMethod
+	public LuaTable list(ILuaContext context, Object[] args)
+	{
+		if(args.length != 1)
+			throw new IllegalArgumentException("Expected argument path");
+		LuaTable table = new LuaTable();
+		try
+		{
+			File dir = new File(computer.getRoot().getCanonicalPath() + "/" + args[0]);
+			if(!dir.isDirectory())
+				throw new IllegalArgumentException("Not a directory");
+
+			String[] files = dir.list();
+			for(int i = 0; i < files.length; i++)
+			{
+				String f = files[i];
+				if(new File(dir, f).exists())
+					table.set(i + 1, f);
+			}
+		}
+		catch(IOException e)
+		{
+		}
+
+		return table;
+	}
+
+	@APIMethod
 	public LuaTable open(ILuaContext context, Object[] args)
 	{
 		if(args.length != 2)

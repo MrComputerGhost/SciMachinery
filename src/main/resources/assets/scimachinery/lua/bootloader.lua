@@ -7,6 +7,14 @@ local function write(x, y, string)
 	end
 end
 
+local function clear()
+	for i=0, 39 do
+		for j=0, 28 do
+			term.setCharacter(i, j, ' ')
+		end
+	end	
+end
+
 ---------------------------------------------------------------------------------------------------------
 
 local loadKernel = function()
@@ -22,10 +30,21 @@ end
 
 local success, err = pcall(loadKernel)
 if not success then	
-	write(0, 0, "An error occured while loading kernel")
+	write(0, 0, "Bootloader Error!")
+	write(0, 1, "An error occured while loading kernel")
+	write(0, 2, "Press any key to continue...")
 end
 
-os.shutdown()
+while true do
+	local evt = os.pullEvent("key")
+	if evt == "key" then
+		break
+	end
+end
+
+clear()
+
+os.shutdown()	
 while true do
 	coroutine.yield()
 end

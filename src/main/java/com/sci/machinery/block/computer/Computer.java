@@ -90,16 +90,7 @@ public class Computer implements IPacketHandler, ILuaContext
 					if(!root.exists())
 						root.mkdirs();
 
-					InputStream in = Computer.class.getResourceAsStream("/assets/scimachinery/lua/os/kernel.lua");
-					OutputStream out = new FileOutputStream(new File(root, "kernel.lua"));
-					int readBytes = 0;
-					byte[] buffer = new byte[4096];
-					while((readBytes = in.read(buffer)) > 0)
-					{
-						out.write(buffer, 0, readBytes);
-					}
-					in.close();
-					out.close();
+					copyFS();
 				}
 				catch(IOException e)
 				{
@@ -110,6 +101,36 @@ public class Computer implements IPacketHandler, ILuaContext
 
 		this.state = State.OFF;
 		this.tile = tile;
+	}
+
+	private void copyFS() throws IOException
+	{
+		String[] files = new String[]
+		{ "kernel.lua", "lib/os.lua" };
+
+		for(String file : files)
+		{
+			File fFile = new File(root, file);
+			if(!fFile.exists())
+			{
+				if(!fFile.getParentFile().exists())
+				{
+					fFile.getParentFile().mkdirs();
+				}
+				fFile.createNewFile();
+			}
+			
+			InputStream in = Computer.class.getResourceAsStream("/assets/scimachinery/lua/os/" + file);
+			OutputStream out = new FileOutputStream(fFile);
+			int readBytes = 0;
+			byte[] buffer = new byte[4096];
+			while((readBytes = in.read(buffer)) > 0)
+			{
+				out.write(buffer, 0, readBytes);
+			}
+			in.close();
+			out.close();
+		}
 	}
 
 	public void boot()

@@ -59,7 +59,7 @@ public class GUIComputerTerminal extends GuiScreen
 
 		final float SCALE = 0.65f;
 		GL11.glPushMatrix();
-		GL11.glTranslated(k + 6, l + 6, 0);
+		GL11.glTranslated(k + 4, l + 6, 0);
 		GL11.glScaled(SCALE, SCALE, SCALE);
 		int xx = 0;
 		for(int y = 0; y < 29; y++)

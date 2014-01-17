@@ -16,7 +16,6 @@ import java.util.Queue;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatAllowedCharacters;
 import net.minecraft.world.World;
-import org.luaj.vm2.Globals;
 import org.luaj.vm2.LuaError;
 import org.luaj.vm2.LuaThread;
 import org.luaj.vm2.LuaValue;
@@ -48,7 +47,7 @@ public class Computer implements IPacketHandler, ILuaContext
 	private TileEntityComputer tile;
 	private boolean isDecomissioned;
 
-	private Globals globals;
+	private LuaValue globals;
 	private LuaValue assert_;
 	private LuaValue loadString;
 	private LuaValue coroutineCreate;
@@ -149,7 +148,7 @@ public class Computer implements IPacketHandler, ILuaContext
 		this.globals = JsePlatform.debugGlobals();
 
 		this.assert_ = this.globals.get("assert");
-		this.loadString = this.globals.get("load");
+		this.loadString = this.globals.get("loadstring");
 
 		LuaValue coroutine = this.globals.get("coroutine");
 		final LuaValue nativeCoroutineCreate = coroutine.get("create");
@@ -169,7 +168,7 @@ public class Computer implements IPacketHandler, ILuaContext
 					@Override
 					public LuaValue call()
 					{
-						mainRoutine.state.lua_yield(LuaValue.varargsOf(new LuaValue[]
+						Computer.this.coroutineYield.invoke(LuaValue.varargsOf(new LuaValue[]
 						{ LuaValue.NIL }));
 						return LuaValue.NIL;
 					}
@@ -177,7 +176,7 @@ public class Computer implements IPacketHandler, ILuaContext
 				return thread;
 			}
 		});
-
+		
 		this.globals.set("collectgarbage", LuaValue.NIL);
 		this.globals.set("dofile", LuaValue.NIL);
 		this.globals.set("loadfile", LuaValue.NIL);

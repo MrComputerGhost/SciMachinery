@@ -20,7 +20,7 @@ end
 local loadKernel = function()
 	kernelFile = fs.open("kernel.lua", "r")
 	if kernelFile then
-		kernel = load(kernelFile.readAll(), "kernel")
+		kernel = loadstring(kernelFile.readAll(), "kernel")
 		kernelFile.close()
 		kernel()
 	else
@@ -30,6 +30,7 @@ end
 
 local success, err = pcall(loadKernel)
 if not success then	
+	term.debug(err)
 	write(0, 0, "Bootloader Error!")
 	write(0, 1, "An error occured while loading kernel")
 	write(0, 2, "Press any key to continue...")

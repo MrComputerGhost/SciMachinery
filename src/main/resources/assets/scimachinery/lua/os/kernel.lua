@@ -1,7 +1,7 @@
 loadfile = function(path)
 	local file = fs.open(path, "r")
 	if file then
-		local func, err = load(file.readAll(), fs.getName(path))
+		local func, err = loadstring(file.readAll(), fs.getName(path))
 		file.close()
 		return func, err
 	end
@@ -18,15 +18,10 @@ dofile = function(path)
 	end
 end
 
-local apisLoading = {}
 function os.loadAPI(path)
 	local name = fs.getName(path)
-	if apisLoading[name] == true then
-		return false
-	end
-	apisLoading[name] = true
-	
 	local tEnv = {}
+	
 	setmetatable(tEnv, { __index = _G })
 	local fnAPI, err = loadfile(path)
 	if fnAPI then
@@ -40,8 +35,6 @@ function os.loadAPI(path)
 	end
 	
 	_G[name] = tAPI
-	apisLoading[name] = nil
-	return true
 end
 
 function os.unloadAPI(name)

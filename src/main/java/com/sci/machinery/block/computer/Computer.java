@@ -126,7 +126,7 @@ public class Computer implements IPacketHandler, ILuaContext
 				fFile.getParentFile().mkdirs();
 			}
 
-			InputStream in = Computer.class.getResourceAsStream(file.replace("\\",  "/"));
+			InputStream in = Computer.class.getResourceAsStream(file.replace("\\", "/"));
 			OutputStream out = new FileOutputStream(fFile);
 			int readBytes = 0;
 			byte[] buffer = new byte[4096];
@@ -380,7 +380,7 @@ public class Computer implements IPacketHandler, ILuaContext
 		{
 			this.state = State.valueOf(din.readUTF());
 			this.world.markBlockForRenderUpdate(this.tile.xCoord, this.tile.yCoord, this.tile.zCoord);
-			for(int x = 0; x < 40; x++)
+			for(int x = 0; x < 61; x++)
 			{
 				for(int y = 0; y < 29; y++)
 				{
@@ -410,7 +410,7 @@ public class Computer implements IPacketHandler, ILuaContext
 			}
 			if(term != null)
 			{
-				for(int x = 0; x < 40; x++)
+				for(int x = 0; x < 61; x++)
 				{
 					for(int y = 0; y < 29; y++)
 					{
@@ -448,6 +448,8 @@ public class Computer implements IPacketHandler, ILuaContext
 	{
 		this.state = State.STOPPING;
 
+		((LuaThread)this.mainRoutine).abandon();
+		
 		this.state = State.OFF;
 		this.sendPacketUpdate(Side.CLIENT);
 	}
@@ -455,7 +457,14 @@ public class Computer implements IPacketHandler, ILuaContext
 	public void reboot()
 	{
 		shutdown();
-		boot();
+		this.tasks.add(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				boot();
+			}
+		});
 	}
 
 	public int getID()

@@ -1,5 +1,6 @@
 package com.sci.machinery.gui;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
@@ -19,6 +20,7 @@ import cpw.mods.fml.common.network.PacketDispatcher;
 public class GUIComputerTerminal extends GuiScreen
 {
 	private static final ResourceLocation TEXTURE = new ResourceLocation(Reference.MOD_ID.toLowerCase(), "textures/guis/computer_terminal.png");
+	private static final FixedWidthFontRenderer FONT_RENDERER = new FixedWidthFontRenderer(Minecraft.getMinecraft().gameSettings, Minecraft.getMinecraft().renderEngine);
 
 	private final int xSize = 250;
 	private final int ySize = 180;
@@ -55,20 +57,17 @@ public class GUIComputerTerminal extends GuiScreen
 		int l = (this.height - this.ySize) / 2;
 		this.drawTexturedModalRect(k, l, 0, 0, this.xSize, this.ySize);
 
-		// 40x29
+		// 61x29
 
 		final float SCALE = 0.65f;
 		GL11.glPushMatrix();
-		GL11.glTranslated(k + 3.5, l + 6, 0);
+		GL11.glTranslated(k + 6, l + 6, 0);
 		GL11.glScaled(SCALE, SCALE, SCALE);
-		int xx = 0;
 		for(int y = 0; y < 29; y++)
 		{
-			xx = 0;
-			for(int x = 0; x < 40; x++)
+			for(int x = 0; x < 61; x++)
 			{
-				fontRenderer.drawString(String.valueOf(this.tileEntity.getTermCharacter(x, y)), xx, y * fontRenderer.FONT_HEIGHT, 0x00CC00);
-				xx += fontRenderer.getCharWidth(this.tileEntity.getTermCharacter(x, y));
+				FONT_RENDERER.drawString(String.valueOf(this.tileEntity.getTermCharacter(x, y)), x * FixedWidthFontRenderer.FONT_WIDTH, y * fontRenderer.FONT_HEIGHT);
 			}
 		}
 		GL11.glPopMatrix();

@@ -12,8 +12,8 @@ public class GPUAPI extends LuaAPI
 	public GPUAPI(Computer computer)
 	{
 		super(computer);
-		this.screen = new char[40][29];
-		for(int x = 0; x < 40; x++)
+		this.screen = new char[61][29];
+		for(int x = 0; x < screen.length; x++)
 		{
 			Arrays.fill(this.screen[x], ' ');
 		}

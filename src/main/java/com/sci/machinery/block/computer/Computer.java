@@ -331,7 +331,7 @@ public class Computer implements IPacketHandler, ILuaContext
 			this.eventFilter = filter.toString();
 		else
 			this.eventFilter = null;
-		if(this.mainRoutine.getStatus().equals("dead"))
+		if("dead".equalsIgnoreCase(this.mainRoutine.getStatus()))
 			this.mainRoutine = null;
 	}
 

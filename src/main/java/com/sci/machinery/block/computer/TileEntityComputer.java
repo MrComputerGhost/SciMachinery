@@ -19,7 +19,6 @@ import cpw.mods.fml.relauncher.Side;
 public class TileEntityComputer extends TileSci
 {
 	private Computer computer;
-
 	private char[][] clientTerm;
 
 	@Override

@@ -100,7 +100,7 @@ public class Computer implements IPacketHandler, ILuaContext
 				}
 			}
 		}
-
+		
 		this.state = State.OFF;
 		this.tile = tile;
 	}

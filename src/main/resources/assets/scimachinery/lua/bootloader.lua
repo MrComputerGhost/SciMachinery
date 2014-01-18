@@ -17,11 +17,6 @@ end
 
 ---------------------------------------------------------------------------------------------------------
 
-local timer = os.startTimer(1)
-repeat 
-	local evt, token = os.pullEvent("timer")
-until token == timer
-
 local loadKernel = function()
 	kernelFile = fs.open("kernel.lua", "r")
 	if kernelFile then

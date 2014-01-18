@@ -27,10 +27,13 @@ public class TileEntityComputer extends TileSci
 	{
 		super.validate();
 
-		this.clientTerm = new char[61][29];
-		for(int x = 0; x < this.clientTerm.length; x++)
+		if(FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
 		{
-			Arrays.fill(this.clientTerm[x], ' ');
+			this.clientTerm = new char[61][29];
+			for(int x = 0; x < this.clientTerm.length; x++)
+			{
+				Arrays.fill(this.clientTerm[x], ' ');
+			}
 		}
 
 		if(this.computer == null)

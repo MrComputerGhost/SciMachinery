@@ -38,18 +38,12 @@ if not success then
 	gpu.debug(err)
 	write(0, 0, "Bootloader Error!")
 	write(0, 1, "An error occured while loading kernel")
-	write(0, 2, "Press any key to continue or press 'r' to reboot")
+	write(0, 2, "Press any key to continue...")
 end
 
 while true do
 	local evt, c = os.pullEvent("char")
 	if evt == "char" then
-		if c == 'r' then
-			os.reboot()
-			while true do
-				coroutine.yield()
-			end
-		end
 		break
 	end
 end

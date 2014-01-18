@@ -258,12 +258,12 @@ public class Computer implements IPacketHandler, ILuaContext
 				api.onStartup();
 			}
 
-			this.state = State.RUNNING;
 			this.sendPacketUpdate(Side.CLIENT);
 
 			LuaValue program = this.assert_.call(this.loadString.call(LuaValue.valueOf(bootloader), LuaValue.valueOf("bootloader")));
 			this.mainRoutine = (LuaThread) this.coroutineCreate.call(program);
 			this.coroutineResume.call(this.mainRoutine);
+			this.state = State.RUNNING;
 		}
 		catch(LuaError e)
 		{

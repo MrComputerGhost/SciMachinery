@@ -26,7 +26,7 @@ public class FixedWidthFontRenderer
 	public FixedWidthFontRenderer(GameSettings gamesettings, TextureManager _textureManager)
 	{
 		this.textureManager = _textureManager;
-		this.charWidth = new int['Ā'];
+		this.charWidth = new int[256];
 		this.buffer = GLAllocation.createDirectIntBuffer(1024);
 		BufferedImage bufferedimage;
 		try

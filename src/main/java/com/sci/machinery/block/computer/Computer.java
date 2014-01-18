@@ -100,7 +100,7 @@ public class Computer implements IPacketHandler, ILuaContext
 				}
 			}
 		}
-		
+
 		this.state = State.OFF;
 		this.tile = tile;
 	}
@@ -460,7 +460,21 @@ public class Computer implements IPacketHandler, ILuaContext
 	public void reboot()
 	{
 		shutdown();
-		boot();
+		new Thread()
+		{
+			@Override
+			public void run()
+			{
+				try
+				{
+					Thread.sleep(500);
+				}
+				catch(InterruptedException e)
+				{
+				}
+				Computer.this.boot();
+			}
+		}.start();
 	}
 
 	public int getID()

@@ -33,13 +33,18 @@ if not success then
 	gpu.debug(err)
 	write(0, 0, "Bootloader Error!")
 	write(0, 1, "An error occured while loading kernel")
-	write(0, 2, "Press any key to continue...")
+	write(0, 2, "Press any key to continue or press 'r' to reboot...")
 end
 
 while true do
-	local evt, c = os.pullEvent("char")
-	if evt == "char" then
-		break
+	local evt, c = os.pullEvent("key")
+	if evt == "key" then
+		if c == 19 then
+			clear()
+			os.reboot()
+		else
+			break
+		end
 	end
 end
 

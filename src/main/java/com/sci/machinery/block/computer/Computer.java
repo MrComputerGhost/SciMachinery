@@ -331,7 +331,7 @@ public class Computer implements IPacketHandler, ILuaContext
 			this.eventFilter = filter.toString();
 		else
 			this.eventFilter = null;
-		if("dead".equalsIgnoreCase(this.mainRoutine.getStatus()))
+		if(this.mainRoutine != null && this.mainRoutine.getStatus().equals("dead"))
 			this.mainRoutine = null;
 	}
 
@@ -452,6 +452,19 @@ public class Computer implements IPacketHandler, ILuaContext
 	public void shutdown()
 	{
 		this.state = State.STOPPING;
+
+		this.tasks.clear();
+		this.apis.clear();
+
+		this.mainRoutine = null;
+		this.assert_ = null;
+		this.loadString = null;
+		this.coroutineCreate = null;
+		this.coroutineResume = null;
+		this.coroutineYield = null;
+		this.globals = null;
+
+		this.eventFilter = null;
 
 		this.state = State.OFF;
 		this.sendPacketUpdate(Side.CLIENT);

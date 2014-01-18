@@ -39,16 +39,14 @@ end
 while true do
 	local evt, c = os.pullEvent("key")
 	if evt == "key" then
+		clear()
 		if c == 19 then
-			clear()
 			os.reboot()
 		else
 			break
 		end
 	end
 end
-
-clear()
 
 os.shutdown()	
 while true do

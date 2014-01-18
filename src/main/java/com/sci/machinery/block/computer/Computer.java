@@ -27,6 +27,7 @@ import org.luaj.vm2.lib.jse.JsePlatform;
 import com.sci.machinery.api.ILuaAPI;
 import com.sci.machinery.api.ILuaContext;
 import com.sci.machinery.api.IPacketHandler;
+import com.sci.machinery.block.computer.apis.BitAPI;
 import com.sci.machinery.block.computer.apis.FSAPI;
 import com.sci.machinery.block.computer.apis.GPUAPI;
 import com.sci.machinery.block.computer.apis.OSAPI;
@@ -222,6 +223,7 @@ public class Computer implements IPacketHandler, ILuaContext
 		this.apis.add(new OSAPI(this));
 		this.apis.add(new FSAPI(this));
 		this.apis.add(new GPUAPI(this));
+		this.apis.add(new BitAPI(this));
 
 		for(final ILuaAPI api : apis)
 		{

@@ -15,6 +15,13 @@ local function clear()
 	end	
 end
 
+local function sleep(time)
+	local timer = os.startTimer(time)
+	repeat 
+		local evt, token = os.pullEvent("timer")
+	until token == timer
+end
+
 ---------------------------------------------------------------------------------------------------------
 
 local loadKernel = function()
@@ -33,20 +40,19 @@ if not success then
 	gpu.debug(err)
 	write(0, 0, "Bootloader Error!")
 	write(0, 1, "An error occured while loading kernel")
-	write(0, 2, "Press any key to continue or press 'r' to reboot...")
+	write(0, 2, "Press any key to continue...")
 end
 
 while true do
 	local evt, c = os.pullEvent("key")
 	if evt == "key" then
-		clear()
-		if c == 19 then
-			os.reboot()
-		else
-			break
-		end
+		break
 	end
 end
+
+sleep(0.1)
+clear()
+sleep(0.1)
 
 os.shutdown()	
 while true do

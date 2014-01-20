@@ -26,16 +26,16 @@ public class BlockNuke extends BlockTNT
 	{
 		super.onBlockPlacedBy(par1World, par2, par3, par4, par5EntityLivingBase, par6ItemStack);
 
-		if(par5EntityLivingBase instanceof EntityPlayer)
+		if(par5EntityLivingBase instanceof EntityPlayer && !par1World.isRemote)
 		{
 			EntityPlayer p = (EntityPlayer) par5EntityLivingBase;
-			SciMachinery.instance.log.log(Level.FINE, p.username + " placed a nuke at (" + par2 + ", " + par3 + ", " + par4 + ") at " + getTime());
+			SciMachinery.instance.log.log(Level.INFO, p.username + " placed a nuke at (" + par2 + ", " + par3 + ", " + par4 + ") at " + getTime());
 		}
 	}
 
 	private String getTime()
 	{
-		DateFormat format = new SimpleDateFormat("HH:mm:ss - yyyy/MM/dd");
+		DateFormat format = new SimpleDateFormat("HH:mm:ss-yyyy/MM/dd");
 		Date date = new Date();
 		return format.format(date);
 	}

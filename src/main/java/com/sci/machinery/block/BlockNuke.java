@@ -29,7 +29,7 @@ public class BlockNuke extends BlockTNT
 		if(par5EntityLivingBase instanceof EntityPlayer && !par1World.isRemote)
 		{
 			EntityPlayer p = (EntityPlayer) par5EntityLivingBase;
-			SciMachinery.instance.log.log(Level.INFO, p.username + " placed a nuke at (" + par2 + ", " + par3 + ", " + par4 + ") at " + getTime());
+			//SciMachinery.instance.log.log(Level.INFO, p.username + " placed a nuke at (" + par2 + ", " + par3 + ", " + par4 + ") at " + getTime());
 		}
 	}
 

@@ -1,6 +1,7 @@
 package com.sci.machinery;
 
 import java.io.File;
+import java.util.logging.Logger;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDispenser;
 import net.minecraft.creativetab.CreativeTabs;
@@ -43,6 +44,7 @@ import com.sci.machinery.item.ItemSuicide;
 import com.sci.machinery.lib.Reference;
 import com.sci.machinery.network.PacketHandler;
 import cpw.mods.fml.client.FMLClientHandler;
+import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -119,11 +121,16 @@ public class SciMachinery implements IGuiHandler
 
 	public IRecipeRegistry circuitMakerRegistry;
 
+	public Logger log;
+
 	@EventHandler
 	public void init(FMLInitializationEvent e)
 	{
 		proxy.init(e);
 
+		log = Logger.getLogger(Reference.MOD_NAME);
+		log.setParent(FMLLog.getLogger());
+		
 		circuitMakerRegistry = new CircuitMakerRegistry();
 
 		circuit = new ItemCircuit(circuitId);
@@ -174,9 +181,9 @@ public class SciMachinery implements IGuiHandler
 		circuitMaker.setUnlocalizedName("circuitMaker");
 		GameRegistry.registerBlock(circuitMaker, "SciMachinery_TileCircuitMaker");
 
-	//	computer = new BlockComputer(computerId);
-	//	computer.setUnlocalizedName("computer");
-	//	GameRegistry.registerBlock(computer, "SciMachinery_TileComputer");
+		// computer = new BlockComputer(computerId);
+		// computer.setUnlocalizedName("computer");
+		// GameRegistry.registerBlock(computer, "SciMachinery_TileComputer");
 
 		suicide = new ItemSuicide(suicideId);
 

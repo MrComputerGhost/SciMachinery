@@ -1,7 +1,13 @@
 package com.sci.machinery.block;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.logging.Level;
 import net.minecraft.block.BlockTNT;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import com.sci.machinery.SciMachinery;
 import com.sci.machinery.entity.EntityNuke;
@@ -13,6 +19,25 @@ public class BlockNuke extends BlockTNT
 		super(par1);
 		this.setCreativeTab(SciMachinery.tab);
 		this.setTextureName("tnt");
+	}
+
+	@Override
+	public void onBlockPlacedBy(World par1World, int par2, int par3, int par4, EntityLivingBase par5EntityLivingBase, ItemStack par6ItemStack)
+	{
+		super.onBlockPlacedBy(par1World, par2, par3, par4, par5EntityLivingBase, par6ItemStack);
+
+		if(par5EntityLivingBase instanceof EntityPlayer)
+		{
+			EntityPlayer p = (EntityPlayer) par5EntityLivingBase;
+			SciMachinery.instance.log.log(Level.FINE, p.username + " placed a nuke at (" + par2 + ", " + par3 + ", " + par4 + ") at " + getTime());
+		}
+	}
+
+	private String getTime()
+	{
+		DateFormat format = new SimpleDateFormat("HH:mm:ss - yyyy/MM/dd");
+		Date date = new Date();
+		return format.format(date);
 	}
 
 	@Override

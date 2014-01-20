@@ -2,11 +2,16 @@ package com.sci.machinery;
 
 import java.io.File;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockDispenser;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.dispenser.BehaviorDefaultDispenseItem;
+import net.minecraft.dispenser.IBlockSource;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.WeightedRandomChestContent;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.sound.PlayStreamingEvent;
@@ -28,6 +33,7 @@ import com.sci.machinery.block.tube.TubeModifier;
 import com.sci.machinery.core.CircuitMakerRecipe;
 import com.sci.machinery.core.CircuitMakerRegistry;
 import com.sci.machinery.core.CreativeTabSM;
+import com.sci.machinery.entity.EntityNuke;
 import com.sci.machinery.gui.ContainerCircuitMaker;
 import com.sci.machinery.gui.GUICircuitMaker;
 import com.sci.machinery.gui.GUIComputerTerminal;
@@ -110,7 +116,7 @@ public class SciMachinery implements IGuiHandler
 
 	public Block nuke;
 	public int nukeId;
-	
+
 	public IRecipeRegistry circuitMakerRegistry;
 
 	@EventHandler
@@ -171,12 +177,28 @@ public class SciMachinery implements IGuiHandler
 		computer = new BlockComputer(computerId);
 		computer.setUnlocalizedName("computer");
 		GameRegistry.registerBlock(computer, "SciMachinery_TileComputer");
-		
+
 		suicide = new ItemSuicide(suicideId);
-		
+
 		nuke = new BlockNuke(nukeId);
 		nuke.setUnlocalizedName("nuke");
 		GameRegistry.registerBlock(nuke, "SciMachinery_Nuke");
+
+		BlockDispenser.dispenseBehaviorRegistry.putObject(nuke, new BehaviorDefaultDispenseItem()
+		{
+			protected ItemStack dispenseStack(IBlockSource par1IBlockSource, ItemStack par2ItemStack)
+			{
+				EnumFacing enumfacing = BlockDispenser.getFacing(par1IBlockSource.getBlockMetadata());
+				World world = par1IBlockSource.getWorld();
+				int i = par1IBlockSource.getXInt() + enumfacing.getFrontOffsetX();
+				int j = par1IBlockSource.getYInt() + enumfacing.getFrontOffsetY();
+				int k = par1IBlockSource.getZInt() + enumfacing.getFrontOffsetZ();
+				EntityNuke entitytntprimed = new EntityNuke(world, (double) ((float) i + 0.5F), (double) ((float) j + 0.5F), (double) ((float) k + 0.5F), (EntityLivingBase) null);
+				world.spawnEntityInWorld(entitytntprimed);
+				--par2ItemStack.stackSize;
+				return par2ItemStack;
+			}
+		});
 
 		GameRegistry.addRecipe(new ItemStack(stoneTube, 16), new Object[]
 		{ "sss", "gpg", "sss", 's', Block.stone, 'g', Block.glass, 'p', Block.pistonBase });
@@ -360,7 +382,7 @@ public class SciMachinery implements IGuiHandler
 			computerId = cfg.getBlock("computer", 430).getInt();
 
 			suicideId = cfg.getItem("suicide", 431).getInt();
-			
+
 			nukeId = cfg.getBlock("nuke", 432).getInt();
 		}
 		finally

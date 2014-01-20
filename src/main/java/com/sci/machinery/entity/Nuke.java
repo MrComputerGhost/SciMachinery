@@ -17,7 +17,7 @@ public class Nuke
 		this.x = x;
 		this.y = y;
 		this.z = z;
-		this.power = 25;
+		this.power = 50;
 	}
 
 	public void explode()
@@ -52,11 +52,17 @@ public class Nuke
 		{
 			((BlockTNT) block).primeTnt(this.world, this.x, this.y, this.z, 4, null);
 		}
-
-		if(block.canDropFromExplosion(null))
+		else if(block.blockID == Block.waterMoving.blockID || block.blockID == Block.waterStill.blockID || block.blockID == Block.lavaMoving.blockID || block.blockID == Block.lavaStill.blockID)
 		{
-			block.dropBlockAsItemWithChance(this.world, x, y, z, this.world.getBlockMetadata(x, y, z), 1.0F / this.power, 0);
-			block.onBlockExploded(this.world, x, y, z, null);
+			this.world.setBlock(x, y, z, 0); // die liquids!
+		}
+		else
+		{
+			if(block.canDropFromExplosion(null))
+			{
+				block.dropBlockAsItemWithChance(this.world, x, y, z, this.world.getBlockMetadata(x, y, z), 0.1f, 0);
+				block.onBlockExploded(this.world, x, y, z, null);
+			}
 		}
 	}
 }

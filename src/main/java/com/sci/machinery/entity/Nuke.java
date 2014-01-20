@@ -85,9 +85,12 @@ public class Nuke
 							arrow.setFire(1000);
 							this.world.spawnEntityInWorld(arrow);
 
-							EntityTNTPrimed tnt = new EntityTNTPrimed(this.world, this.x, this.y, this.z, null);
-							tnt.setVelocity(-1 + this.world.rand.nextDouble() * 2, -1 + this.world.rand.nextDouble() * 2, -1 + this.world.rand.nextDouble() * 2);
-							this.world.spawnEntityInWorld(tnt);
+							if(this.world.rand.nextBoolean())
+							{
+								EntityTNTPrimed tnt = new EntityTNTPrimed(this.world, this.x, this.y, this.z, null);
+								tnt.setVelocity(-1 + this.world.rand.nextDouble() * 2, -1 + this.world.rand.nextDouble() * 2, -1 + this.world.rand.nextDouble() * 2);
+								this.world.spawnEntityInWorld(tnt);
+							}
 						}
 					}
 				}

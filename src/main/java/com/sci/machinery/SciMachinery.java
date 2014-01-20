@@ -174,9 +174,9 @@ public class SciMachinery implements IGuiHandler
 		circuitMaker.setUnlocalizedName("circuitMaker");
 		GameRegistry.registerBlock(circuitMaker, "SciMachinery_TileCircuitMaker");
 
-		computer = new BlockComputer(computerId);
-		computer.setUnlocalizedName("computer");
-		GameRegistry.registerBlock(computer, "SciMachinery_TileComputer");
+	//	computer = new BlockComputer(computerId);
+	//	computer.setUnlocalizedName("computer");
+	//	GameRegistry.registerBlock(computer, "SciMachinery_TileComputer");
 
 		suicide = new ItemSuicide(suicideId);
 
@@ -226,6 +226,9 @@ public class SciMachinery implements IGuiHandler
 		{ new ItemStack(Item.redstone, 1), new ItemStack(stoneTube, 1) });
 		GameRegistry.addShapelessRecipe(new ItemStack(tubeValve), new Object[]
 		{ new ItemStack(Item.redstone, 1), new ItemStack(cobbleTube, 1) });
+
+		GameRegistry.addRecipe(new ItemStack(nuke), new Object[]
+		{ "aaa", "aba", "aaa", 'a', suicide, 'b', Block.tnt });
 
 		ItemStack[] stacks = new ItemStack[15];
 		stacks[0] = new ItemStack(Item.redstone);

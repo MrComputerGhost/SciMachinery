@@ -4,6 +4,9 @@ import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockTNT;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.EntityTNTPrimed;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
@@ -22,7 +25,7 @@ public class Nuke
 		this.x = x;
 		this.y = y;
 		this.z = z;
-		this.power = 35;
+		this.power = 50;
 	}
 
 	public void explode()
@@ -32,10 +35,18 @@ public class Nuke
 
 		int radius = power + this.world.rand.nextInt(10);
 
-		List<Entity> list = this.world.getEntitiesWithinAABBExcludingEntity(null, AxisAlignedBB.getAABBPool().getAABB((double) this.x - radius, (double) this.y - radius, (double) this.z - radius, (double) this.x + radius, (double) this.y + radius, (double) this.z + radius));
+		@SuppressWarnings("unchecked")
+		// ffs mojang use generics! friggin n00bs
+		List<Entity> list = this.world.getEntitiesWithinAABBExcludingEntity(null, AxisAlignedBB.getAABBPool().getAABB((double) this.x - radius * 2, (double) this.y - radius * 2, (double) this.z - radius * 2, (double) this.x + radius * 2, (double) this.y + radius * 2, (double) this.z + radius * 2));
 		for(Entity e : list)
-		{	
+		{
 			e.attackEntityFrom(DamageSource.setExplosionSource(null), 18.0f);
+			if(e instanceof EntityPlayer)
+			{
+				EntityPlayer ep = (EntityPlayer) e;
+				if(!ep.capabilities.isCreativeMode)
+					ep.addPotionEffect(new PotionEffect(19, 20 * 30));
+			}
 		}
 
 		for(int x = -radius; x < radius; x++)
@@ -67,12 +78,16 @@ public class Nuke
 				{
 					if((x * x + y * y + z * z <= radius * radius) || this.world.rand.nextInt(100) < 15)
 					{
-						if(this.world.rand.nextInt(200) == 0)
+						if(this.world.rand.nextInt(500) == 0)
 						{
 							EntityAcidArrow arrow = new EntityAcidArrow(this.world, this.x, this.y, this.z);
 							arrow.setVelocity(-1 + this.world.rand.nextDouble() * 2, -1 + this.world.rand.nextDouble() * 2, -1 + this.world.rand.nextDouble() * 2);
 							arrow.setFire(1000);
 							this.world.spawnEntityInWorld(arrow);
+
+							EntityTNTPrimed tnt = new EntityTNTPrimed(this.world, this.x, this.y, this.z, null);
+							tnt.setVelocity(-1 + this.world.rand.nextDouble() * 2, -1 + this.world.rand.nextDouble() * 2, -1 + this.world.rand.nextDouble() * 2);
+							this.world.spawnEntityInWorld(tnt);
 						}
 					}
 				}

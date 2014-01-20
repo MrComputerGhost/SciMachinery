@@ -1,7 +1,11 @@
 package com.sci.machinery.entity;
 
+import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockTNT;
+import net.minecraft.entity.Entity;
+import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 import com.sci.machinery.SciMachinery;
 import com.sci.machinery.block.BlockNuke;
@@ -25,8 +29,14 @@ public class Nuke
 	{
 		this.world.spawnParticle("hugeexplosion", this.x, this.y, this.z, 1.0D, 0.0D, 0.0D);
 		this.world.playSoundEffect(this.x, this.y, this.z, "random.explode", 4.0F, (1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F);
-		
+
 		int radius = power + this.world.rand.nextInt(10);
+
+		List<Entity> list = this.world.getEntitiesWithinAABBExcludingEntity(null, AxisAlignedBB.getAABBPool().getAABB((double) this.x - radius, (double) this.y - radius, (double) this.z - radius, (double) this.x + radius, (double) this.y + radius, (double) this.z + radius));
+		for(Entity e : list)
+		{	
+			e.attackEntityFrom(DamageSource.setExplosionSource(null), 18.0f);
+		}
 
 		for(int x = -radius; x < radius; x++)
 		{
@@ -43,12 +53,12 @@ public class Nuke
 		}
 
 		this.world.playSoundEffect(this.x, this.y, this.z, "random.explode", 4.0F, (1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F);
-		
+
 		this.world.spawnParticle("largeexplode", this.x, this.y, this.z, 1.0D, 0.0D, 0.0D);
 		this.world.spawnParticle("hugeexplosion", this.x, this.y, this.z, 1.0D, 0.0D, 0.0D);
-		
+
 		this.world.playSoundEffect(this.x, this.y, this.z, "random.explode", 4.0F, (1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F);
-		
+
 		for(int x = -radius; x < radius; x++)
 		{
 			for(int y = -radius; y < radius; y++)
@@ -68,7 +78,7 @@ public class Nuke
 				}
 			}
 		}
-		
+
 		this.world.playSoundEffect(this.x, this.y, this.z, "random.explode", 4.0F, (1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F);
 		this.world.spawnParticle("largeexplode", this.x, this.y, this.z, 1.0D, 0.0D, 0.0D);
 	}

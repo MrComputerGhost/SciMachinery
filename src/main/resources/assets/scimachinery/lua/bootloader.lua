@@ -1,6 +1,9 @@
 --bootloader essential functions
 
 local function write(x, y, string)
+	assert(type(string) == "string")
+	assert(x < 61)
+	assert(y < 29)
 	for i = 1, #string do
 		local c = string:sub(i, i)
 		gpu.setCharacter(x + i - 1, y, c)

@@ -10,6 +10,7 @@ tile.voidTube.name=Item Void Tube
 tile.valveTube.name=Item Valve Tube
 tile.circuitMaker.name=Circuit Maker
 tile.computer.name=Computer
+tile.nuke.name=Nuke
 
 item.basicCircuit.name=Basic Circuit
 item.timingCircuit.name=Timing Circuit

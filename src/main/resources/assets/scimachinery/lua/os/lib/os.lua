@@ -17,6 +17,6 @@ end
 function os.sleep(time)
 	local timer = os.startTimer(time)
 	repeat
-		local sEvent, b = os.pullEvent("timer")
+		local evt, b = os.pullEvent("timer")
 	until b == timer
 end

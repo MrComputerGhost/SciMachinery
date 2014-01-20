@@ -57,6 +57,8 @@ public class Computer implements IPacketHandler, ILuaContext
 	private LuaValue coroutineCreate;
 	private LuaValue coroutineResume;
 	private LuaValue coroutineYield;
+	
+	private LuaValue gc;
 
 	private String eventFilter;
 
@@ -175,6 +177,8 @@ public class Computer implements IPacketHandler, ILuaContext
 
 		this.assert_ = this.globals.get("assert");
 		this.loadString = this.globals.get("loadstring");
+		
+		this.gc = this.globals.get("collectgarbage");
 
 		LuaValue coroutine = this.globals.get("coroutine");
 		final LuaValue nativeCoroutineCreate = coroutine.get("create");
@@ -262,6 +266,8 @@ public class Computer implements IPacketHandler, ILuaContext
 
 			this.sendPacketUpdate(Side.CLIENT);
 
+			this.gc.call(LuaValue.valueOf("collect"));
+			
 			LuaValue program = this.assert_.call(this.loadString.call(LuaValue.valueOf(bootloader), LuaValue.valueOf("bootloader")));
 			this.mainRoutine = (LuaThread) this.coroutineCreate.call(program);
 			this.coroutineResume.call(this.mainRoutine);
@@ -455,6 +461,8 @@ public class Computer implements IPacketHandler, ILuaContext
 	{
 		this.state = State.STOPPING;
 
+		this.gc.call(LuaValue.valueOf("collect"));
+		
 		this.tasks.clear();
 		this.apis.clear();
 

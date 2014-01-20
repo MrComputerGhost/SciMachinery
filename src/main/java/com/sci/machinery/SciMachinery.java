@@ -17,6 +17,7 @@ import net.minecraftforge.event.ForgeSubscribe;
 import com.sci.machinery.api.IProxy;
 import com.sci.machinery.api.IRecipeRegistry;
 import com.sci.machinery.block.BlockCircuitMaker;
+import com.sci.machinery.block.BlockNuke;
 import com.sci.machinery.block.TileCircuitMaker;
 import com.sci.machinery.block.computer.BlockComputer;
 import com.sci.machinery.block.computer.TileEntityComputer;
@@ -107,6 +108,9 @@ public class SciMachinery implements IGuiHandler
 	public ItemSuicide suicide;
 	public int suicideId;
 
+	public Block nuke;
+	public int nukeId;
+	
 	public IRecipeRegistry circuitMakerRegistry;
 
 	@EventHandler
@@ -167,8 +171,12 @@ public class SciMachinery implements IGuiHandler
 		computer = new BlockComputer(computerId);
 		computer.setUnlocalizedName("computer");
 		GameRegistry.registerBlock(computer, "SciMachinery_TileComputer");
-
+		
 		suicide = new ItemSuicide(suicideId);
+		
+		nuke = new BlockNuke(nukeId);
+		nuke.setUnlocalizedName("nuke");
+		GameRegistry.registerBlock(nuke, "SciMachinery_Nuke");
 
 		GameRegistry.addRecipe(new ItemStack(stoneTube, 16), new Object[]
 		{ "sss", "gpg", "sss", 's', Block.stone, 'g', Block.glass, 'p', Block.pistonBase });
@@ -352,6 +360,8 @@ public class SciMachinery implements IGuiHandler
 			computerId = cfg.getBlock("computer", 430).getInt();
 
 			suicideId = cfg.getItem("suicide", 431).getInt();
+			
+			nukeId = cfg.getBlock("nuke", 432).getInt();
 		}
 		finally
 		{

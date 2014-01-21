@@ -1,16 +1,16 @@
 package com.sci.machinery.entity;
 
 import java.util.List;
-import java.util.logging.Level;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockTNT;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.EntityTNTPrimed;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
+import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
 import com.sci.machinery.SciMachinery;
 import com.sci.machinery.block.BlockNuke;
 
@@ -26,13 +26,11 @@ public class Nuke
 		this.x = x;
 		this.y = y;
 		this.z = z;
-		this.power = 100;
+		this.power = 128;
 	}
 
 	public void explode()
 	{
-		long start = System.currentTimeMillis();
-
 		this.world.spawnParticle("hugeexplosion", this.x, this.y, this.z, 1.0D, 0.0D, 0.0D);
 		this.world.playSoundEffect(this.x, this.y, this.z, "random.explode", 4.0F, (1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F);
 
@@ -60,7 +58,7 @@ public class Nuke
 				{
 					if((x * x + y * y + z * z <= radius * radius) || this.world.rand.nextInt(100) < 15)
 					{
-						setBlock(x + this.x, y + this.y, z + this.z, 0);
+						killBlock(x + this.x, y + this.y, z + this.z, 0);
 					}
 				}
 			}
@@ -73,12 +71,9 @@ public class Nuke
 
 		this.world.playSoundEffect(this.x, this.y, this.z, "random.explode", 4.0F, (1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F);
 		this.world.spawnParticle("largeexplode", this.x, this.y, this.z, 1.0D, 0.0D, 0.0D);
-
-		long time = System.currentTimeMillis() - start;
-		SciMachinery.instance.log.log(Level.FINEST, "Nuclear detonation executed in " + time + "ms");
 	}
 
-	private void setBlock(int x, int y, int z, int id)
+	private void killBlock(int x, int y, int z, int id)
 	{
 		Block block = Block.blocksList[this.world.getBlockId(x, y, z)];
 
@@ -96,16 +91,42 @@ public class Nuke
 		{
 			((BlockNuke) block).primeTnt(this.world, this.x, this.y, this.z, 4, null);
 		}
-		else if(block.blockID == Block.waterMoving.blockID || block.blockID == Block.waterStill.blockID || block.blockID == Block.lavaMoving.blockID || block.blockID == Block.lavaStill.blockID)
-		{
-			this.world.setBlock(x, y, z, 0); // die liquids!
-		}
 		else
 		{
-			if(block.canDropFromExplosion(null))
+			setBlock(x, y, z, 0);
+		}
+	}
+
+	public boolean setBlock(int x, int y, int z, int id)
+	{
+		if(x >= -30000000 && z >= -30000000 && x < 30000000 && z < 30000000 && y > 0 && y < 256)
+		{
+			Chunk chunk = this.world.getChunkFromChunkCoords(x >> 4, z >> 4);
+
+			int id_ = chunk.getBlockID(x & 15, y, z & 15);
+
+			if(id_ == id)
 			{
-				block.onBlockExploded(this.world, x, y, z, null);
+				return false;
+			}
+			else
+			{
+				ExtendedBlockStorage extendedblockstorage = chunk.getBlockStorageArray()[y >> 4];
+
+				if(extendedblockstorage == null)
+				{
+					if(id == 0)
+						return false;
+
+					extendedblockstorage = chunk.getBlockStorageArray()[y >> 4] = new ExtendedBlockStorage(y >> 4 << 4, !this.world.provider.hasNoSky);
+				}
+
+				extendedblockstorage.setExtBlockID(x & 15, y & 15, z & 15, id);
+				this.world.notifyBlockChange(x, y, z, id_);
+				this.world.markBlockForUpdate(x, y, z);
+				return true;
 			}
 		}
+		return false;
 	}
 }

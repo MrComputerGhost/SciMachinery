@@ -70,7 +70,8 @@ public final class CPU
 
 	public void cycle() throws MemoryException
 	{
-		Instruction i = Instruction.findByOpcode(bus.read(readB()));
+		Instruction i = Instruction.findByOpcode(readB());
+		
 		int tmp;
 		switch (i)
 		{

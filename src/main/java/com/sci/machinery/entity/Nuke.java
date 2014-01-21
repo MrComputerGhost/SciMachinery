@@ -26,7 +26,7 @@ public class Nuke
 		this.x = x;
 		this.y = y;
 		this.z = z;
-		this.power = 128;
+		this.power = 256;
 	}
 
 	public void explode()
@@ -104,6 +104,11 @@ public class Nuke
 			Chunk chunk = this.world.getChunkFromChunkCoords(x >> 4, z >> 4);
 
 			int id_ = chunk.getBlockID(x & 15, y, z & 15);
+
+			if(world.getBlockTileEntity(x, y, z) != null)
+			{
+				world.removeBlockTileEntity(x, y, z);
+			}
 
 			if(id_ == id)
 			{

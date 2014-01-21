@@ -17,7 +17,7 @@ item.timingCircuit.name=Timing Circuit
 item.aluCircuit.name=Arithmetic Logic Unit
 item.controlCircuit.name=Control Unit
 item.cpuCircuit.name=Central Processing Unit
-item.ram64Circuit.name=RAM
+item.ramCircuit.name=RAM
 item.hddCircuit.name=HDD
 item.suicide.name=Suicide
 

@@ -16,7 +16,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class ItemCircuit extends Item
 {
 	private static final String[] CIRCUIT_NAMES = new String[]
-	{ "basic", "timing", "alu", "control", "cpu" };
+	{ "basic", "timing", "alu", "control", "cpu", "ram64" };
 
 	@SideOnly(Side.CLIENT)
 	private Icon[] icons;
@@ -34,13 +34,10 @@ public class ItemCircuit extends Item
 	@Override
 	public String getUnlocalizedName(ItemStack itemStack)
 	{
-		StringBuilder unlocalizedName = new StringBuilder();
+		StringBuilder unlocalizedName = new StringBuilder("item.");
 		int meta = MathHelper.clamp_int(itemStack.getItemDamage(), 0, 15);
-
-		unlocalizedName.append("item");
-		unlocalizedName.append(".");
-		unlocalizedName.append(CIRCUIT_NAMES[meta]);
-		unlocalizedName.append("Circuit");
+		
+		unlocalizedName.append(CIRCUIT_NAMES[meta]).append("Circuit");
 
 		return unlocalizedName.toString();
 	}

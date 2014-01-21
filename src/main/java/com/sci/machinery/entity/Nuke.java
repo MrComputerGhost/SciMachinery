@@ -26,7 +26,7 @@ public class Nuke
 		this.x = x;
 		this.y = y;
 		this.z = z;
-		this.power = 25;
+		this.power = 100;
 	}
 
 	public void explode()
@@ -72,35 +72,6 @@ public class Nuke
 		this.world.spawnParticle("hugeexplosion", this.x, this.y, this.z, 1.0D, 0.0D, 0.0D);
 
 		this.world.playSoundEffect(this.x, this.y, this.z, "random.explode", 4.0F, (1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F);
-
-		for(int x = -radius; x < radius; x++)
-		{
-			for(int y = -radius; y < radius; y++)
-			{
-				for(int z = -radius; z < radius; z++)
-				{
-					if((x * x + y * y + z * z <= radius * radius) || this.world.rand.nextInt(100) < 15)
-					{
-						if(this.world.rand.nextInt(this.power * 4) == 0)
-						{
-							EntityAcidArrow arrow = new EntityAcidArrow(this.world, this.x, this.y, this.z);
-							arrow.setVelocity(-1 + this.world.rand.nextDouble() * 2, -1 + this.world.rand.nextDouble() * 2, -1 + this.world.rand.nextDouble() * 2);
-							arrow.setFire(1000);
-							this.world.spawnEntityInWorld(arrow);
-
-							if(this.world.rand.nextInt(100) < 10)
-							{
-								EntityTNTPrimed tnt = new EntityTNTPrimed(this.world, this.x, this.y, this.z, null);
-								tnt.setVelocity(-1 + this.world.rand.nextDouble() * 2, -1 + this.world.rand.nextDouble() * 2, -1 + this.world.rand.nextDouble() * 2);
-								this.world.spawnEntityInWorld(tnt);
-							}
-						}
-					}
-				}
-			}
-		}
-
-		this.world.playSoundEffect(this.x, this.y, this.z, "random.explode", 4.0F, (1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F);
 		this.world.spawnParticle("largeexplode", this.x, this.y, this.z, 1.0D, 0.0D, 0.0D);
 
 		long time = System.currentTimeMillis() - start;
@@ -133,7 +104,6 @@ public class Nuke
 		{
 			if(block.canDropFromExplosion(null))
 			{
-				block.dropBlockAsItemWithChance(this.world, x, y, z, this.world.getBlockMetadata(x, y, z), 0.01f, 0);
 				block.onBlockExploded(this.world, x, y, z, null);
 			}
 		}

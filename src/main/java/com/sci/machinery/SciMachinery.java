@@ -25,7 +25,6 @@ import com.sci.machinery.api.IRecipeRegistry;
 import com.sci.machinery.block.BlockCircuitMaker;
 import com.sci.machinery.block.BlockNuke;
 import com.sci.machinery.block.TileCircuitMaker;
-import com.sci.machinery.block.computer.BlockCase;
 import com.sci.machinery.block.computer.TileCase;
 import com.sci.machinery.block.tube.BlockTube;
 import com.sci.machinery.block.tube.TileTube;
@@ -35,9 +34,7 @@ import com.sci.machinery.core.CircuitMakerRecipe;
 import com.sci.machinery.core.CircuitMakerRegistry;
 import com.sci.machinery.core.CreativeTabSM;
 import com.sci.machinery.entity.EntityNuke;
-import com.sci.machinery.gui.ContainerCase;
 import com.sci.machinery.gui.ContainerCircuitMaker;
-import com.sci.machinery.gui.GUICase;
 import com.sci.machinery.gui.GUICircuitMaker;
 import com.sci.machinery.item.ItemCircuit;
 import com.sci.machinery.item.ItemEasterEgg;
@@ -111,9 +108,6 @@ public class SciMachinery implements IGuiHandler
 	public ItemCircuit circuit;
 	public int circuitId;
 
-	public BlockCase computer;
-	public int computerId;
-
 	public ItemSuicide suicide;
 	public int suicideId;
 
@@ -181,17 +175,13 @@ public class SciMachinery implements IGuiHandler
 		circuitMaker.setUnlocalizedName("circuitMaker");
 		GameRegistry.registerBlock(circuitMaker, "SciMachinery_TileCircuitMaker");
 
-		// computer = new BlockComputer(computerId);
-		// computer.setUnlocalizedName("computer");
-		// GameRegistry.registerBlock(computer, "SciMachinery_TileComputer");
-
 		suicide = new ItemSuicide(suicideId);
 
 		nuke = new BlockNuke(nukeId);
 		nuke.setUnlocalizedName("nuke");
 		GameRegistry.registerBlock(nuke, "SciMachinery_Nuke");
 
-		BlockDispenser.dispenseBehaviorRegistry.putObject(nuke, new BehaviorDefaultDispenseItem()
+		BlockDispenser.dispenseBehaviorRegistry.putObject(Item.itemsList[nuke.blockID], new BehaviorDefaultDispenseItem()
 		{
 			protected ItemStack dispenseStack(IBlockSource par1IBlockSource, ItemStack par2ItemStack)
 			{
@@ -409,8 +399,6 @@ public class SciMachinery implements IGuiHandler
 			circuitMakerId = cfg.getBlock("circuitMaker", 428).getInt();
 			circuitId = cfg.getItem("circuit", 429).getInt();
 
-			computerId = cfg.getBlock("computer", 430).getInt();
-
 			suicideId = cfg.getItem("suicide", 431).getInt();
 
 			nukeId = cfg.getBlock("nuke", 432).getInt();
@@ -426,7 +414,6 @@ public class SciMachinery implements IGuiHandler
 	{
 		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
 		if(tileEntity instanceof TileCircuitMaker) { return new ContainerCircuitMaker(player.inventory, (TileCircuitMaker) tileEntity); }
-		if(tileEntity instanceof TileCase) { return new ContainerCase(player.inventory, (TileCase) tileEntity); }
 		return null;
 	}
 
@@ -435,7 +422,6 @@ public class SciMachinery implements IGuiHandler
 	{
 		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
 		if(tileEntity instanceof TileCircuitMaker) { return new GUICircuitMaker(player.inventory, (TileCircuitMaker) tileEntity); }
-		if(tileEntity instanceof TileCase) { return new GUICase(player.inventory, (TileCase) tileEntity); }
 		return null;
 	}
 }

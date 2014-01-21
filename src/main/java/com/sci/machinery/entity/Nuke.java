@@ -88,7 +88,7 @@ public class Nuke
 							arrow.setFire(1000);
 							this.world.spawnEntityInWorld(arrow);
 
-							if(this.world.rand.nextBoolean())
+							if(this.world.rand.nextInt(100) < 10)
 							{
 								EntityTNTPrimed tnt = new EntityTNTPrimed(this.world, this.x, this.y, this.z, null);
 								tnt.setVelocity(-1 + this.world.rand.nextDouble() * 2, -1 + this.world.rand.nextDouble() * 2, -1 + this.world.rand.nextDouble() * 2);

@@ -1,6 +1,7 @@
 package com.sci.machinery.entity;
 
 import java.util.List;
+import java.util.logging.Level;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockTNT;
 import net.minecraft.entity.Entity;
@@ -25,11 +26,13 @@ public class Nuke
 		this.x = x;
 		this.y = y;
 		this.z = z;
-		this.power = 50;
+		this.power = 25;
 	}
 
 	public void explode()
 	{
+		long start = System.currentTimeMillis();
+
 		this.world.spawnParticle("hugeexplosion", this.x, this.y, this.z, 1.0D, 0.0D, 0.0D);
 		this.world.playSoundEffect(this.x, this.y, this.z, "random.explode", 4.0F, (1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F);
 
@@ -78,7 +81,7 @@ public class Nuke
 				{
 					if((x * x + y * y + z * z <= radius * radius) || this.world.rand.nextInt(100) < 15)
 					{
-						if(this.world.rand.nextInt(500) == 0)
+						if(this.world.rand.nextInt(this.power * 4) == 0)
 						{
 							EntityAcidArrow arrow = new EntityAcidArrow(this.world, this.x, this.y, this.z);
 							arrow.setVelocity(-1 + this.world.rand.nextDouble() * 2, -1 + this.world.rand.nextDouble() * 2, -1 + this.world.rand.nextDouble() * 2);
@@ -99,6 +102,9 @@ public class Nuke
 
 		this.world.playSoundEffect(this.x, this.y, this.z, "random.explode", 4.0F, (1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F);
 		this.world.spawnParticle("largeexplode", this.x, this.y, this.z, 1.0D, 0.0D, 0.0D);
+
+		long time = System.currentTimeMillis() - start;
+		SciMachinery.instance.log.log(Level.FINEST, "Nuclear detonation executed in " + time + "ms");
 	}
 
 	private void setBlock(int x, int y, int z, int id)

@@ -1,0 +1,88 @@
+Addressing Modes:
+	Accumulator - uses value stored in accumulator - LSR A					A
+	Immediate - specify a full 32 bit constant (in DECIMAL!) - LDA #123		I
+	Memory - use value stored at some memory address - LDA $44cc			M
+	Implicit - no operands - PHA
+	
+Flags:
+	C - Carry flag
+	Z - Zero flag
+	N - Negative flag 
+	I - Interrupt disable
+
+Instructions:												
+	LDA - I,M - C,Z,N - 1,2 - A = M						
+	LDB - I,M - C,Z,N - 3,4 - B = M						
+	LDC - I,M - C,Z,N - 5,6	- C = M	 					
+	LDD - I,M - C,Z,N - 7,8	- D = M					
+															
+	STA - I,M - N/A - 9,10 - MEM[M] = A					
+	STB - I,M - N/A - 11,12 - MEM[M] = B					
+	STC - I,M - N/A - 13,14 - MEM[M] = C						
+	STD - I,M - N/A - 15,16 - MEM[M] = D						
+															
+	MOV - I - C,Z,N - 17 - R = R									
+														
+	TSD - IM - C,Z,N - 18 - D = SP			
+	TDS - IM - N/A - 19 - SP = D
+	PHA - IM - N/A - 20 - PUSH(A)
+	PLA - IM - N/A - 21 - A = POP()
+	PHP - IM - N/A - 22 - PUSH(STATUS)
+	PLP - IM - N/A - 23 - STATUS = POP()					
+	
+	AND - I,M - C,Z,N - 24,25 - A = A & M
+	XOR - I,M - C,Z,N - 26,27 - A = A ^ M
+	ORA - I,M - C,Z,N - 28,29 - A = A | M
+	
+	ADD - I,M - C,Z,N - 30,31 - A = A + M
+	SUB - I,M - C,Z,N - 32,33 - A = A - M
+	CMA - I,M - C,Z,N - 34,35 - STATUS = STATUS(A - M)
+	CMB - I,M - C,Z,N - 36,37 - STATUS = STATUS(B - M)
+	CMC - I,M - C,Z,N - 38,39 - STATUS = STATUS(C - M)
+	CMD - I,M - C,Z,N - 40,41 - STATUS = STATUS(D - M)
+	
+	INC - I,M,A - N/A - 42,43,44 - MEM[M] = MEM[M] + 1
+	INA - IM - C,Z,N - 45 - A = A + 1
+	INB - IM - C,Z,N - 46 - B = B + 1
+	ICN - IM - C,Z,N - 47 - C = C + 1
+	IND - IM - C,Z,N - 48 - D = D + 1
+	DEC - I,M,A - N/A - 49,50,51 - MEM[M] = MEM[M] - 1
+	DEA - IM - C,Z,N - 52 - A = A - 1
+	DEB - IM - C,Z,N - 53 - B = B - 1
+	DCE - IM - C,Z,N - 54 - C = C - 1
+	DED - IM - C,Z,N - 55 - D = D - 1
+	
+	ASL - I,M - C,Z,N - 56,57 - A = A << M
+	ASR - I,M - C,Z,N - 58,59 - A = A >> M
+	LSR - I,M - C,Z,N - 60,61 - A = A >>> M
+	
+	JMP - I,M,A - N/A - 62,63,64 - PC = M
+	JSR - I,M,A - N/A - 65,66,67 - PUSH(PC), PC = M
+	RTS - IM - N/A - 68 - PC = POP()
+			
+	BCC - I,M,A - N/A - 69,70,71 - if(!c) then PC = M end	
+	BNC - I,M,A - N/A - 72,73,74 - if(!n) then PC = M end	
+	BZC - I,M,A - N/A - 75,76,77 - if(!z) then PC = M end	
+	BCS - I,M,A - N/A - 78,79,80 - if(c) then PC = M end
+	BNS - I,M,A - N/A - 81,82,83 - if(n) then PC = M end
+	BZS - I,M,A - N/A - 84,85,86 - if(z) then PC = M end
+	
+	CLC - IM - C - 87 - C = 0
+	CLN - IM - N - 88 - N = 0
+	CLZ - IM - Z - 89 - Z = 0
+	CLI - IM - I - 90 - I = 0
+	SEC - IM - C - 91 - C = 1
+	SEN - IM - N - 92 - N = 1
+	SEZ - IM - Z - 93 - Z = 1
+	SEI - IM - I - 94 - I = 1
+	
+	BRK - IM - N/A - 95 - interrupt()
+	RTI - IM - ALL - 96 - STATUS = POP(), PC = POP()
+	NOP - IM - N/A - 0 - no operation 
+	
+	function interrupt() 
+		PUSH(STATUS)
+		PUSH(PC)
+		PC = INT_VECTOR
+	end
+	

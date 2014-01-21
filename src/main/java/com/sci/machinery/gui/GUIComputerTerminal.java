@@ -6,9 +6,6 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 import com.sci.machinery.block.computer.TileEntityComputer;
 import com.sci.machinery.lib.Reference;
-import com.sci.machinery.network.PacketKeyPress;
-import com.sci.machinery.network.PacketTypeHandler;
-import cpw.mods.fml.common.network.PacketDispatcher;
 
 /**
  * SciMachinery
@@ -67,7 +64,6 @@ public class GUIComputerTerminal extends GuiScreen
 		{
 			for(int x = 0; x < 61; x++)
 			{
-				FONT_RENDERER.drawString(String.valueOf(this.tileEntity.getTermCharacter(x, y)), x * FixedWidthFontRenderer.FONT_WIDTH, y * fontRenderer.FONT_HEIGHT);
 			}
 		}
 		GL11.glPopMatrix();
@@ -80,7 +76,6 @@ public class GUIComputerTerminal extends GuiScreen
 	protected void keyTyped(char c, int i)
 	{
 		super.keyTyped(c, i);
-		PacketDispatcher.sendPacketToServer(PacketTypeHandler.populatePacket(new PacketKeyPress(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord, c, i)));
 	}
 
 	@Override

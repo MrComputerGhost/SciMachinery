@@ -9,11 +9,13 @@ public class EntityNuke extends EntityTNTPrimed
 	public EntityNuke(World par1World)
 	{
 		super(par1World);
+		this.fuse = 20 * 15;
 	}
 
 	public EntityNuke(World par1World, double par2, double par4, double par6, EntityLivingBase par8EntityLivingBase)
 	{
 		super(par1World, par2, par4, par6, par8EntityLivingBase);
+		this.fuse = 20 * 15;
 	}
 
 	public void onUpdate()

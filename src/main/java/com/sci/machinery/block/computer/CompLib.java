@@ -1,15 +1,13 @@
 package com.sci.machinery.block.computer;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.util.BitSet;
+import java.util.UUID;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.SaveHandler;
-import net.minecraftforge.common.DimensionManager;
+import com.sci.machinery.lib.Reference;
 
 /**
  * SciMachinery
@@ -24,125 +22,19 @@ public final class CompLib
 	{
 	}
 
-	private static int nextID = 1;
-	private static BitSet usedIDs = new BitSet();
-
-	static
+	public static UUID cpuidFromStack(ItemStack stack)
 	{
-		try
-		{
-			File ids = new File(getSMCFolder(DimensionManager.getWorld(0)), "ids.txt");
-			if(!ids.exists())
-				ids.createNewFile();
-
-			if(ids.exists())
-			{
-				StringBuilder sb = new StringBuilder();
-
-				try
-				{
-					BufferedReader reader = new BufferedReader(new FileReader(ids));
-
-					String line;
-					while((line = reader.readLine()) != null)
-					{
-						sb.append(line);
-					}
-
-					reader.close();
-				}
-				catch(IOException e)
-				{
-					e.printStackTrace();
-				}
-
-				if(!sb.toString().isEmpty())
-				{
-					String[] spl = sb.toString().split(",");
-					for(String i : spl)
-					{
-						assignID(Integer.valueOf(i));
-					}
-				}
-			}
-			else
-			{
-				try
-				{
-					ids.createNewFile();
-				}
-				catch(IOException e)
-				{
-					e.printStackTrace();
-				}
-			}
-		}
-		catch(IOException e)
-		{
-			e.printStackTrace();
-		}
+		return cpuidFromTag(stack.getTagCompound());
 	}
 
-	public static int assignID()
+	public static UUID cpuidFromTag(NBTTagCompound tag)
 	{
-		int id = usedIDs.nextClearBit(nextID);
-		nextID = id + 1;
-		usedIDs.set(id);
-		save();
-		return id;
+		return cpuidFromString(tag.getString(Reference.NBT_CPUID_TAG));
 	}
 
-	public static void assignID(int id)
+	public static UUID cpuidFromString(String str)
 	{
-		if(usedIDs.get(id))
-			throw new RuntimeException("Cannot steal id " + id);
-
-		usedIDs.set(id);
-		nextID = usedIDs.nextClearBit(1);
-		save();
-	}
-
-	public static void releaseID(int id)
-	{
-		usedIDs.clear(id);
-		if(id < nextID)
-			nextID = id;
-		save();
-	}
-
-	private static void save()
-	{
-		try
-		{
-			File file = new File(getSMCFolder(DimensionManager.getWorld(0)), "ids.txt");
-			if(!file.exists())
-				file.createNewFile();
-
-			BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-
-			StringBuilder sb = new StringBuilder();
-
-			for(int i = 0; i < usedIDs.length(); i++)
-			{
-				if(usedIDs.get(i))
-				{
-					sb.append(i);
-					sb.append(',');
-				}
-			}
-
-			String w = sb.toString();
-			if(w.endsWith(","))
-				w = w.substring(0, w.length() - 1);
-			writer.write(w);
-
-			writer.flush();
-			writer.close();
-		}
-		catch(IOException e)
-		{
-			e.printStackTrace();
-		}
+		return UUID.fromString(str.replaceAll("([0-9a-fA-F]{8})([0-9a-fA-F]{4})([0-9a-fA-F]{4})([0-9a-fA-F]{4})([0-9a-fA-F]+)", "$1-$2-$3-$4-$5"));
 	}
 
 	public static File getSMCFolder(World world) throws IOException

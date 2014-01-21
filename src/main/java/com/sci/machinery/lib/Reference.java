@@ -39,6 +39,8 @@ public final class Reference
 
 	public static final String SERVER_PROXY = "com.sci.machinery.core.CommonProxy";
 
+	public static final String NBT_CPUID_TAG = "CPU_UUID";
+
 	private Reference()
 	{
 	}

@@ -9,7 +9,6 @@ import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import com.sci.machinery.SciMachinery;
-import com.sci.machinery.block.computer.Computer.State;
 import com.sci.machinery.core.BlockSci;
 
 /**
@@ -67,7 +66,7 @@ public class BlockComputer extends BlockSci
 	public Icon getBlockTexture(IBlockAccess par1IBlockAccess, int par2, int par3, int par4, int par5)
 	{
 		TileEntityComputer c = (TileEntityComputer) par1IBlockAccess.getBlockTileEntity(par2, par3, par4);
-		return c.getComputer().getState() == State.OFF ? off : on;
+		return off;
 	}
 
 	@Override

@@ -15,7 +15,7 @@ import com.sci.machinery.lib.Reference;
 
 public enum PacketTypeHandler
 {
-	BYTE_ARRAY(PacketByteArray.class), BUTTON_PRESSED(PacketButtonPressed.class), KEY_PRESS(PacketKeyPress.class);
+	BYTE_ARRAY(PacketByteArray.class), BUTTON_PRESSED(PacketButtonPressed.class);
 
 	public static PacketSci buildPacket(byte[] data)
 	{

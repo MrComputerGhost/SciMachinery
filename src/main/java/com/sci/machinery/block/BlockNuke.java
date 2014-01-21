@@ -12,6 +12,13 @@ import net.minecraft.world.World;
 import com.sci.machinery.SciMachinery;
 import com.sci.machinery.entity.EntityNuke;
 
+/**
+ * SciMachinery
+ * 
+ * @author sci4me
+ * @license Lesser GNU Public License v3 (http://www.gnu.org/licenses/lgpl.html)
+ */
+
 public class BlockNuke extends BlockTNT
 {
 	public BlockNuke(int par1)
@@ -29,7 +36,7 @@ public class BlockNuke extends BlockTNT
 		if(par5EntityLivingBase instanceof EntityPlayer && !par1World.isRemote)
 		{
 			EntityPlayer p = (EntityPlayer) par5EntityLivingBase;
-			//SciMachinery.instance.log.log(Level.INFO, p.username + " placed a nuke at (" + par2 + ", " + par3 + ", " + par4 + ") at " + getTime());
+			SciMachinery.instance.log.log(Level.INFO, p.username + " placed a nuke at (" + par2 + ", " + par3 + ", " + par4 + ") at " + getTime());
 		}
 	}
 

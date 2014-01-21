@@ -120,7 +120,6 @@ public class SciMachinery implements IGuiHandler
 	public int nukeId;
 
 	public IRecipeRegistry circuitMakerRegistry;
-
 	public Logger log;
 
 	@EventHandler
@@ -130,7 +129,7 @@ public class SciMachinery implements IGuiHandler
 
 		log = Logger.getLogger(Reference.MOD_NAME);
 		log.setParent(FMLLog.getLogger());
-		
+
 		circuitMakerRegistry = new CircuitMakerRegistry();
 
 		circuit = new ItemCircuit(circuitId);

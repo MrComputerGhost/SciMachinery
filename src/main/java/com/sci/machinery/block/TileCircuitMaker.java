@@ -14,6 +14,13 @@ import com.sci.machinery.api.IRecipeRegistry;
 import com.sci.machinery.core.CircuitMakerRecipe;
 import cpw.mods.fml.relauncher.Side;
 
+/**
+ * SciMachinery
+ * 
+ * @author sci4me
+ * @license Lesser GNU Public License v3 (http://www.gnu.org/licenses/lgpl.html)
+ */
+
 public class TileCircuitMaker extends TileSci implements IInventory
 {
 	private boolean crafting;

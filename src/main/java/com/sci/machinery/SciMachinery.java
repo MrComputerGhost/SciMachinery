@@ -25,8 +25,8 @@ import com.sci.machinery.api.IRecipeRegistry;
 import com.sci.machinery.block.BlockCircuitMaker;
 import com.sci.machinery.block.BlockNuke;
 import com.sci.machinery.block.TileCircuitMaker;
-import com.sci.machinery.block.computer.BlockComputer;
-import com.sci.machinery.block.computer.TileEntityComputer;
+import com.sci.machinery.block.computer.BlockCase;
+import com.sci.machinery.block.computer.TileCase;
 import com.sci.machinery.block.tube.BlockTube;
 import com.sci.machinery.block.tube.TileTube;
 import com.sci.machinery.block.tube.TubeBase;
@@ -35,9 +35,10 @@ import com.sci.machinery.core.CircuitMakerRecipe;
 import com.sci.machinery.core.CircuitMakerRegistry;
 import com.sci.machinery.core.CreativeTabSM;
 import com.sci.machinery.entity.EntityNuke;
+import com.sci.machinery.gui.ContainerCase;
 import com.sci.machinery.gui.ContainerCircuitMaker;
+import com.sci.machinery.gui.GUICase;
 import com.sci.machinery.gui.GUICircuitMaker;
-import com.sci.machinery.gui.GUIComputerTerminal;
 import com.sci.machinery.item.ItemCircuit;
 import com.sci.machinery.item.ItemEasterEgg;
 import com.sci.machinery.item.ItemSuicide;
@@ -110,7 +111,7 @@ public class SciMachinery implements IGuiHandler
 	public ItemCircuit circuit;
 	public int circuitId;
 
-	public BlockComputer computer;
+	public BlockCase computer;
 	public int computerId;
 
 	public ItemSuicide suicide;
@@ -142,7 +143,7 @@ public class SciMachinery implements IGuiHandler
 
 		GameRegistry.registerTileEntity(TileTube.class, "SciMachinery_TileTube");
 		GameRegistry.registerTileEntity(TileCircuitMaker.class, "SciMachinery_TileCircuitMaker");
-		GameRegistry.registerTileEntity(TileEntityComputer.class, "SciMachinery_TileComputer");
+		GameRegistry.registerTileEntity(TileCase.class, "SciMachinery_TileComputer");
 
 		stoneTube = new BlockTube(stoneTubeId, TubeBase.STONE);
 		stoneTube.setUnlocalizedName("stoneTube");
@@ -405,6 +406,7 @@ public class SciMachinery implements IGuiHandler
 	{
 		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
 		if(tileEntity instanceof TileCircuitMaker) { return new ContainerCircuitMaker(player.inventory, (TileCircuitMaker) tileEntity); }
+		if(tileEntity instanceof TileCase) { return new ContainerCase(player.inventory, (TileCase) tileEntity); }
 		return null;
 	}
 
@@ -413,7 +415,7 @@ public class SciMachinery implements IGuiHandler
 	{
 		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
 		if(tileEntity instanceof TileCircuitMaker) { return new GUICircuitMaker(player.inventory, (TileCircuitMaker) tileEntity); }
-		if(tileEntity instanceof TileEntityComputer) { return new GUIComputerTerminal((TileEntityComputer) tileEntity); }
+		if(tileEntity instanceof TileCase) { return new GUICase((TileCase) tileEntity); }
 		return null;
 	}
 }

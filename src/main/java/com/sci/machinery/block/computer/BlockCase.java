@@ -18,11 +18,9 @@ import com.sci.machinery.core.BlockSci;
  * @license Lesser GNU Public License v3 (http://www.gnu.org/licenses/lgpl.html)
  */
 
-public class BlockComputer extends BlockSci
+public class BlockCase extends BlockSci // TODO - re-implement
 {
-	private Icon on, off;
-
-	public BlockComputer(int id)
+	public BlockCase(int id)
 	{
 		super(id, Material.iron);
 		this.setCreativeTab(SciMachinery.tab);
@@ -33,46 +31,36 @@ public class BlockComputer extends BlockSci
 	@Override
 	public void breakBlock(World par1World, int par2, int par3, int par4, int par5, int par6)
 	{
-		TileEntityComputer computer = (TileEntityComputer) par1World.getBlockTileEntity(par2, par3, par4);
-		if(computer != null)
-			computer.breakBlock();
-
 		super.breakBlock(par1World, par2, par3, par4, par5, par6);
 	}
 
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int metadata, float what, float these, float are)
 	{
-		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
-		if(tileEntity != null && tileEntity instanceof TileEntityComputer)
-			((TileEntityComputer) tileEntity).boot();
-		if(tileEntity == null || player.isSneaking()) { return false; }
-		player.openGui(SciMachinery.instance, 1, world, x, y, z);
-		return true;
+		return false;
 	}
 
 	@Override
 	public TileEntity createNewTileEntity(World world)
 	{
-		return new TileEntityComputer();
+		return new TileCase();
 	}
-	
+
 	@Override
-	public Icon getIcon(int something1, int somthing2){
-		return off;
+	public Icon getIcon(int something1, int somthing2)
+	{
+		return null;
 	}
 
 	@Override
 	public Icon getBlockTexture(IBlockAccess par1IBlockAccess, int par2, int par3, int par4, int par5)
 	{
-		TileEntityComputer c = (TileEntityComputer) par1IBlockAccess.getBlockTileEntity(par2, par3, par4);
-		return off;
+		return null;
 	}
 
 	@Override
 	public void registerIcons(IconRegister par1IconRegister)
 	{
-		this.on = par1IconRegister.registerIcon("scimachinery:pc_on");
-		this.off = par1IconRegister.registerIcon("scimachinery:pc_off");
+
 	}
 }

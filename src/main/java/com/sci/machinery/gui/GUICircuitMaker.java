@@ -14,7 +14,7 @@ import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class GUICircuitMaker extends GuiContainer
 {
-	private static final ResourceLocation guiTexture = new ResourceLocation(Reference.MOD_ID.toLowerCase(), "textures/guis/circuit_maker.png");
+	private static final ResourceLocation TEXTURE = new ResourceLocation(Reference.MOD_ID.toLowerCase(), "textures/guis/circuit_maker.png");
 
 	private TileCircuitMaker tileEntity;
 
@@ -69,7 +69,7 @@ public class GUICircuitMaker extends GuiContainer
 	protected void drawGuiContainerBackgroundLayer(float par1, int par2, int par3)
 	{
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		this.mc.getTextureManager().bindTexture(guiTexture);
+		this.mc.getTextureManager().bindTexture(TEXTURE);
 		int k = (this.width - this.xSize) / 2;
 		int l = (this.height - this.ySize) / 2;
 		this.drawTexturedModalRect(k, l, 0, 0, this.xSize, this.ySize);

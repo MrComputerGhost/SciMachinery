@@ -405,7 +405,7 @@ public class SciMachinery implements IGuiHandler
 			suicideId = cfg.getItem("suicide", 431).getInt();
 
 			nukeId = cfg.getBlock("nuke", 432).getInt();
-			this.allowNukes = config.get("Do you really want nukes?", "Enable Nukes", false).getBoolean(false);
+			this.allowNukes = config.get("Enable Nukes", false).getBoolean();
 		}
 		finally
 		{

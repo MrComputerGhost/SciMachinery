@@ -113,7 +113,8 @@ public class SciMachinery implements IGuiHandler
 
 	public Block nuke;
 	public int nukeId;
-
+	public boolean allowNukes = false;
+	
 	public IRecipeRegistry circuitMakerRegistry;
 	public Logger log;
 
@@ -176,10 +177,12 @@ public class SciMachinery implements IGuiHandler
 		GameRegistry.registerBlock(circuitMaker, "SciMachinery_TileCircuitMaker");
 
 		suicide = new ItemSuicide(suicideId);
-
+		
+		if (allowNukes) {
 		nuke = new BlockNuke(nukeId);
 		nuke.setUnlocalizedName("nuke");
 		GameRegistry.registerBlock(nuke, "SciMachinery_Nuke");
+		}
 
 		BlockDispenser.dispenseBehaviorRegistry.putObject(Item.itemsList[nuke.blockID], new BehaviorDefaultDispenseItem()
 		{
@@ -402,6 +405,7 @@ public class SciMachinery implements IGuiHandler
 			suicideId = cfg.getItem("suicide", 431).getInt();
 
 			nukeId = cfg.getBlock("nuke", 432).getInt();
+			this.allowNukes = config.get("Do you really want nukes?", "Enable Nukes", false).getBoolean(false);
 		}
 		finally
 		{

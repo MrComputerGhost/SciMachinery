@@ -178,11 +178,11 @@ public class SciMachinery implements IGuiHandler
 
 		suicide = new ItemSuicide(suicideId);
 		
-		if (allowNukes) {
+		
 		nuke = new BlockNuke(nukeId);
 		nuke.setUnlocalizedName("nuke");
 		GameRegistry.registerBlock(nuke, "SciMachinery_Nuke");
-		}
+		
 
 		BlockDispenser.dispenseBehaviorRegistry.putObject(Item.itemsList[nuke.blockID], new BehaviorDefaultDispenseItem()
 		{
@@ -226,10 +226,11 @@ public class SciMachinery implements IGuiHandler
 		{ new ItemStack(Item.redstone, 1), new ItemStack(stoneTube, 1) });
 		GameRegistry.addShapelessRecipe(new ItemStack(tubeValve), new Object[]
 		{ new ItemStack(Item.redstone, 1), new ItemStack(cobbleTube, 1) });
-
+		if (allowNukes) {
 		GameRegistry.addRecipe(new ItemStack(nuke), new Object[]
 		{ "aaa", "aba", "aaa", 'a', suicide, 'b', Block.tnt });
-
+		}
+		
 		ItemStack[] stacks = new ItemStack[15];
 		stacks[0] = new ItemStack(Item.redstone);
 		stacks[1] = new ItemStack(Item.redstone);

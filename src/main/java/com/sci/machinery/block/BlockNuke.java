@@ -50,7 +50,7 @@ public class BlockNuke extends BlockTNT
 	@Override
 	public void primeTnt(World par1World, int par2, int par3, int par4, int par5, EntityLivingBase par6EntityLivingBase)
 	{
-		if(!par1World.isRemote)
+		if((!par1World.isRemote) && (SciMachinery.allowNukes))
 		{
 			if((par5 & 1) == 1)
 			{
@@ -58,6 +58,9 @@ public class BlockNuke extends BlockTNT
 				par1World.spawnEntityInWorld(entitytntprimed);
 				par1World.playSoundAtEntity(entitytntprimed, "random.fuse", 1.0F, 1.0F);
 			}
+		} else if(!SciMachinery.allowNukes) {
+			EntityPlayer p = (EntityPlayer) par5EntityLivingBase;
+			p.addChatMessage("Nukes Are Not Allowed! Enable The In The Config!");
 		}
 	}
 }
